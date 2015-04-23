@@ -1,0 +1,2238 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist{entry}{nyt}
+    \entry{agranoff2003}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=5a1f1087271b1a52c466d37e155a59af}{Agranoff}{A\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=d6de401cf0b535b1e25d40187712fbfb}{{McGuire}}{M\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=5a1f1087271b1a52c466d37e155a59af}{Agranoff}{A\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=d6de401cf0b535b1e25d40187712fbfb}{{McGuire}}{M\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{0dbbeaec5e572dce9b441a08c528e311}
+      \strng{fullhash}{0dbbeaec5e572dce9b441a08c528e311}
+      \field{sortinit}{A}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Inside the matrix: Integrating the paradigms of intergovernmental and network management}
+      \field{journaltitle}{International Journal of Public Administration}
+      \field{number}{12}
+      \field{title}{Inside the matrix: Integrating the paradigms of intergovernmental and network management}
+      \field{volume}{26}
+      \field{year}{2003}
+      \field{pages}{1401\bibrangedash 1422}
+    \endentry
+    \entry{ansell2008}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=9441e3992d291fcfe29c7a4a0ed0ec3e}{Ansell}{A\bibinitperiod}{C.}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=e37db31fbfc9a6bedcb5bc2096616fb6}{Gash}{G\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=9441e3992d291fcfe29c7a4a0ed0ec3e}{Ansell}{A\bibinitperiod}{C.}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=e37db31fbfc9a6bedcb5bc2096616fb6}{Gash}{G\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{cbc6a72966938caa508d6c8c3bffd36a}
+      \strng{fullhash}{cbc6a72966938caa508d6c8c3bffd36a}
+      \field{sortinit}{A}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative governance in theory and practice}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{number}{4}
+      \field{title}{Collaborative governance in theory and practice}
+      \field{volume}{18}
+      \field{year}{2008}
+      \field{pages}{543\bibrangedash 571}
+    \endentry
+    \entry{beguin2012}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=cec2a17bd9f799899f54e26717aaa64c}{Beguin}{B\bibinitperiod}{Julien}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=ddb398e7f7ac6a3a75bc5ce77a3800ae}{Cumming}{C\bibinitperiod}{Steven\bibnamedelima G.}{S\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=cec2a17bd9f799899f54e26717aaa64c}{Beguin}{B\bibinitperiod}{Julien}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=ddb398e7f7ac6a3a75bc5ce77a3800ae}{Cumming}{C\bibinitperiod}{Steven\bibnamedelima G.}{S\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{1e74bb6d454a621c1411fd41ef003ce2}
+      \strng{fullhash}{922986f942d9f8c0c70e28a240df70d1}
+      \field{sortinit}{B}
+      \field{labelyear}{2012}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Hierarchical analysis of spatially autocorrelated ecological data using integrated nested Laplace approximation}
+      \field{journaltitle}{Methods in Ecology and Evolution}
+      \field{number}{5}
+      \field{title}{Hierarchical analysis of spatially autocorrelated ecological data using integrated nested Laplace approximation}
+      \field{volume}{3}
+      \field{year}{2012}
+      \field{pages}{921\bibrangedash 929}
+    \endentry
+    \entry{beierle2002}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=80dd825f3e4a3cab2346f8bba0d7db46}{Beierle}{B\bibinitperiod}{Thomas\bibnamedelima C.}{T\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=80dd825f3e4a3cab2346f8bba0d7db46}{Beierle}{B\bibinitperiod}{Thomas\bibnamedelima C.}{T\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{80dd825f3e4a3cab2346f8bba0d7db46}
+      \strng{fullhash}{80dd825f3e4a3cab2346f8bba0d7db46}
+      \field{sortinit}{B}
+      \field{labelyear}{2002}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The Quality of {Stakeholder-Based} Decisions}
+      \field{annotation}{The following values have no corresponding Zotero {field:PB} - Blackwell Publishing}
+      \field{issn}{0272-4332}
+      \field{journaltitle}{Risk Analysis}
+      \field{number}{4}
+      \field{title}{The Quality of {Stakeholder-Based} Decisions}
+      \field{volume}{22}
+      \field{year}{2002}
+      \field{pages}{739\bibrangedash 749}
+    \endentry
+    \entry{berardo2014}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=72d08c8bd045a0b2b433e961bbf9b159}{Berardo}{B\bibinitperiod}{Ramiro}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=dcbc2bf0115a6c90ac65e52e6ccb531f}{Heikkila}{H\bibinitperiod}{Tanya}{T\bibinitperiod}{}{}{}{}}%
+        {{hash=ea8a63481bb5f345be7e01479371c7af}{Gerlak}{G\bibinitperiod}{Andrea\bibnamedelima K.}{A\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=72d08c8bd045a0b2b433e961bbf9b159}{Berardo}{B\bibinitperiod}{Ramiro}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=dcbc2bf0115a6c90ac65e52e6ccb531f}{Heikkila}{H\bibinitperiod}{Tanya}{T\bibinitperiod}{}{}{}{}}%
+        {{hash=ea8a63481bb5f345be7e01479371c7af}{Gerlak}{G\bibinitperiod}{Andrea\bibnamedelima K.}{A\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{64bc78f28bd5176a06cc82dd77e69460}
+      \strng{fullhash}{bd7038026162d2fd37ef7fedf86616a4}
+      \field{sortinit}{B}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Interorganizational Engagement in Collaborative Environmental Management: Evidence from the South Florida Ecosystem Restoration Task Force}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{title}{Interorganizational Engagement in Collaborative Environmental Management: Evidence from the South Florida Ecosystem Restoration Task Force}
+      \field{year}{2014}
+      \field{pages}{muu003}
+    \endentry
+    \entry{bernardo2009}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=f8da17e102f8043d74b025a5b8634400}{Bernardo}{B\bibinitperiod}{Jos\'{e}\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=87cb56dfd034b3c5ccfe7ec32e92037c}{Smith}{S\bibinitperiod}{Adrian\bibnamedelima {FM}}{A\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=f8da17e102f8043d74b025a5b8634400}{Bernardo}{B\bibinitperiod}{Jos\'{e}\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=87cb56dfd034b3c5ccfe7ec32e92037c}{Smith}{S\bibinitperiod}{Adrian\bibnamedelima {FM}}{A\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{6babfdeff936ff6df037242e5a42cc1a}
+      \strng{fullhash}{6babfdeff936ff6df037242e5a42cc1a}
+      \field{sortinit}{B}
+      \field{labelyear}{2009}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Bayesian theory}
+      \field{isbn}{{047031771X}}
+      \field{title}{Bayesian theory}
+      \field{volume}{405}
+      \field{year}{2009}
+    \endentry
+    \entry{bickman1987}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=233e4b239137c669322bc37158870d3d}{Bickman}{B\bibinitperiod}{Leonard}{L\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=233e4b239137c669322bc37158870d3d}{Bickman}{B\bibinitperiod}{Leonard}{L\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{233e4b239137c669322bc37158870d3d}
+      \strng{fullhash}{233e4b239137c669322bc37158870d3d}
+      \field{sortinit}{B}
+      \field{labelyear}{1987}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The functions of program theory}
+      \field{journaltitle}{New Directions for Program Evaluation}
+      \field{number}{33}
+      \field{title}{The functions of program theory}
+      \field{year}{1987}
+      \field{pages}{5\bibrangedash 18}
+    \endentry
+    \entry{bivand2008}{book}{}
+      \name{labelname}{3}{}{%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=aab4f77ecd6e44b54388a6d9979662c3}{Pebesma}{P\bibinitperiod}{Edzer\bibnamedelima J.}{E\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=aab4f77ecd6e44b54388a6d9979662c3}{Pebesma}{P\bibinitperiod}{Edzer\bibnamedelima J.}{E\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{b3cf91a3ef9859dd01f58cc37b4d3371}
+      \strng{fullhash}{04b29f6c3298f502670b0572b6f96427}
+      \field{sortinit}{B}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Applied spatial data analysis with R}
+      \field{title}{Applied spatial data analysis with R}
+      \field{volume}{747248717}
+      \field{year}{2008}
+    \endentry
+    \entry{bivand2013}{incollection}{}
+      \name{labelname}{3}{}{%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=422fc79d05d5bcdcc598a0a7c6f95159}{Pebesma}{P\bibinitperiod}{Edzer}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=422fc79d05d5bcdcc598a0a7c6f95159}{Pebesma}{P\bibinitperiod}{Edzer}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{b3cf91a3ef9859dd01f58cc37b4d3371}
+      \strng{fullhash}{005d9423b50ed83f5a099bb37d222875}
+      \field{sortinit}{B}
+      \field{labelyear}{2013}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Disease Mapping}
+      \field{booktitle}{Applied Spatial Data Analysis with R}
+      \field{isbn}{1461476178}
+      \field{title}{Disease Mapping}
+      \field{year}{2013}
+      \field{pages}{319\bibrangedash 361}
+    \endentry
+    \entry{blangiardo2010}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=0f3c941d41e1ccee6619493d31f0283e}{Blangiardo}{B\bibinitperiod}{Marta}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=71425b355b472529d862b325802115e6}{Richardson}{R\bibinitperiod}{Sylvia}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=6fd38652909f641b55405e8309505772}{Gulliver}{G\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=71039a5a7a536b00ed8a339aa2d2db2c}{Hansell}{H\bibinitperiod}{Anna}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=0f3c941d41e1ccee6619493d31f0283e}{Blangiardo}{B\bibinitperiod}{Marta}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=71425b355b472529d862b325802115e6}{Richardson}{R\bibinitperiod}{Sylvia}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=6fd38652909f641b55405e8309505772}{Gulliver}{G\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=71039a5a7a536b00ed8a339aa2d2db2c}{Hansell}{H\bibinitperiod}{Anna}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{2ad6124eba3539bbf3ee5773a745aa78}
+      \strng{fullhash}{905ecaea07471732506ad2ceb3b6b47d}
+      \field{sortinit}{B}
+      \field{labelyear}{2010}
+      \field{datelabelsource}{}
+      \field{labeltitle}{A Bayesian analysis of the impact of air pollution episodes on cardio-respiratory hospital admissions in the Greater London area}
+      \field{journaltitle}{Statistical methods in medical research}
+      \field{title}{A Bayesian analysis of the impact of air pollution episodes on cardio-respiratory hospital admissions in the Greater London area}
+      \field{year}{2010}
+    \endentry
+    \entry{blangiardo2013}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=0f3c941d41e1ccee6619493d31f0283e}{Blangiardo}{B\bibinitperiod}{Marta}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=456a72634fb5a5dfdd84e76ed626f527}{Cameletti}{C\bibinitperiod}{Michela}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=c74c1978f61672d907cc27b11aec65a8}{Baio}{B\bibinitperiod}{Gianluca}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=6784fa8417c7c473fd5ebc5406a8428b}{Rue}{R\bibinitperiod}{H\r{a}vard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=0f3c941d41e1ccee6619493d31f0283e}{Blangiardo}{B\bibinitperiod}{Marta}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=456a72634fb5a5dfdd84e76ed626f527}{Cameletti}{C\bibinitperiod}{Michela}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=c74c1978f61672d907cc27b11aec65a8}{Baio}{B\bibinitperiod}{Gianluca}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=6784fa8417c7c473fd5ebc5406a8428b}{Rue}{R\bibinitperiod}{H\r{a}vard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{2ad6124eba3539bbf3ee5773a745aa78}
+      \strng{fullhash}{85e048c3240f9e602050b6b2b6a7fcce}
+      \field{sortinit}{B}
+      \field{labelyear}{2013}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Spatial and spatio-temporal models with {R-INLA}}
+      \field{journaltitle}{Spatial and spatio-temporal epidemiology}
+      \field{title}{Spatial and spatio-temporal models with {R-INLA}}
+      \field{volume}{7}
+      \field{year}{2013}
+      \field{pages}{39\bibrangedash 55}
+    \endentry
+    \entry{brooks2011}{book}{}
+      \name{labelname}{4}{}{%
+        {{hash=44e6b85e4b24ea984e58302c151818d6}{Brooks}{B\bibinitperiod}{Steve}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=1e1eb60e3b6e222217bf8e9b24070b28}{Gelman}{G\bibinitperiod}{Andrew}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=91338e619ca9474a380864619a3b98a1}{Jones}{J\bibinitperiod}{Galin}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=85ea5d8c6fc2be6b9cae229fdff73961}{Meng}{M\bibinitperiod}{{Xiao-Li}}{X\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=44e6b85e4b24ea984e58302c151818d6}{Brooks}{B\bibinitperiod}{Steve}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=1e1eb60e3b6e222217bf8e9b24070b28}{Gelman}{G\bibinitperiod}{Andrew}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=91338e619ca9474a380864619a3b98a1}{Jones}{J\bibinitperiod}{Galin}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=85ea5d8c6fc2be6b9cae229fdff73961}{Meng}{M\bibinitperiod}{{Xiao-Li}}{X\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {{CRC} Press}%
+      }
+      \strng{namehash}{eb4b2cd91ad78135015c11642dac3ba9}
+      \strng{fullhash}{dab40d7760b6559dd9d433c60f154f16}
+      \field{sortinit}{B}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Handbook of Markov Chain Monte Carlo}
+      \field{isbn}{1420079425}
+      \field{title}{Handbook of Markov Chain Monte Carlo}
+      \field{year}{2011}
+    \endentry
+    \entry{bryson2006}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=a06b6a1c9af1ada3d29cceab93fa7fbb}{Bryson}{B\bibinitperiod}{John\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=77ea538baca9a4ae4f760034fa1bfb88}{Crosby}{C\bibinitperiod}{Barbara\bibnamedelima C.}{B\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{hash=1b3e25f5d52d5b01aae42661d79069c2}{Stone}{S\bibinitperiod}{Melissa\bibnamedelima Middleton}{M\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=a06b6a1c9af1ada3d29cceab93fa7fbb}{Bryson}{B\bibinitperiod}{John\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=77ea538baca9a4ae4f760034fa1bfb88}{Crosby}{C\bibinitperiod}{Barbara\bibnamedelima C.}{B\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{hash=1b3e25f5d52d5b01aae42661d79069c2}{Stone}{S\bibinitperiod}{Melissa\bibnamedelima Middleton}{M\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{aac808f90b6baa3de6ed8f8404feed01}
+      \strng{fullhash}{0bcc0b78bb98b2a81a2d2a502f926efe}
+      \field{sortinit}{B}
+      \field{labelyear}{2006}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The design and implementation of {Cross-Sector} collaborations: Propositions from the literature}
+      \field{journaltitle}{Public administration review}
+      \field{number}{s1}
+      \field{title}{The design and implementation of {Cross-Sector} collaborations: Propositions from the literature}
+      \field{volume}{66}
+      \field{year}{2006}
+      \field{pages}{44\bibrangedash 55}
+    \endentry
+    \entry{cameletti2013}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=456a72634fb5a5dfdd84e76ed626f527}{Cameletti}{C\bibinitperiod}{Michela}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=740d117d0458272bb691f40adf15dfdb}{Simpson}{S\bibinitperiod}{Daniel}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=6784fa8417c7c473fd5ebc5406a8428b}{Rue}{R\bibinitperiod}{H\r{a}vard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=456a72634fb5a5dfdd84e76ed626f527}{Cameletti}{C\bibinitperiod}{Michela}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=740d117d0458272bb691f40adf15dfdb}{Simpson}{S\bibinitperiod}{Daniel}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=6784fa8417c7c473fd5ebc5406a8428b}{Rue}{R\bibinitperiod}{H\r{a}vard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{37d6b011153b465c19659c370912da96}
+      \strng{fullhash}{da6ad83b76f558b8cee232a0f1b014ff}
+      \field{sortinit}{C}
+      \field{labelyear}{2013}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Spatio-temporal modeling of particulate matter concentration through the {SPDE} approach}
+      \field{journaltitle}{{AStA} Advances in Statistical Analysis}
+      \field{number}{2}
+      \field{title}{Spatio-temporal modeling of particulate matter concentration through the {SPDE} approach}
+      \field{volume}{97}
+      \field{year}{2013}
+      \field{pages}{109\bibrangedash 131}
+    \endentry
+    \entry{carr2012}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=94cf690b10c918a0e0710630b02ff1bd}{Carr}{C\bibinitperiod}{G.}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=2cb113bb4ed041cb9544b08a82018b41}{Bloschl}{B\bibinitperiod}{G.}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=9ed0fc576c0aa2cb138852943c9fa050}{Loucks}{L\bibinitperiod}{D.\bibnamedelimi P.}{D\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=94cf690b10c918a0e0710630b02ff1bd}{Carr}{C\bibinitperiod}{G.}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=2cb113bb4ed041cb9544b08a82018b41}{Bloschl}{B\bibinitperiod}{G.}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=9ed0fc576c0aa2cb138852943c9fa050}{Loucks}{L\bibinitperiod}{D.\bibnamedelimi P.}{D\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{92654019fa9ffa8771b017810383eeab}
+      \strng{fullhash}{705664cbba4d6479a31e5924fe0f6cdb}
+      \field{sortinit}{C}
+      \field{labelyear}{2012}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Evaluating Participation in Water Resource Management: A review}
+      \field{journaltitle}{Water Resources Research}
+      \field{number}{11}
+      \field{title}{Evaluating Participation in Water Resource Management: A review}
+      \field{volume}{48}
+      \field{year}{2012}
+    \endentry
+    \entry{clark2005}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=953e9df7fb87ccbf2955a538c29948ff}{Clark}{C\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=953e9df7fb87ccbf2955a538c29948ff}{Clark}{C\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{953e9df7fb87ccbf2955a538c29948ff}
+      \strng{fullhash}{953e9df7fb87ccbf2955a538c29948ff}
+      \field{sortinit}{C}
+      \field{labelyear}{2005}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Why environmental scientists are becoming Bayesians}
+      \field{journaltitle}{Ecology letters}
+      \field{number}{1}
+      \field{title}{Why environmental scientists are becoming Bayesians}
+      \field{volume}{8}
+      \field{year}{2005}
+      \field{pages}{2\bibrangedash 14}
+    \endentry
+    \entry{clark2006}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=953e9df7fb87ccbf2955a538c29948ff}{Clark}{C\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=2957d6c2260b7407510339559f08b664}{Gelfand}{G\bibinitperiod}{Alan\bibnamedelima E.}{A\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=953e9df7fb87ccbf2955a538c29948ff}{Clark}{C\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=2957d6c2260b7407510339559f08b664}{Gelfand}{G\bibinitperiod}{Alan\bibnamedelima E.}{A\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press}%
+      }
+      \strng{namehash}{dbbd07eb8263aad19833c26546efd0f7}
+      \strng{fullhash}{dbbd07eb8263aad19833c26546efd0f7}
+      \field{sortinit}{C}
+      \field{labelyear}{2006}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Hierarchical Modelling for the Environmental Sciences: Statistical methods and applications: Statistical methods and applications}
+      \field{isbn}{0191513849}
+      \field{title}{Hierarchical Modelling for the Environmental Sciences: Statistical methods and applications: Statistical methods and applications}
+      \field{year}{2006}
+    \endentry
+    \entry{coglianese2003}{incollection}{}
+      \name{labelname}{1}{}{%
+        {{hash=9904d247e4e1ef6c405b261db2d5f22a}{Coglianese}{C\bibinitperiod}{Cary}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=9904d247e4e1ef6c405b261db2d5f22a}{Coglianese}{C\bibinitperiod}{Cary}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=67663eba8c0ed79330644a6a844b143a}{{O'Leary}}{O\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=d3c152159f37e885f01d73c512ea963c}{Bingham}{B\bibinitperiod}{L.\bibnamedelimi B.}{L\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Washington, {D.C.}}%
+      }
+      \list{publisher}{1}{%
+        {{RFF} Press}%
+      }
+      \strng{namehash}{9904d247e4e1ef6c405b261db2d5f22a}
+      \strng{fullhash}{9904d247e4e1ef6c405b261db2d5f22a}
+      \field{sortinit}{C}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Is satisfaction success? Evaluating public participation in regulatory policymaking}
+      \field{booktitle}{The Promise and Performance of Environmental Conflict Resolution}
+      \field{title}{Is satisfaction success? Evaluating public participation in regulatory policymaking}
+      \field{year}{2003}
+      \field{pages}{69\bibrangedash 89}
+    \endentry
+    \entry{cosandey-godin2014}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=d86485213b2dfa34590a98b2e849cec4}{{Cosandey-Godin}}{C\bibinitperiod}{Aurelie}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=cb5c8d0bb1c7ad41f7063f9fff2165ff}{Teixeira\bibnamedelima Krainski}{T\bibinitperiod\bibinitdelim K\bibinitperiod}{Elias}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=d20926afa43feca8de94d916be6425fd}{Worm}{W\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
+        {{hash=b191047bd27c87fc677a6706567ab821}{Mills\bibnamedelima Flemming}{M\bibinitperiod\bibinitdelim F\bibinitperiod}{Joanna}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=d86485213b2dfa34590a98b2e849cec4}{{Cosandey-Godin}}{C\bibinitperiod}{Aurelie}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=cb5c8d0bb1c7ad41f7063f9fff2165ff}{Teixeira\bibnamedelima Krainski}{T\bibinitperiod\bibinitdelim K\bibinitperiod}{Elias}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=d20926afa43feca8de94d916be6425fd}{Worm}{W\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
+        {{hash=b191047bd27c87fc677a6706567ab821}{Mills\bibnamedelima Flemming}{M\bibinitperiod\bibinitdelim F\bibinitperiod}{Joanna}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{6f08768c732065a054e90fc2f59be534}
+      \strng{fullhash}{93639cadb5ba403b5343430f97cb117a}
+      \field{sortinit}{C}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Applying Bayesian spatio-temporal models to fisheries bycatch in the Canadian Arctic}
+      \field{journaltitle}{Canadian Journal of Fisheries and Aquatic Sciences}
+      \field{number}{ja}
+      \field{title}{Applying Bayesian spatio-temporal models to fisheries bycatch in the Canadian Arctic}
+      \field{year}{2014}
+    \endentry
+    \entry{cressie2011}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=1d684a7b784094856b0f4832104839c4}{Cressie}{C\bibinitperiod}{Noel}{N\bibinitperiod}{}{}{}{}}%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=1d684a7b784094856b0f4832104839c4}{Cressie}{C\bibinitperiod}{Noel}{N\bibinitperiod}{}{}{}{}}%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{84dcd6c8c998bc8cf51ac65aeb96c102}
+      \strng{fullhash}{84dcd6c8c998bc8cf51ac65aeb96c102}
+      \field{sortinit}{C}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Statistics for spatio-temporal data}
+      \field{isbn}{0471692743}
+      \field{title}{Statistics for spatio-temporal data}
+      \field{year}{2011}
+    \endentry
+    \entry{cressie2009}{article}{}
+      \name{labelname}{5}{}{%
+        {{hash=1d684a7b784094856b0f4832104839c4}{Cressie}{C\bibinitperiod}{Noel}{N\bibinitperiod}{}{}{}{}}%
+        {{hash=797125cbe13f1b5b46881f7ce1aba16f}{Calder}{C\bibinitperiod}{Catherine\bibnamedelima A.}{C\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=953e9df7fb87ccbf2955a538c29948ff}{Clark}{C\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=731ca741c95ea4f866f0220e58e84acf}{Hoef}{H\bibinitperiod}{Jay\bibnamedelimb M.\bibnamedelimi Ver}{J\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim V\bibinitperiod}{}{}{}{}}%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{5}{}{%
+        {{hash=1d684a7b784094856b0f4832104839c4}{Cressie}{C\bibinitperiod}{Noel}{N\bibinitperiod}{}{}{}{}}%
+        {{hash=797125cbe13f1b5b46881f7ce1aba16f}{Calder}{C\bibinitperiod}{Catherine\bibnamedelima A.}{C\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=953e9df7fb87ccbf2955a538c29948ff}{Clark}{C\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=731ca741c95ea4f866f0220e58e84acf}{Hoef}{H\bibinitperiod}{Jay\bibnamedelimb M.\bibnamedelimi Ver}{J\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim V\bibinitperiod}{}{}{}{}}%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{a94273a1fd71bc89620f6c3f9528ace5}
+      \strng{fullhash}{6d090eec94244cd74a63863d7b11c086}
+      \field{sortinit}{C}
+      \field{labelyear}{2009}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Accounting for uncertainty in ecological analysis: the strengths and limitations of hierarchical statistical modeling}
+      \field{journaltitle}{Ecological Applications}
+      \field{number}{3}
+      \field{title}{Accounting for uncertainty in ecological analysis: the strengths and limitations of hierarchical statistical modeling}
+      \field{volume}{19}
+      \field{year}{2009}
+      \field{pages}{553\bibrangedash 570}
+    \endentry
+    \entry{cude2001}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=8aa222a8fc1af6e1c08391f0f26c15be}{Cude}{C\bibinitperiod}{Curtis\bibnamedelima G.}{C\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=8aa222a8fc1af6e1c08391f0f26c15be}{Cude}{C\bibinitperiod}{Curtis\bibnamedelima G.}{C\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{8aa222a8fc1af6e1c08391f0f26c15be}
+      \strng{fullhash}{8aa222a8fc1af6e1c08391f0f26c15be}
+      \field{sortinit}{C}
+      \field{labelyear}{2001}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Oregon Water Quality Index: A tool for evaluating water quality management effectiveness.}
+      \field{issn}{{1093-474X}}
+      \field{journaltitle}{Journal of the American Water Resources Association}
+      \field{number}{1}
+      \field{title}{Oregon Water Quality Index: A tool for evaluating water quality management effectiveness.}
+      \field{volume}{37}
+      \field{year}{2001}
+      \field{pages}{125\bibrangedash 137}
+    \endentry
+    \entry{dakins2005}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=50a1455857b4633d5e0681149ca265b6}{Dakins}{D\bibinitperiod}{Maxine\bibnamedelima E.}{M\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+        {{hash=22a9e8f7c1cc872bfd1b1574d1bee7f8}{Long}{L\bibinitperiod}{Jeffery\bibnamedelima D.}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=17ae426bce96e8f1856141e40d543b97}{Hart}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=50a1455857b4633d5e0681149ca265b6}{Dakins}{D\bibinitperiod}{Maxine\bibnamedelima E.}{M\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+        {{hash=22a9e8f7c1cc872bfd1b1574d1bee7f8}{Long}{L\bibinitperiod}{Jeffery\bibnamedelima D.}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=17ae426bce96e8f1856141e40d543b97}{Hart}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{9402b9be24cb47f20786314ee2c0c660}
+      \strng{fullhash}{b6aca93a6b8df50a0931b2253793ad12}
+      \field{sortinit}{D}
+      \field{labelyear}{2005}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative Environmental Decision Making in Oregon Watershed Groups: Perceptions of Effectiveness}
+      \field{journaltitle}{{JAWRA} Journal of the American Water Resources Association}
+      \field{number}{1}
+      \field{title}{Collaborative Environmental Decision Making in Oregon Watershed Groups: Perceptions of Effectiveness}
+      \field{volume}{41}
+      \field{year}{2005}
+      \field{pages}{171\bibrangedash 180}
+    \endentry
+    \entry{donahue2011}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=69caf3c8c178ec108b8e171526817bb2}{Donahue}{D\bibinitperiod}{J.\bibnamedelimi D}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=691a4b8d33b37e676430db9ca5dac209}{Zeckhauser}{Z\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=69caf3c8c178ec108b8e171526817bb2}{Donahue}{D\bibinitperiod}{J.\bibnamedelimi D}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=691a4b8d33b37e676430db9ca5dac209}{Zeckhauser}{Z\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Princeton, {N.J.}}%
+      }
+      \list{publisher}{1}{%
+        {Princeton University Press}%
+      }
+      \strng{namehash}{3254f656587e8caa551d913a4657a685}
+      \strng{fullhash}{3254f656587e8caa551d913a4657a685}
+      \field{sortinit}{D}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative Governance: Private Roles for Public Goals in Turbulent Times}
+      \field{isbn}{0691149798}
+      \field{title}{Collaborative Governance: Private Roles for Public Goals in Turbulent Times}
+      \field{year}{2011}
+    \endentry
+    \entry{dunson2001}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=d0372712969a665b40376f6322d14e39}{Dunson}{D\bibinitperiod}{David\bibnamedelima B.}{D\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=d0372712969a665b40376f6322d14e39}{Dunson}{D\bibinitperiod}{David\bibnamedelima B.}{D\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{d0372712969a665b40376f6322d14e39}
+      \strng{fullhash}{d0372712969a665b40376f6322d14e39}
+      \field{sortinit}{D}
+      \field{labelyear}{2001}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Commentary: practical advantages of Bayesian analysis of epidemiologic data}
+      \field{journaltitle}{American Journal of Epidemiology}
+      \field{number}{12}
+      \field{title}{Commentary: practical advantages of Bayesian analysis of epidemiologic data}
+      \field{volume}{153}
+      \field{year}{2001}
+      \field{pages}{1222\bibrangedash 1226}
+    \endentry
+    \entry{emerson2012}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=e23ef0c5d80c6ece948f5553b6562f9c}{Emerson}{E\bibinitperiod}{K.}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=0bbca03c35211a7eb9a0993d6ce5c892}{Nabatchi}{N\bibinitperiod}{T.}{T\bibinitperiod}{}{}{}{}}%
+        {{hash=118a2efc726e6db9dc952d3749b62f94}{Balogh}{B\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=e23ef0c5d80c6ece948f5553b6562f9c}{Emerson}{E\bibinitperiod}{K.}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=0bbca03c35211a7eb9a0993d6ce5c892}{Nabatchi}{N\bibinitperiod}{T.}{T\bibinitperiod}{}{}{}{}}%
+        {{hash=118a2efc726e6db9dc952d3749b62f94}{Balogh}{B\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{aa671597e368e9a484a4752f34600d5b}
+      \strng{fullhash}{a84ffda1aca317d89973553ea3604169}
+      \field{sortinit}{E}
+      \field{labelyear}{2012}
+      \field{datelabelsource}{}
+      \field{labeltitle}{An integrative framework for collaborative governance}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{number}{1}
+      \field{title}{An integrative framework for collaborative governance}
+      \field{volume}{22}
+      \field{year}{2012}
+      \field{pages}{1\bibrangedash 29}
+    \endentry
+    \entry{gelman2006}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=e68d7eadc431bf1d12612ed40d111dfc}{Gelman}{G\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=e68d7eadc431bf1d12612ed40d111dfc}{Gelman}{G\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{e68d7eadc431bf1d12612ed40d111dfc}
+      \strng{fullhash}{e68d7eadc431bf1d12612ed40d111dfc}
+      \field{sortinit}{G}
+      \field{labelyear}{2006}
+      \field{labelmonth}{08}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Multilevel {(Hierarchical)} Modeling: What It Can and Cannot Do}
+      \field{annotation}{The following values have no corresponding Zotero {field:DOI:} doi: {10.1198/004017005000000661PB} - Taylor \& Francis}
+      \field{issn}{0040-1706}
+      \field{journaltitle}{Technometrics}
+      \field{month}{08}
+      \field{number}{3}
+      \field{title}{Multilevel {(Hierarchical)} Modeling: What It Can and Cannot Do}
+      \field{volume}{48}
+      \field{year}{2006}
+      \field{pages}{432\bibrangedash 435}
+      \verb{doi}
+      \verb 10.1198/004017005000000661
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1198/004017005000000661
+      \endverb
+    \endentry
+    \entry{gelman2013}{book}{}
+      \name{labelname}{6}{}{%
+        {{hash=1e1eb60e3b6e222217bf8e9b24070b28}{Gelman}{G\bibinitperiod}{Andrew}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=40c60e4e0832fcac64a68a5249bfc022}{Carlin}{C\bibinitperiod}{John\bibnamedelima B.}{J\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+        {{hash=1d67b4656f9551333d9785747b11cf8b}{Stern}{S\bibinitperiod}{Hal\bibnamedelima S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=d0372712969a665b40376f6322d14e39}{Dunson}{D\bibinitperiod}{David\bibnamedelima B.}{D\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+        {{hash=5d36e97683cbc9d6ef06fc2ec40becb0}{Vehtari}{V\bibinitperiod}{Aki}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=37fe180f849ae0085cba2b45692be375}{Rubin}{R\bibinitperiod}{Donald\bibnamedelima B.}{D\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{6}{}{%
+        {{hash=1e1eb60e3b6e222217bf8e9b24070b28}{Gelman}{G\bibinitperiod}{Andrew}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=40c60e4e0832fcac64a68a5249bfc022}{Carlin}{C\bibinitperiod}{John\bibnamedelima B.}{J\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+        {{hash=1d67b4656f9551333d9785747b11cf8b}{Stern}{S\bibinitperiod}{Hal\bibnamedelima S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=d0372712969a665b40376f6322d14e39}{Dunson}{D\bibinitperiod}{David\bibnamedelima B.}{D\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+        {{hash=5d36e97683cbc9d6ef06fc2ec40becb0}{Vehtari}{V\bibinitperiod}{Aki}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=37fe180f849ae0085cba2b45692be375}{Rubin}{R\bibinitperiod}{Donald\bibnamedelima B.}{D\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {{CRC} press}%
+      }
+      \strng{namehash}{7b511f44eded88e08c98470ecd75568d}
+      \strng{fullhash}{e96daf37aee1988c0e89a660219adf57}
+      \field{sortinit}{G}
+      \field{labelyear}{2013}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Bayesian data analysis}
+      \field{isbn}{1439840954}
+      \field{title}{Bayesian data analysis}
+      \field{year}{2013}
+    \endentry
+    \entry{gomez-rubio2014}{incollection}{}
+      \name{labelname}{3}{}{%
+        {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{163dadbc155bcbab2957c3ab3645d56e}
+      \strng{fullhash}{b242a131f6e27aeccae40d47a533c41c}
+      \field{sortinit}{G}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Spatial Models Using Laplace Approximation Methods}
+      \field{booktitle}{Handbook of Regional Science}
+      \field{isbn}{3642234291}
+      \field{title}{Spatial Models Using Laplace Approximation Methods}
+      \field{year}{2014}
+      \field{pages}{1401\bibrangedash 1417}
+    \endentry
+    \entry{griffin1999}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=301138508e1bc3c9aa9e03a46fb02102}{Griffin}{G\bibinitperiod}{Carol\bibnamedelima B.}{C\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=301138508e1bc3c9aa9e03a46fb02102}{Griffin}{G\bibinitperiod}{Carol\bibnamedelima B.}{C\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{301138508e1bc3c9aa9e03a46fb02102}
+      \strng{fullhash}{301138508e1bc3c9aa9e03a46fb02102}
+      \field{sortinit}{G}
+      \field{labelyear}{1999}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Watershed Councils: An Emerging Form of Public Participation in Natural Resource Management}
+      \field{journaltitle}{{JAWRA} Journal of the American Water Resources Association}
+      \field{number}{3}
+      \field{title}{Watershed Councils: An Emerging Form of Public Participation in Natural Resource Management}
+      \field{volume}{35}
+      \field{year}{1999}
+      \field{pages}{505\bibrangedash 518}
+    \endentry
+    \entry{gunton2003}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=119781f5e80761c3377dfe03a849749b}{Gunton}{G\bibinitperiod}{Thomas\bibnamedelima I.}{T\bibinitperiod\bibinitdelim I\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=119781f5e80761c3377dfe03a849749b}{Gunton}{G\bibinitperiod}{Thomas\bibnamedelima I.}{T\bibinitperiod\bibinitdelim I\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{119781f5e80761c3377dfe03a849749b}
+      \strng{fullhash}{119781f5e80761c3377dfe03a849749b}
+      \field{sortinit}{G}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The theory and practice of collaborative planning in resource and environmental management}
+      \field{journaltitle}{Environments: a journal of interdisciplinary studies}
+      \field{number}{2}
+      \field{title}{The theory and practice of collaborative planning in resource and environmental management}
+      \field{volume}{31}
+      \field{year}{2003}
+    \endentry
+    \entry{habron2003}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=ce3b154ea565aec97af47194d9fa0efe}{Habron}{H\bibinitperiod}{Geoffrey}{G\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=ce3b154ea565aec97af47194d9fa0efe}{Habron}{H\bibinitperiod}{Geoffrey}{G\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{ce3b154ea565aec97af47194d9fa0efe}
+      \strng{fullhash}{ce3b154ea565aec97af47194d9fa0efe}
+      \field{sortinit}{H}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Role of adaptive management for watershed councils}
+      \field{journaltitle}{Environmental Management}
+      \field{number}{1}
+      \field{title}{Role of adaptive management for watershed councils}
+      \field{volume}{31}
+      \field{year}{2003}
+      \field{pages}{0029\bibrangedash 0041}
+    \endentry
+    \entry{hardy2008}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=5685e50a19b9a557a427702cd0e9bc69}{Hardy}{H\bibinitperiod}{{ScottD.}}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=c40164d6f26d981c962fe141072bcad2}{Koontz}{K\bibinitperiod}{{TomasM.}}{T\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=5685e50a19b9a557a427702cd0e9bc69}{Hardy}{H\bibinitperiod}{{ScottD.}}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=c40164d6f26d981c962fe141072bcad2}{Koontz}{K\bibinitperiod}{{TomasM.}}{T\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{a11dead6d0fd06363fc0b0ef5fece965}
+      \strng{fullhash}{a11dead6d0fd06363fc0b0ef5fece965}
+      \field{sortinit}{H}
+      \field{labelyear}{2008}
+      \field{labelmonth}{03}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Reducing Nonpoint Source Pollution Through Collaboration: Policies and Programs Across the {U.S.} States}
+      \field{annotation}{The following values have no corresponding Zotero {field:PB} - {Springer-Verlag}}
+      \field{issn}{{0364-152X}}
+      \field{journaltitle}{Environmental Management}
+      \field{month}{03}
+      \field{number}{3}
+      \field{title}{Reducing Nonpoint Source Pollution Through Collaboration: Policies and Programs Across the {U.S.} States}
+      \field{volume}{41}
+      \field{year}{2008}
+      \field{pages}{301\bibrangedash 310}
+      \verb{doi}
+      \verb 10.1007/s00267-007-9038-6
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1007/s00267-007-9038-6
+      \endverb
+      \keyw{Clean Water Act,Collaborative watershed management,Environmental policy,Nonpoint source pollution,Section 319}
+    \endentry
+    \entry{heimlich2010}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=e29f809dd4ac6d282551d99ebc023680}{Heimlich}{H\bibinitperiod}{Joe\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=e29f809dd4ac6d282551d99ebc023680}{Heimlich}{H\bibinitperiod}{Joe\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{e29f809dd4ac6d282551d99ebc023680}
+      \strng{fullhash}{e29f809dd4ac6d282551d99ebc023680}
+      \field{sortinit}{H}
+      \field{labelyear}{2010}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Environmental education evaluation: Reinterpreting education as a strategy for meeting mission}
+      \field{journaltitle}{Evaluation and Program planning}
+      \field{number}{2}
+      \field{title}{Environmental education evaluation: Reinterpreting education as a strategy for meeting mission}
+      \field{volume}{33}
+      \field{year}{2010}
+      \field{pages}{180\bibrangedash 185}
+    \endentry
+    \entry{hibbard2006}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=823f6774f691adbbc3d07aeda545e4ea}{Hibbard}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=b90ed99a553a0238e3046a596806e2e9}{Lurie}{L\bibinitperiod}{Susan}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=823f6774f691adbbc3d07aeda545e4ea}{Hibbard}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=b90ed99a553a0238e3046a596806e2e9}{Lurie}{L\bibinitperiod}{Susan}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{32c957ffd473ee50742d8ab9c07a0859}
+      \strng{fullhash}{32c957ffd473ee50742d8ab9c07a0859}
+      \field{sortinit}{H}
+      \field{labelyear}{2006}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Some community socio-economic benefits of watershed councils: A case study from Oregon}
+      \field{journaltitle}{Journal of environmental planning and management}
+      \field{number}{6}
+      \field{title}{Some community socio-economic benefits of watershed councils: A case study from Oregon}
+      \field{volume}{49}
+      \field{year}{2006}
+      \field{pages}{891\bibrangedash 908}
+    \endentry
+    \entry{hijmans2014}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=b175a322d473157cf88fb7bfd175b2ac}{Hijmans}{H\bibinitperiod}{Robert\bibnamedelima J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=b175a322d473157cf88fb7bfd175b2ac}{Hijmans}{H\bibinitperiod}{Robert\bibnamedelima J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{b175a322d473157cf88fb7bfd175b2ac}
+      \strng{fullhash}{b175a322d473157cf88fb7bfd175b2ac}
+      \field{sortinit}{H}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{raster: raster: Geographic data analysis and modeling}
+      \field{note}{R package version 2.3-0}
+      \field{title}{raster: raster: Geographic data analysis and modeling}
+      \field{year}{2014}
+      \verb{url}
+      \verb http://CRAN.R-project.org/package=raster
+      \endverb
+    \endentry
+    \entry{hines1987}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=d1acface5c25ca9b450d2874ea44f63d}{Hines}{H\bibinitperiod}{Jody\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=f692c27e868bd4c64413350ce30f57d9}{Tomera}{T\bibinitperiod}{Audrey\bibnamedelima N.}{A\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=d1acface5c25ca9b450d2874ea44f63d}{Hines}{H\bibinitperiod}{Jody\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=f692c27e868bd4c64413350ce30f57d9}{Tomera}{T\bibinitperiod}{Audrey\bibnamedelima N.}{A\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{0b656f65b3a1c3a7e29bd1aeb663295b}
+      \strng{fullhash}{0a8fcf282e8941425807777b2697bb6e}
+      \field{sortinit}{H}
+      \field{labelyear}{1987}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Analysis and synthesis of research on responsible environmental behavior: A meta-analysis}
+      \field{journaltitle}{The Journal of environmental education}
+      \field{number}{2}
+      \field{title}{Analysis and synthesis of research on responsible environmental behavior: A meta-analysis}
+      \field{volume}{18}
+      \field{year}{1987}
+      \field{pages}{1\bibrangedash 8}
+    \endentry
+    \entry{hodges2014}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=745dbcc272ac9d58c261f60965151fe0}{Hodges}{H\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=745dbcc272ac9d58c261f60965151fe0}{Hodges}{H\bibinitperiod}{James\bibnamedelima S.}{J\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{2}{%
+        {Taylor}%
+        {Francis}%
+      }
+      \strng{namehash}{745dbcc272ac9d58c261f60965151fe0}
+      \strng{fullhash}{745dbcc272ac9d58c261f60965151fe0}
+      \field{sortinit}{H}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Richly Parameterized Linear Models Additive, Time Series, and Spatial Models Using Random Effects.}
+      \field{isbn}{{143986683X} 9781439866832}
+      \field{title}{Richly Parameterized Linear Models Additive, Time Series, and Spatial Models Using Random Effects.}
+      \field{year}{2014}
+    \endentry
+    \entry{hoornbeek2012}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=f06cd4047dde8d44d6c0705d49e4733b}{Hoornbeek}{H\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=0e52b181e3a2653ecd3a8752cff70108}{Hansen}{H\bibinitperiod}{Evan}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=1acbfc7c8e0c9c15166ff9dd0ee84fa1}{Ringquist}{R\bibinitperiod}{Evan}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=df963db3943627bf706aee1144411ac1}{Carlson}{C\bibinitperiod}{Robert}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=f06cd4047dde8d44d6c0705d49e4733b}{Hoornbeek}{H\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=0e52b181e3a2653ecd3a8752cff70108}{Hansen}{H\bibinitperiod}{Evan}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=1acbfc7c8e0c9c15166ff9dd0ee84fa1}{Ringquist}{R\bibinitperiod}{Evan}{E\bibinitperiod}{}{}{}{}}%
+        {{hash=df963db3943627bf706aee1144411ac1}{Carlson}{C\bibinitperiod}{Robert}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{4235beba786e60c4022cab44dc15acec}
+      \strng{fullhash}{f5537898974f76234b20df4c273d5a4c}
+      \field{sortinit}{H}
+      \field{labelyear}{2012}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Implementing Water Pollution Policy in the United States: Total Maximum Daily Loads and Collaborative Watershed Management}
+      \field{journaltitle}{Society \& Natural Resources}
+      \field{number}{4}
+      \field{title}{Implementing Water Pollution Policy in the United States: Total Maximum Daily Loads and Collaborative Watershed Management}
+      \field{volume}{26}
+      \field{year}{2012}
+      \field{pages}{420\bibrangedash 436}
+    \endentry
+    \entry{hungerford1990}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=9961f986b50e2e7e81c51d38bc398a67}{Volk}{V\bibinitperiod}{Trudi\bibnamedelima L.}{T\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=9961f986b50e2e7e81c51d38bc398a67}{Volk}{V\bibinitperiod}{Trudi\bibnamedelima L.}{T\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{b332803e5105dd6bcb52f54b9df497bf}
+      \strng{fullhash}{b332803e5105dd6bcb52f54b9df497bf}
+      \field{sortinit}{H}
+      \field{labelyear}{1990}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Changing learner behavior through environmental education}
+      \field{journaltitle}{The journal of environmental education}
+      \field{number}{3}
+      \field{title}{Changing learner behavior through environmental education}
+      \field{volume}{21}
+      \field{year}{1990}
+      \field{pages}{8\bibrangedash 21}
+    \endentry
+    \entry{huntington2000}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=8f9549d665cdfd25e0f149920af98a9d}{Huntington}{H\bibinitperiod}{H.\bibnamedelimi P}{H\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=8f9549d665cdfd25e0f149920af98a9d}{Huntington}{H\bibinitperiod}{H.\bibnamedelimi P}{H\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{8f9549d665cdfd25e0f149920af98a9d}
+      \strng{fullhash}{8f9549d665cdfd25e0f149920af98a9d}
+      \field{sortinit}{H}
+      \field{labelyear}{2000}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Using traditional ecological knowledge in science: methods and applications}
+      \field{journaltitle}{Ecological applications}
+      \field{number}{5}
+      \field{title}{Using traditional ecological knowledge in science: methods and applications}
+      \field{volume}{10}
+      \field{year}{2000}
+      \field{pages}{1270\bibrangedash 1274}
+    \endentry
+    \entry{imperial2005}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=794b0b5d61b7801d378b9c71256e2fea}{Imperial}{I\bibinitperiod}{M.\bibnamedelimi T}{M\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=794b0b5d61b7801d378b9c71256e2fea}{Imperial}{I\bibinitperiod}{M.\bibnamedelimi T}{M\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{794b0b5d61b7801d378b9c71256e2fea}
+      \strng{fullhash}{794b0b5d61b7801d378b9c71256e2fea}
+      \field{sortinit}{I}
+      \field{labelyear}{2005}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Using collaboration as a governance strategy lessons from six watershed management programs}
+      \field{journaltitle}{Administration \& Society}
+      \field{number}{3}
+      \field{title}{Using collaboration as a governance strategy lessons from six watershed management programs}
+      \field{volume}{37}
+      \field{year}{2005}
+      \field{pages}{281\bibrangedash 320}
+    \endentry
+    \entry{innes1999}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=5475d15bbaf05e3f3c6abf6ce388d707}{Innes}{I\bibinitperiod}{J.\bibnamedelimi E}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+        {{hash=0a5bf561a970ec1735ae6e8738214b73}{Booher}{B\bibinitperiod}{D.\bibnamedelimi E}{D\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=5475d15bbaf05e3f3c6abf6ce388d707}{Innes}{I\bibinitperiod}{J.\bibnamedelimi E}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+        {{hash=0a5bf561a970ec1735ae6e8738214b73}{Booher}{B\bibinitperiod}{D.\bibnamedelimi E}{D\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{d7efcc09de12c12857ca43812d64240d}
+      \strng{fullhash}{d7efcc09de12c12857ca43812d64240d}
+      \field{sortinit}{I}
+      \field{labelyear}{1999}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Consensus building and complex adaptive systems}
+      \field{journaltitle}{Journal of the American Planning Association}
+      \field{number}{4}
+      \field{title}{Consensus building and complex adaptive systems}
+      \field{volume}{65}
+      \field{year}{1999}
+      \field{pages}{412\bibrangedash 423}
+    \endentry
+    \entry{johnes1997}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=bb5165eb551a878b2488aaca6d9fb2c6}{Johnes}{J\bibinitperiod}{P.\bibnamedelimi J.}{P\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=ea2f0a1e40649c572e094e5a7c802065}{Heathwaite}{H\bibinitperiod}{A.\bibnamedelimi L.}{A\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=bb5165eb551a878b2488aaca6d9fb2c6}{Johnes}{J\bibinitperiod}{P.\bibnamedelimi J.}{P\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=ea2f0a1e40649c572e094e5a7c802065}{Heathwaite}{H\bibinitperiod}{A.\bibnamedelimi L.}{A\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{65a23ff1d98c104d05ba423b3c4a85ff}
+      \strng{fullhash}{65a23ff1d98c104d05ba423b3c4a85ff}
+      \field{sortinit}{J}
+      \field{labelyear}{1997}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Modelling the impact of land use change on water quality in agricultural catchments}
+      \field{journaltitle}{Hydrological Processes}
+      \field{number}{3}
+      \field{title}{Modelling the impact of land use change on water quality in agricultural catchments}
+      \field{volume}{11}
+      \field{year}{1997}
+      \field{pages}{269\bibrangedash 286}
+    \endentry
+    \entry{koontz2006}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=47ee03107cc41dfc76540b766b11fca2}{Koontz}{K\bibinitperiod}{T.\bibnamedelimi M}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=a450c7102c4d109e76b31c279c7c9c23}{Thomas}{T\bibinitperiod}{C.\bibnamedelimi W}{C\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=47ee03107cc41dfc76540b766b11fca2}{Koontz}{K\bibinitperiod}{T.\bibnamedelimi M}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=a450c7102c4d109e76b31c279c7c9c23}{Thomas}{T\bibinitperiod}{C.\bibnamedelimi W}{C\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{76b375ff01b29542345c5ab8b4149275}
+      \strng{fullhash}{76b375ff01b29542345c5ab8b4149275}
+      \field{sortinit}{K}
+      \field{labelyear}{2006}
+      \field{datelabelsource}{}
+      \field{labeltitle}{What do we know and need to know about the environmental outcomes of collaborative management?}
+      \field{journaltitle}{Public Administration Review}
+      \field{title}{What do we know and need to know about the environmental outcomes of collaborative management?}
+      \field{volume}{66}
+      \field{year}{2006}
+      \field{pages}{111\bibrangedash 121}
+    \endentry
+    \entry{koontz2004}{book}{}
+      \name{labelname}{4}{}{%
+        {{hash=47ee03107cc41dfc76540b766b11fca2}{Koontz}{K\bibinitperiod}{T.\bibnamedelimi M}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=b3abe5f625e91ac7d6ad1e50573ea621}{Carmin}{C\bibinitperiod}{J.\bibnamedelimi A}{J\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=66e8470e6f853294c027fdbc3cb26cd3}{Steelman}{S\bibinitperiod}{T.\bibnamedelimi A}{T\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=a450c7102c4d109e76b31c279c7c9c23}{Thomas}{T\bibinitperiod}{C.\bibnamedelimi W}{C\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=47ee03107cc41dfc76540b766b11fca2}{Koontz}{K\bibinitperiod}{T.\bibnamedelimi M}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=b3abe5f625e91ac7d6ad1e50573ea621}{Carmin}{C\bibinitperiod}{J.\bibnamedelimi A}{J\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=66e8470e6f853294c027fdbc3cb26cd3}{Steelman}{S\bibinitperiod}{T.\bibnamedelimi A}{T\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=a450c7102c4d109e76b31c279c7c9c23}{Thomas}{T\bibinitperiod}{C.\bibnamedelimi W}{C\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Washington, {D.C.}}%
+      }
+      \list{publisher}{1}{%
+        {{RFF} Press}%
+      }
+      \strng{namehash}{5db240ed2e4762bec5147442a1d8ea54}
+      \strng{fullhash}{dadbb2ac74a9e1fc0cbb8b5da435a82b}
+      \field{sortinit}{K}
+      \field{labelyear}{2004}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative environmental management: What roles for government?}
+      \field{isbn}{1891853805}
+      \field{title}{Collaborative environmental management: What roles for government?}
+      \field{year}{2004}
+    \endentry
+    \entry{layzer2008}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=a5b1f50482b757985e41e41e1e6c3816}{Layzer}{L\bibinitperiod}{Judith\bibnamedelima A.}{J\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=a5b1f50482b757985e41e41e1e6c3816}{Layzer}{L\bibinitperiod}{Judith\bibnamedelima A.}{J\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {{MIT} Press}%
+      }
+      \strng{namehash}{a5b1f50482b757985e41e41e1e6c3816}
+      \strng{fullhash}{a5b1f50482b757985e41e41e1e6c3816}
+      \field{sortinit}{L}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Natural Experiments: Ecosystem-based management and the environment}
+      \field{isbn}{9780262122986 0262122987 9780262622141 0262622149}
+      \field{title}{Natural Experiments: Ecosystem-based management and the environment}
+      \field{year}{2008}
+    \endentry
+    \entry{leach2002}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=95c2ee144bc0e5e8f8ec755c47f1dc5b}{Leach}{L\bibinitperiod}{W.\bibnamedelimi D}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=a140c415d545ee9be31a2f9110a76230}{Pelkey}{P\bibinitperiod}{N.\bibnamedelimi W}{N\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=aa93c8f9d7b16cee2b1ae6e367ccd055}{Sabatier}{S\bibinitperiod}{P.\bibnamedelimi A}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=95c2ee144bc0e5e8f8ec755c47f1dc5b}{Leach}{L\bibinitperiod}{W.\bibnamedelimi D}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=a140c415d545ee9be31a2f9110a76230}{Pelkey}{P\bibinitperiod}{N.\bibnamedelimi W}{N\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=aa93c8f9d7b16cee2b1ae6e367ccd055}{Sabatier}{S\bibinitperiod}{P.\bibnamedelimi A}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{3a8fc75d319a42c7df71d60bddf6494a}
+      \strng{fullhash}{a1c915b28b9f7e75628a4c82a5775e3a}
+      \field{sortinit}{L}
+      \field{labelyear}{2002}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Stakeholder partnerships as collaborative policymaking: Evaluation criteria applied to watershed management in California and Washington}
+      \field{journaltitle}{Journal of Policy Analysis and Management}
+      \field{number}{4}
+      \field{title}{Stakeholder partnerships as collaborative policymaking: Evaluation criteria applied to watershed management in California and Washington}
+      \field{volume}{21}
+      \field{year}{2002}
+      \field{pages}{645\bibrangedash 670}
+    \endentry
+    \entry{leach2013}{article}{}
+      \name{labelname}{5}{}{%
+        {{hash=f4c2b60a2b6767f64dbf9ea20b5a210f}{Leach}{L\bibinitperiod}{W.\bibnamedelimi D.}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=2e87bb188c9e0704dfe33601c12f11ae}{Weible}{W\bibinitperiod}{C.\bibnamedelimi M.}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=6fe8ed4be637429dbef6ecf73fe878a5}{Vince}{V\bibinitperiod}{S.\bibnamedelimi R.}{S\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=8e9a39a360544293674dda2f5d5cfb21}{Siddiki}{S\bibinitperiod}{S.\bibnamedelimi N.}{S\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
+        {{hash=3f23a53f5f689a5e2f32b13896f4a582}{Calanni}{C\bibinitperiod}{J.\bibnamedelimi C.}{J\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{5}{}{%
+        {{hash=f4c2b60a2b6767f64dbf9ea20b5a210f}{Leach}{L\bibinitperiod}{W.\bibnamedelimi D.}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=2e87bb188c9e0704dfe33601c12f11ae}{Weible}{W\bibinitperiod}{C.\bibnamedelimi M.}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=6fe8ed4be637429dbef6ecf73fe878a5}{Vince}{V\bibinitperiod}{S.\bibnamedelimi R.}{S\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=8e9a39a360544293674dda2f5d5cfb21}{Siddiki}{S\bibinitperiod}{S.\bibnamedelimi N.}{S\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
+        {{hash=3f23a53f5f689a5e2f32b13896f4a582}{Calanni}{C\bibinitperiod}{J.\bibnamedelimi C.}{J\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{397804699a61aa26cbda0c7fbe1bab91}
+      \strng{fullhash}{f9f09ca2f0548745b8c84c5de7ab351d}
+      \field{sortinit}{L}
+      \field{labelyear}{2013}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Fostering Learning through Collaboration: Knowledge Acquisition and Belief Change in Marine Aquaculture Partnerships}
+      \field{issn}{1053-1858}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{number}{3}
+      \field{title}{Fostering Learning through Collaboration: Knowledge Acquisition and Belief Change in Marine Aquaculture Partnerships}
+      \field{volume}{24}
+      \field{year}{2013}
+      \field{pages}{591\bibrangedash 622}
+    \endentry
+    \entry{leach2006}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=74a684214922ec8367a915608a09405f}{Leach}{L\bibinitperiod}{William\bibnamedelima D.}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=74a684214922ec8367a915608a09405f}{Leach}{L\bibinitperiod}{William\bibnamedelima D.}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{74a684214922ec8367a915608a09405f}
+      \strng{fullhash}{74a684214922ec8367a915608a09405f}
+      \field{sortinit}{L}
+      \field{labelyear}{2006}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative Public Management and Democracy: Evidence from Western Watershed Partnerships}
+      \field{annotation}{The following values have no corresponding Zotero {field:PB} - Blackwell Publishing}
+      \field{issn}{0033-3352}
+      \field{journaltitle}{Public Administration Review}
+      \field{number}{Supplement}
+      \field{title}{Collaborative Public Management and Democracy: Evidence from Western Watershed Partnerships}
+      \field{volume}{66}
+      \field{year}{2006}
+      \field{pages}{100\bibrangedash 110}
+    \endentry
+    \entry{lesage2010}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=8cbe285c311d4cd122f4e0047b7999fc}{{LeSage}}{L\bibinitperiod}{James}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=ef8f11c254cab72548642787376df617}{Pace}{P\bibinitperiod}{Robert\bibnamedelima Kelley}{R\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=8cbe285c311d4cd122f4e0047b7999fc}{{LeSage}}{L\bibinitperiod}{James}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=ef8f11c254cab72548642787376df617}{Pace}{P\bibinitperiod}{Robert\bibnamedelima Kelley}{R\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {{CRC} press}%
+      }
+      \strng{namehash}{14d7f3faa468a834711a9cfe87a0367a}
+      \strng{fullhash}{14d7f3faa468a834711a9cfe87a0367a}
+      \field{sortinit}{L}
+      \field{labelyear}{2010}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Introduction to spatial econometrics}
+      \field{isbn}{1420064258}
+      \field{title}{Introduction to spatial econometrics}
+      \field{year}{2010}
+    \endentry
+    \entry{lindgren2013}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{026228d706aa339ef09810cb61ffcf6f}
+      \strng{fullhash}{026228d706aa339ef09810cb61ffcf6f}
+      \field{sortinit}{L}
+      \field{labelyear}{2013}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Bayesian spatial and spatiotemporal modelling with r-inla}
+      \field{journaltitle}{Journal of Statistical Software}
+      \field{title}{Bayesian spatial and spatiotemporal modelling with r-inla}
+      \field{year}{2013}
+    \endentry
+    \entry{lindgren2011}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=6784fa8417c7c473fd5ebc5406a8428b}{Rue}{R\bibinitperiod}{H\r{a}vard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=c807fba929a55ff41d5ea759becd2da8}{Lindstr\"{o}m}{L\bibinitperiod}{Johan}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=6784fa8417c7c473fd5ebc5406a8428b}{Rue}{R\bibinitperiod}{H\r{a}vard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=c807fba929a55ff41d5ea759becd2da8}{Lindstr\"{o}m}{L\bibinitperiod}{Johan}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{65c5b4da9d3dad96da69a08f5b5029a9}
+      \strng{fullhash}{097d97f42246c96f9ed7a6ce6705741f}
+      \field{sortinit}{L}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{An explicit link between Gaussian fields and Gaussian Markov random fields: the stochastic partial differential equation approach}
+      \field{journaltitle}{Journal of the Royal Statistical Society: Series B {(Statistical} Methodology)}
+      \field{number}{4}
+      \field{title}{An explicit link between Gaussian fields and Gaussian Markov random fields: the stochastic partial differential equation approach}
+      \field{volume}{73}
+      \field{year}{2011}
+      \field{pages}{423\bibrangedash 498}
+    \endentry
+    \entry{lubell2004}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bf6f499f595bceb60c1444e1cfa13179}
+      \strng{fullhash}{bf6f499f595bceb60c1444e1cfa13179}
+      \field{sortinit}{L}
+      \field{labelyear}{2004}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative environmental institutions: All talk and no action?}
+      \field{journaltitle}{Journal of Policy Analysis and Management}
+      \field{number}{3}
+      \field{title}{Collaborative environmental institutions: All talk and no action?}
+      \field{volume}{23}
+      \field{year}{2004}
+      \field{pages}{549\bibrangedash 573}
+    \endentry
+    \entry{lubell2005}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bf6f499f595bceb60c1444e1cfa13179}
+      \strng{fullhash}{bf6f499f595bceb60c1444e1cfa13179}
+      \field{sortinit}{L}
+      \field{labelyear}{2005}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Political Institutions and Conservation by Local Governments}
+      \field{issn}{1078-0874}
+      \field{journaltitle}{Urban Affairs Review}
+      \field{number}{6}
+      \field{title}{Political Institutions and Conservation by Local Governments}
+      \field{volume}{40}
+      \field{year}{2005}
+      \field{pages}{706\bibrangedash 729}
+    \endentry
+    \entry{lubell2008}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=8745ac4868a5e02b1e46f0a6df0edd6e}{Lubell}{L\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=fab29ccbedbcff7a2f61130dda5d5ab2}{Fulton}{F\bibinitperiod}{Allan}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=8745ac4868a5e02b1e46f0a6df0edd6e}{Lubell}{L\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=fab29ccbedbcff7a2f61130dda5d5ab2}{Fulton}{F\bibinitperiod}{Allan}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{45fb3af4e169848167ab5e697d003a5d}
+      \strng{fullhash}{45fb3af4e169848167ab5e697d003a5d}
+      \field{sortinit}{L}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Local policy networks and agricultural watershed management}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{number}{4}
+      \field{title}{Local policy networks and agricultural watershed management}
+      \field{volume}{18}
+      \field{year}{2008}
+      \field{pages}{673\bibrangedash 696}
+    \endentry
+    \entry{lubell2009}{incollection}{}
+      \name{labelname}{3}{}{%
+        {{hash=8745ac4868a5e02b1e46f0a6df0edd6e}{Lubell}{L\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=74a684214922ec8367a915608a09405f}{Leach}{L\bibinitperiod}{William\bibnamedelima D.}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=8e0e921b953eb7b8eb2ca668d004622d}{Sabatier}{S\bibinitperiod}{Paul\bibnamedelima A.}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=8745ac4868a5e02b1e46f0a6df0edd6e}{Lubell}{L\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=74a684214922ec8367a915608a09405f}{Leach}{L\bibinitperiod}{William\bibnamedelima D.}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=8e0e921b953eb7b8eb2ca668d004622d}{Sabatier}{S\bibinitperiod}{Paul\bibnamedelima A.}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=19101a75272fe6352744dfcb27d3f06f}{Mazmanian}{M\bibinitperiod}{Daniel\bibnamedelima A.}{D\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=50f079d2494730aa18e201bda20891c2}{Kraft}{K\bibinitperiod}{Michael\bibnamedelima E.}{M\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {{MIT} Press}%
+      }
+      \strng{namehash}{f1f3ae81135c941348fe68f903e7fd7b}
+      \strng{fullhash}{6b7ca485b2a276cde8da7d29f2371323}
+      \field{sortinit}{L}
+      \field{labelyear}{2009}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative watershed partnerships in the epoch of sustainability}
+      \field{booktitle}{Toward sustainable communities: transition and transformations in environmental policy}
+      \field{title}{Collaborative watershed partnerships in the epoch of sustainability}
+      \field{year}{2009}
+      \field{pages}{255\bibrangedash 88}
+    \endentry
+    \entry{lurie2008}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=b90ed99a553a0238e3046a596806e2e9}{Lurie}{L\bibinitperiod}{Susan}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=823f6774f691adbbc3d07aeda545e4ea}{Hibbard}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=b90ed99a553a0238e3046a596806e2e9}{Lurie}{L\bibinitperiod}{Susan}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=823f6774f691adbbc3d07aeda545e4ea}{Hibbard}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{7a2700f5a6e5126d7dd4248a1a9f7a63}
+      \strng{fullhash}{7a2700f5a6e5126d7dd4248a1a9f7a63}
+      \field{sortinit}{L}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Community-based natural resource management: Ideals and realities for oregon watershed councils}
+      \field{journaltitle}{Society and natural resources}
+      \field{number}{5}
+      \field{title}{Community-based natural resource management: Ideals and realities for oregon watershed councils}
+      \field{volume}{21}
+      \field{year}{2008}
+      \field{pages}{430\bibrangedash 440}
+    \endentry
+    \entry{margerum2011}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=193cbda0876285c2e59e657925afff54}{Margerum}{M\bibinitperiod}{R.\bibnamedelimi D}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=193cbda0876285c2e59e657925afff54}{Margerum}{M\bibinitperiod}{R.\bibnamedelimi D}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {{MIT} Press}%
+      }
+      \strng{namehash}{193cbda0876285c2e59e657925afff54}
+      \strng{fullhash}{193cbda0876285c2e59e657925afff54}
+      \field{sortinit}{M}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Beyond Consensus: Improving collaborative planning and management}
+      \field{isbn}{0262015811}
+      \field{title}{Beyond Consensus: Improving collaborative planning and management}
+      \field{year}{2011}
+    \endentry
+    \entry{margerum2002}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{4c81034991ffb0ebae80fbfc544be7b9}
+      \strng{fullhash}{4c81034991ffb0ebae80fbfc544be7b9}
+      \field{sortinit}{M}
+      \field{labelyear}{2002}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Collaborative Planning Building Consensus and Building a Distinct Model for Practice}
+      \field{journaltitle}{Journal of Planning Education and Research}
+      \field{number}{3}
+      \field{title}{Collaborative Planning Building Consensus and Building a Distinct Model for Practice}
+      \field{volume}{21}
+      \field{year}{2002}
+      \field{pages}{237\bibrangedash 253}
+    \endentry
+    \entry{margerum2007}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{4c81034991ffb0ebae80fbfc544be7b9}
+      \strng{fullhash}{4c81034991ffb0ebae80fbfc544be7b9}
+      \field{sortinit}{M}
+      \field{labelyear}{2007}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Overcoming locally based collaboration constraints}
+      \field{journaltitle}{Society \& Natural Resources}
+      \field{number}{2}
+      \field{title}{Overcoming locally based collaboration constraints}
+      \field{volume}{20}
+      \field{year}{2007}
+      \field{pages}{135\bibrangedash 152}
+    \endentry
+    \entry{margerum2008}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{4c81034991ffb0ebae80fbfc544be7b9}
+      \strng{fullhash}{4c81034991ffb0ebae80fbfc544be7b9}
+      \field{sortinit}{M}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{A typology of collaboration efforts in environmental management}
+      \field{journaltitle}{Environmental management}
+      \field{number}{4}
+      \field{title}{A typology of collaboration efforts in environmental management}
+      \field{volume}{41}
+      \field{year}{2008}
+      \field{pages}{487\bibrangedash 500}
+    \endentry
+    \entry{margerum2004}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=592188491408d6460da839650e5cec74}{Whitall}{W\bibinitperiod}{Debra}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=4c81034991ffb0ebae80fbfc544be7b9}{Margerum}{M\bibinitperiod}{Richard\bibnamedelima D.}{R\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=592188491408d6460da839650e5cec74}{Whitall}{W\bibinitperiod}{Debra}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{2265e679685c4be102aea04646a2e99c}
+      \strng{fullhash}{2265e679685c4be102aea04646a2e99c}
+      \field{sortinit}{M}
+      \field{labelyear}{2004}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The challenges and implications of collaborative management on a river basin scale}
+      \field{journaltitle}{Journal of environmental planning and management}
+      \field{number}{3}
+      \field{title}{The challenges and implications of collaborative management on a river basin scale}
+      \field{volume}{47}
+      \field{year}{2004}
+      \field{pages}{409\bibrangedash 429}
+    \endentry
+    \entry{martino2011}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=5f4f6f2c95b3d139c3ca8bc267433606}{Akerkar}{A\bibinitperiod}{Rupali}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=5f4f6f2c95b3d139c3ca8bc267433606}{Akerkar}{A\bibinitperiod}{Rupali}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{925bd78638f183c3708e7845a72417ec}
+      \strng{fullhash}{559e3efddce4bc9396a0131d8c5a6d98}
+      \field{sortinit}{M}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Approximate Bayesian inference for survival models}
+      \field{journaltitle}{Scandinavian Journal of Statistics}
+      \field{number}{3}
+      \field{title}{Approximate Bayesian inference for survival models}
+      \field{volume}{38}
+      \field{year}{2011}
+      \field{pages}{514\bibrangedash 528}
+    \endentry
+    \entry{martino2010}{incollection}{}
+      \name{labelname}{2}{}{%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{72e6e11643726ee3df0fd15febcb5283}
+      \strng{fullhash}{72e6e11643726ee3df0fd15febcb5283}
+      \field{sortinit}{M}
+      \field{labelyear}{2010}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Case studies in Bayesian computation using {INLA}}
+      \field{booktitle}{Complex data modeling and computationally intensive statistical methods}
+      \field{isbn}{8847013852}
+      \field{title}{Case studies in Bayesian computation using {INLA}}
+      \field{year}{2010}
+      \field{pages}{99\bibrangedash 114}
+    \endentry
+    \entry{mclaughlin1999}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=28220519deb365df4a30a2c871522ddd}{{McLaughlin}}{M\bibinitperiod}{John\bibnamedelima A.}{J\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=3ccb00e4fe2d8fc7981e4f018c901cc7}{Jordan}{J\bibinitperiod}{Gretchen\bibnamedelima B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=28220519deb365df4a30a2c871522ddd}{{McLaughlin}}{M\bibinitperiod}{John\bibnamedelima A.}{J\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=3ccb00e4fe2d8fc7981e4f018c901cc7}{Jordan}{J\bibinitperiod}{Gretchen\bibnamedelima B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{ab70f9659aabacb9814e961c034f049a}
+      \strng{fullhash}{ab70f9659aabacb9814e961c034f049a}
+      \field{sortinit}{M}
+      \field{labelyear}{1999}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Logic models: a tool for telling your programs performance story}
+      \field{journaltitle}{Evaluation and program planning}
+      \field{number}{1}
+      \field{title}{Logic models: a tool for telling your programs performance story}
+      \field{volume}{22}
+      \field{year}{1999}
+      \field{pages}{65\bibrangedash 72}
+    \endentry
+    \entry{meador2003}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=21f409584a6a4f3c8a2113c92c5050cf}{Meador}{M\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=c806389633c7a3066b822f2fc38b30ca}{Goldstein}{G\bibinitperiod}{Robert\bibnamedelima M.}{R\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=21f409584a6a4f3c8a2113c92c5050cf}{Meador}{M\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+        {{hash=c806389633c7a3066b822f2fc38b30ca}{Goldstein}{G\bibinitperiod}{Robert\bibnamedelima M.}{R\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bfcf5ce0a434577093fd05d15851c762}
+      \strng{fullhash}{bfcf5ce0a434577093fd05d15851c762}
+      \field{sortinit}{M}
+      \field{labelyear}{2003}
+      \field{labelmonth}{04}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Assessing Water Quality at Large Geographic Scales: Relations Among Land Use, Water Physicochemistry, Riparian Condition, and Fish Community Structure}
+      \field{annotation}{The following values have no corresponding Zotero {field:PB} - {Springer-Verlag}}
+      \field{issn}{{0364-152X}}
+      \field{journaltitle}{Environmental Management}
+      \field{month}{04}
+      \field{number}{4}
+      \field{title}{Assessing Water Quality at Large Geographic Scales: Relations Among Land Use, Water Physicochemistry, Riparian Condition, and Fish Community Structure}
+      \field{volume}{31}
+      \field{year}{2003}
+      \field{pages}{0504\bibrangedash 0517}
+      \verb{doi}
+      \verb 10.1007/s00267-002-2805-5
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1007/s00267-002-2805-5
+      \endverb
+      \keyw{Ecological indicators,Fish community,{KEY} {WORDS:} Water quality,Land use,Riparian zone}
+    \endentry
+    \entry{newig2009}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=90e85b4b07bd3190f2e9066c39339b85}{Newig}{N\bibinitperiod}{Jens}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=c365aaa6685452abd63214c44bffbce7}{Fritsch}{F\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=90e85b4b07bd3190f2e9066c39339b85}{Newig}{N\bibinitperiod}{Jens}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=c365aaa6685452abd63214c44bffbce7}{Fritsch}{F\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{826e0229d483202da8522e5d7093126e}
+      \strng{fullhash}{826e0229d483202da8522e5d7093126e}
+      \field{sortinit}{N}
+      \field{labelyear}{2009}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Environmental governance: participatory, multilevel, and effective?}
+      \field{journaltitle}{Environmental Policy and Governance}
+      \field{number}{3}
+      \field{title}{Environmental governance: participatory, multilevel, and effective?}
+      \field{volume}{19}
+      \field{year}{2009}
+      \field{pages}{197\bibrangedash 214}
+    \endentry
+    \entry{nikolic2008}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=26bea4ef0780899ed8e0215f01df334e}{Nikolic}{N\bibinitperiod}{Sara\bibnamedelima {JS}}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=3254250261f8760f851f054df7152ad2}{Koontz}{K\bibinitperiod}{Tomas\bibnamedelima M.}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=26bea4ef0780899ed8e0215f01df334e}{Nikolic}{N\bibinitperiod}{Sara\bibnamedelima {JS}}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=3254250261f8760f851f054df7152ad2}{Koontz}{K\bibinitperiod}{Tomas\bibnamedelima M.}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{472d5f2bd3fbfd4641117e3ed4c4443c}
+      \strng{fullhash}{472d5f2bd3fbfd4641117e3ed4c4443c}
+      \field{sortinit}{N}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Nonprofit organizations in environmental management: A comparative analysis of government impacts}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{number}{3}
+      \field{title}{Nonprofit organizations in environmental management: A comparative analysis of government impacts}
+      \field{volume}{18}
+      \field{year}{2008}
+      \field{pages}{441\bibrangedash 463}
+    \endentry
+    \entry{oleary2006}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=9765abf44e6700235abaafbafcb2355e}{{O{\textquoteleft}Leary}}{O\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=02fa0b89668bc6fbd0bac86c692994f9}{Gerard}{G\bibinitperiod}{C.}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=475061b2e70d965e3b68b4deb3804a75}{Bingham}{B\bibinitperiod}{L.\bibnamedelimi B}{L\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=9765abf44e6700235abaafbafcb2355e}{{O{\textquoteleft}Leary}}{O\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=02fa0b89668bc6fbd0bac86c692994f9}{Gerard}{G\bibinitperiod}{C.}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=475061b2e70d965e3b68b4deb3804a75}{Bingham}{B\bibinitperiod}{L.\bibnamedelimi B}{L\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{30d43902b663a6b2794b5f3a76306e95}
+      \strng{fullhash}{48fc995e0d06aa0da9610c3c0ec33740}
+      \field{sortinit}{O}
+      \field{labelyear}{2006}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Introduction to the symposium on collaborative public management}
+      \field{journaltitle}{Public Administration Review}
+      \field{number}{s1}
+      \field{title}{Introduction to the symposium on collaborative public management}
+      \field{volume}{66}
+      \field{year}{2006}
+      \field{pages}{6\bibrangedash 9}
+    \endentry
+    \entry{ostrom1961}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=39bd2f38ffb6930df919611530e34966}{Ostrom}{O\bibinitperiod}{V.}{V\bibinitperiod}{}{}{}{}}%
+        {{hash=3afb0166ddf8ddf91d88cca5564ad83f}{Tiebout}{T\bibinitperiod}{C.\bibnamedelimi M}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=0f2f49c1b3c9d7ce86de9edcc487b2d6}{Warren}{W\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=39bd2f38ffb6930df919611530e34966}{Ostrom}{O\bibinitperiod}{V.}{V\bibinitperiod}{}{}{}{}}%
+        {{hash=3afb0166ddf8ddf91d88cca5564ad83f}{Tiebout}{T\bibinitperiod}{C.\bibnamedelimi M}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=0f2f49c1b3c9d7ce86de9edcc487b2d6}{Warren}{W\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{6452f3b1161fbfc61532832ca12cb164}
+      \strng{fullhash}{5c29690b8c731d1c7d38e22804d5b046}
+      \field{sortinit}{O}
+      \field{labelyear}{1961}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The organization of government in metropolitan areas: a theoretical inquiry}
+      \field{journaltitle}{The American Political Science Review}
+      \field{number}{4}
+      \field{title}{The organization of government in metropolitan areas: a theoretical inquiry}
+      \field{volume}{55}
+      \field{year}{1961}
+      \field{pages}{831\bibrangedash 842}
+    \endentry
+    \entry{pebesma2014}{misc}{}
+      \name{labelname}{2}{}{%
+        {{hash=aab4f77ecd6e44b54388a6d9979662c3}{Pebesma}{P\bibinitperiod}{Edzer\bibnamedelima J.}{E\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=aab4f77ecd6e44b54388a6d9979662c3}{Pebesma}{P\bibinitperiod}{Edzer\bibnamedelima J.}{E\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=523b95ea4e11456e942b91a149883810}{Bivand}{B\bibinitperiod}{Roger\bibnamedelima S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{155023581669134c6be0a7540852f705}
+      \strng{fullhash}{155023581669134c6be0a7540852f705}
+      \field{sortinit}{P}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{sp: Classes and methods for spatial data in R.}
+      \field{title}{sp: Classes and methods for spatial data in R.}
+      \field{year}{2014}
+    \endentry
+    \entry{robert2004}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=6e20960b59a6850b0335bdcc34be9c55}{Robert}{R\bibinitperiod}{Christian\bibnamedelima P.}{C\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+        {{hash=c7abc90e14f2761d9325ee092fda0de7}{Casella}{C\bibinitperiod}{George}{G\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=6e20960b59a6850b0335bdcc34be9c55}{Robert}{R\bibinitperiod}{Christian\bibnamedelima P.}{C\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+        {{hash=c7abc90e14f2761d9325ee092fda0de7}{Casella}{C\bibinitperiod}{George}{G\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Citeseer}%
+      }
+      \strng{namehash}{78e6fd207cd849dcabd56dd11c874ee2}
+      \strng{fullhash}{78e6fd207cd849dcabd56dd11c874ee2}
+      \field{sortinit}{R}
+      \field{labelyear}{2004}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Monte Carlo statistical methods}
+      \field{title}{Monte Carlo statistical methods}
+      \field{volume}{319}
+      \field{year}{2004}
+    \endentry
+    \entry{rue2005}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=08e9979cf126d2bd3a8136e3cdc6cc76}{Held}{H\bibinitperiod}{Leonhard}{L\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=08e9979cf126d2bd3a8136e3cdc6cc76}{Held}{H\bibinitperiod}{Leonhard}{L\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {{CRC} Press}%
+      }
+      \strng{namehash}{fbbbc9bb0b9dcfc2098db00248c7a9ec}
+      \strng{fullhash}{fbbbc9bb0b9dcfc2098db00248c7a9ec}
+      \field{sortinit}{R}
+      \field{labelyear}{2005}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Gaussian Markov random fields: theory and applications}
+      \field{isbn}{0203492021}
+      \field{title}{Gaussian Markov random fields: theory and applications}
+      \field{year}{2005}
+    \endentry
+    \entry{rue2009}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=23c0c7d947415c68f4949167db1ca938}{Chopin}{C\bibinitperiod}{Nicolas}{N\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=23c0c7d947415c68f4949167db1ca938}{Chopin}{C\bibinitperiod}{Nicolas}{N\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{e97ee6b3d6cd1e446928c4330763324e}
+      \strng{fullhash}{df0f078cdaeeee4f6fa7323f8b6b13db}
+      \field{sortinit}{R}
+      \field{labelyear}{2009}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Approximate Bayesian inference for latent Gaussian models by using integrated nested Laplace approximations}
+      \field{journaltitle}{Journal of the royal statistical society: Series b (statistical methodology)}
+      \field{number}{2}
+      \field{title}{Approximate Bayesian inference for latent Gaussian models by using integrated nested Laplace approximations}
+      \field{volume}{71}
+      \field{year}{2009}
+      \field{pages}{319\bibrangedash 392}
+    \endentry
+    \entry{rue2014}{book}{}
+      \name{labelname}{6}{}{%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=740d117d0458272bb691f40adf15dfdb}{Simpson}{S\bibinitperiod}{Daniel}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=93b2fbae5d0e39a3911fd333db391b49}{Riebler}{R\bibinitperiod}{Andrea}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=f4150a18b0f40b27f717360441c11139}{Krainski}{K\bibinitperiod}{Elias\bibnamedelima Teixeira}{E\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{6}{}{%
+        {{hash=09362260e1fddec76ee0c1f7caad5f33}{Rue}{R\bibinitperiod}{Havard}{H\bibinitperiod}{}{}{}{}}%
+        {{hash=01741b7b26772172361e27e76a257154}{Martino}{M\bibinitperiod}{Sara}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=a0d20f939f42d254e0675d1f16a1a789}{Lindgren}{L\bibinitperiod}{Finn}{F\bibinitperiod}{}{}{}{}}%
+        {{hash=740d117d0458272bb691f40adf15dfdb}{Simpson}{S\bibinitperiod}{Daniel}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=93b2fbae5d0e39a3911fd333db391b49}{Riebler}{R\bibinitperiod}{Andrea}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=f4150a18b0f40b27f717360441c11139}{Krainski}{K\bibinitperiod}{Elias\bibnamedelima Teixeira}{E\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{e97ee6b3d6cd1e446928c4330763324e}
+      \strng{fullhash}{f1c86c557411e4490750c36da013e65d}
+      \field{sortinit}{R}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{{INLA:} Functions which allow to perform full Bayesian analysis of latent Gaussian models using Integrated Nested Laplace Approximation}
+      \field{note}{R package version 0.0-1404466487}
+      \field{title}{{INLA:} Functions which allow to perform full Bayesian analysis of latent Gaussian models using Integrated Nested Laplace Approximation}
+      \field{year}{2014}
+    \endentry
+    \entry{sabatier2005}{incollection}{}
+      \name{labelname}{4}{}{%
+        {{hash=aa93c8f9d7b16cee2b1ae6e367ccd055}{Sabatier}{S\bibinitperiod}{P.\bibnamedelimi A}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=95c2ee144bc0e5e8f8ec755c47f1dc5b}{Leach}{L\bibinitperiod}{W.\bibnamedelimi D}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=a140c415d545ee9be31a2f9110a76230}{Pelkey}{P\bibinitperiod}{N.\bibnamedelimi W}{N\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=aa93c8f9d7b16cee2b1ae6e367ccd055}{Sabatier}{S\bibinitperiod}{P.\bibnamedelimi A}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=95c2ee144bc0e5e8f8ec755c47f1dc5b}{Leach}{L\bibinitperiod}{W.\bibnamedelimi D}{W\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=a140c415d545ee9be31a2f9110a76230}{Pelkey}{P\bibinitperiod}{N.\bibnamedelimi W}{N\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \name{editor}{6}{}{%
+        {{hash=64cd87d5a99b13f5d1549f9913566c90}{Sabatier}{S\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+        {{hash=d223313865b0c5bde5e98f6433a6dd74}{Focht}{F\bibinitperiod}{W.}{W\bibinitperiod}{}{}{}{}}%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=9e3856bfd0d5f30ae044ffbac04568b7}{Trachtenberg}{T\bibinitperiod}{Z.}{Z\bibinitperiod}{}{}{}{}}%
+        {{hash=3207fbb39ed33e78bd04f9d14a458d05}{Vedlitz}{V\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=3f57a979324dbc55c364734f48a592cf}{Matlock}{M\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {{MIT} Press}%
+      }
+      \strng{namehash}{f26959f7df28e39993fa7613e89ea4c0}
+      \strng{fullhash}{aa2abc54c0d0b5d7508b25feb68de41b}
+      \field{sortinit}{S}
+      \field{labelyear}{2005}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Theoretical frameworks explaining partnership success}
+      \field{booktitle}{Swimming Upstream: Collaborative approaches to watershed management}
+      \field{title}{Theoretical frameworks explaining partnership success}
+      \field{year}{2005}
+      \field{pages}{173\bibrangedash 200}
+    \endentry
+    \entry{salamon2002}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=6717002bc16f93b343ea10830ab113a1}{Salamon}{S\bibinitperiod}{L.\bibnamedelimi M}{L\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=6717002bc16f93b343ea10830ab113a1}{Salamon}{S\bibinitperiod}{L.\bibnamedelimi M}{L\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {New York, {NY}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press}%
+      }
+      \strng{namehash}{6717002bc16f93b343ea10830ab113a1}
+      \strng{fullhash}{6717002bc16f93b343ea10830ab113a1}
+      \field{sortinit}{S}
+      \field{labelyear}{2002}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The Tools of Government: A guide to the new governance}
+      \field{isbn}{0199881278}
+      \field{title}{The Tools of Government: A guide to the new governance}
+      \field{year}{2002}
+    \endentry
+    \entry{schneider2003}{article}{}
+      \name{labelname}{5}{}{%
+        {{hash=3a35acb0163f13b07a3db997b63e81ea}{Schneider}{S\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=fa436e5a6a6b224db2001e008717656b}{Scholz}{S\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=8294be19c216f93d1a7f3c1cff149d8d}{Mindruta}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=0147d0926a654e6e0cbf23c4db806977}{Edwardsen}{E\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{5}{}{%
+        {{hash=3a35acb0163f13b07a3db997b63e81ea}{Schneider}{S\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=fa436e5a6a6b224db2001e008717656b}{Scholz}{S\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=bf6f499f595bceb60c1444e1cfa13179}{Lubell}{L\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=8294be19c216f93d1a7f3c1cff149d8d}{Mindruta}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=0147d0926a654e6e0cbf23c4db806977}{Edwardsen}{E\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{dae250e5b9185277fe22250868beb50e}
+      \strng{fullhash}{cc52ead17890f1914486b0c65b0a5e2c}
+      \field{sortinit}{S}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Building consensual institutions: Networks and the National Estuary Program}
+      \field{journaltitle}{American Journal of Political Science}
+      \field{number}{1}
+      \field{title}{Building consensual institutions: Networks and the National Estuary Program}
+      \field{volume}{47}
+      \field{year}{2003}
+      \field{pages}{143\bibrangedash 158}
+    \endentry
+    \entry{scott2014}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=502f4ce42c548570d9fa198f78d582d0}{Scott}{S\bibinitperiod}{Tyler}{T\bibinitperiod}{}{}{}{}}%
+        {{hash=47444349cf0299142ed8e4fcc540e950}{Thomas}{T\bibinitperiod}{Craig}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=502f4ce42c548570d9fa198f78d582d0}{Scott}{S\bibinitperiod}{Tyler}{T\bibinitperiod}{}{}{}{}}%
+        {{hash=47444349cf0299142ed8e4fcc540e950}{Thomas}{T\bibinitperiod}{Craig}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{217d3509bcba4007b1175b684765ba54}
+      \strng{fullhash}{217d3509bcba4007b1175b684765ba54}
+      \field{sortinit}{S}
+      \field{labelyear}{2014}
+      \field{datelabelsource}{}
+      \field{labeltitle}{The Effect of Collaborative Partnerships on Inter-organizational Networks}
+      \field{journaltitle}{Public Performance \& Management Review}
+      \field{title}{The Effect of Collaborative Partnerships on Inter-organizational Networks}
+      \field{volume}{Accepted for Publication}
+      \field{year}{2014}
+    \endentry
+    \entry{skaggs1994}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=8c470a4cd2b39df005dca48a81a6f853}{Skaggs}{S\bibinitperiod}{R.\bibnamedelimi W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=139836a24b3697acbfe0c4dbaf58979e}{Breve}{B\bibinitperiod}{M.\bibnamedelimi A.}{M\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=79d58521b9f21c216436efc128e652e4}{Gilliam}{G\bibinitperiod}{J.\bibnamedelimi W.}{J\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=8c470a4cd2b39df005dca48a81a6f853}{Skaggs}{S\bibinitperiod}{R.\bibnamedelimi W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=139836a24b3697acbfe0c4dbaf58979e}{Breve}{B\bibinitperiod}{M.\bibnamedelimi A.}{M\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=79d58521b9f21c216436efc128e652e4}{Gilliam}{G\bibinitperiod}{J.\bibnamedelimi W.}{J\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{e46acad9a8249f76cdb4205393ae64ea}
+      \strng{fullhash}{8810da40ee149bf3fd071c7f2f250dd2}
+      \field{sortinit}{S}
+      \field{labelyear}{1994}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Hydrologic and water quality impacts of agricultural drainage}
+      \field{journaltitle}{Critical reviews in environmental science and technology}
+      \field{number}{1}
+      \field{title}{Hydrologic and water quality impacts of agricultural drainage}
+      \field{volume}{24}
+      \field{year}{1994}
+      \field{pages}{1\bibrangedash 32}
+    \endentry
+    \entry{smith2004}{incollection}{}
+      \name{labelname}{1}{}{%
+        {{hash=a29790bdc2a49d64f8336806484af56c}{Smith}{S\bibinitperiod}{Steven\bibnamedelima Rathgeb}{S\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=a29790bdc2a49d64f8336806484af56c}{Smith}{S\bibinitperiod}{Steven\bibnamedelima Rathgeb}{S\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=a38084eb25635828125d1052bd1a470c}{Frumkin}{F\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
+        {{hash=de8a2d2d0cb2cd0b7e48c887b8378941}{Imber}{I\bibinitperiod}{Jonathan\bibnamedelima B.}{J\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {New Brunswick, {NJ}}%
+      }
+      \list{publisher}{1}{%
+        {Transaction Publishers}%
+      }
+      \strng{namehash}{a29790bdc2a49d64f8336806484af56c}
+      \strng{fullhash}{a29790bdc2a49d64f8336806484af56c}
+      \field{sortinit}{S}
+      \field{labelyear}{2004}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Government and nonprofits in the modern age: Is independence possible?}
+      \field{booktitle}{In Search of the Nonprofit Sector}
+      \field{title}{Government and nonprofits in the modern age: Is independence possible?}
+      \field{year}{2004}
+      \field{pages}{3\bibrangedash 18}
+    \endentry
+    \entry{spiegelhalter2002}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=20a9ce693c8e62d43411df20979b7817}{Spiegelhalter}{S\bibinitperiod}{David\bibnamedelima J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=aa3dcbf790ce366b74d8504e7661d5c0}{Best}{B\bibinitperiod}{Nicola\bibnamedelima G.}{N\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+        {{hash=04e8b62c64700c4d3db0d9564573270d}{Carlin}{C\bibinitperiod}{Bradley\bibnamedelima P.}{B\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+        {{hash=9663f57e7b0fb598e16c50bd9753296d}{Van\bibnamedelimb Der\bibnamedelima Linde}{V\bibinitperiod\bibinitdelim D\bibinitperiod\bibinitdelim L\bibinitperiod}{Angelika}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=20a9ce693c8e62d43411df20979b7817}{Spiegelhalter}{S\bibinitperiod}{David\bibnamedelima J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+        {{hash=aa3dcbf790ce366b74d8504e7661d5c0}{Best}{B\bibinitperiod}{Nicola\bibnamedelima G.}{N\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+        {{hash=04e8b62c64700c4d3db0d9564573270d}{Carlin}{C\bibinitperiod}{Bradley\bibnamedelima P.}{B\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+        {{hash=9663f57e7b0fb598e16c50bd9753296d}{Van\bibnamedelimb Der\bibnamedelima Linde}{V\bibinitperiod\bibinitdelim D\bibinitperiod\bibinitdelim L\bibinitperiod}{Angelika}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{121b1366afd9bee53f5df2d9c1844b5e}
+      \strng{fullhash}{739a7c16222b25a2f4ea391f1f51c62e}
+      \field{sortinit}{S}
+      \field{labelyear}{2002}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Bayesian measures of model complexity and fit}
+      \field{journaltitle}{Journal of the Royal Statistical Society: Series B {(Statistical} Methodology)}
+      \field{number}{4}
+      \field{title}{Bayesian measures of model complexity and fit}
+      \field{volume}{64}
+      \field{year}{2002}
+      \field{pages}{583\bibrangedash 639}
+    \endentry
+    \entry{thomas2011}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=a450c7102c4d109e76b31c279c7c9c23}{Thomas}{T\bibinitperiod}{C.\bibnamedelimi W}{C\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=47ee03107cc41dfc76540b766b11fca2}{Koontz}{K\bibinitperiod}{T.\bibnamedelimi M}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=a450c7102c4d109e76b31c279c7c9c23}{Thomas}{T\bibinitperiod}{C.\bibnamedelimi W}{C\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=47ee03107cc41dfc76540b766b11fca2}{Koontz}{K\bibinitperiod}{T.\bibnamedelimi M}{T\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{50cc79fe43da7eaf5e8f491e325ced71}
+      \strng{fullhash}{50cc79fe43da7eaf5e8f491e325ced71}
+      \field{sortinit}{T}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Research designs for evaluating the impact of community-based management on natural resource conservation}
+      \field{journaltitle}{Journal of Natural Resources Policy Research}
+      \field{number}{2}
+      \field{title}{Research designs for evaluating the impact of community-based management on natural resource conservation}
+      \field{volume}{3}
+      \field{year}{2011}
+      \field{pages}{97\bibrangedash 111}
+    \endentry
+    \entry{tong2002}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=7afe55b63ee9e650bebeba1e3fe0c4a0}{Tong}{T\bibinitperiod}{Susanna\bibnamedelima {TY}}{S\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+        {{hash=ed44611fbb948f4488ba5f8676302de0}{Chen}{C\bibinitperiod}{Wenli}{W\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=7afe55b63ee9e650bebeba1e3fe0c4a0}{Tong}{T\bibinitperiod}{Susanna\bibnamedelima {TY}}{S\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+        {{hash=ed44611fbb948f4488ba5f8676302de0}{Chen}{C\bibinitperiod}{Wenli}{W\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{f24f7fca6db6b800f37b8b8325414543}
+      \strng{fullhash}{f24f7fca6db6b800f37b8b8325414543}
+      \field{sortinit}{T}
+      \field{labelyear}{2002}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Modeling the relationship between land use and surface water quality}
+      \field{journaltitle}{Journal of Environmental Management}
+      \field{number}{4}
+      \field{title}{Modeling the relationship between land use and surface water quality}
+      \field{volume}{66}
+      \field{year}{2002}
+      \field{pages}{377\bibrangedash 393}
+    \endentry
+    \entry{wang2001}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=5721aa5bba332ccf01ea5bd39189dccd}{Wang}{W\bibinitperiod}{Xinhao}{X\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=5721aa5bba332ccf01ea5bd39189dccd}{Wang}{W\bibinitperiod}{Xinhao}{X\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{5721aa5bba332ccf01ea5bd39189dccd}
+      \strng{fullhash}{5721aa5bba332ccf01ea5bd39189dccd}
+      \field{sortinit}{W}
+      \field{labelyear}{2001}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Integrating water-quality management and land-use planning in a watershed context}
+      \field{journaltitle}{Journal of Environmental Management}
+      \field{number}{1}
+      \field{title}{Integrating water-quality management and land-use planning in a watershed context}
+      \field{volume}{61}
+      \field{year}{2001}
+      \field{pages}{25\bibrangedash 36}
+    \endentry
+    \entry{ward2008}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=d9f597942179e6447b0d7b5a8706a119}{Ward}{W\bibinitperiod}{Trevor\bibnamedelima J.}{T\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=d9f597942179e6447b0d7b5a8706a119}{Ward}{W\bibinitperiod}{Trevor\bibnamedelima J.}{T\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{d9f597942179e6447b0d7b5a8706a119}
+      \strng{fullhash}{d9f597942179e6447b0d7b5a8706a119}
+      \field{sortinit}{W}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Barriers to biodiversity conservation in marine fishery certification}
+      \field{annotation}{Two global certification and ecolabelling systems - the generic global dolphin-safe ecolabel and the global Marine Stewardship Council {(MSC)} ecolabel - are assessed for their present and potential contributions to improving biodiversity conservation in marine capture fisheries. The dolphin-safe ecolabel appears to have played a minor role in a reduction of dolphin mortality in tuna fisheries, but dolphin populations in the worst-affected area have not recovered, and it appears that the current level of dolphin by-catch sanctioned by present-day fishery management and the ecolabel is not effective enough to achieve population recovery. The {MSC} ecolabel has established a poorly expressed environmental standard that has resulted in variable interpretations by certifiers, creating an apparently systematic bias in application of the standard to the certified fisheries. Without substantial revision of both these systems, it seems unlikely that they will be able to make major contributions to marine biodiversity conservation because of barriers created by limitations in programme design, lack of robust linkages between the certification standard and biodiversity conservation outcomes, and unclear standards and their inconsistent application in the certification of fisheries.}
+      \field{issn}{1467-2960}
+      \field{journaltitle}{Fish and Fisheries}
+      \field{note}{2}
+      \field{title}{Barriers to biodiversity conservation in marine fishery certification}
+      \field{volume}{9}
+      \field{year}{2008}
+      \field{pages}{169\bibrangedash 177}
+    \endentry
+    \entry{weber2003}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=168c5cb805fc5cd50ac4f4aa923e0248}{Weber}{W\bibinitperiod}{E.\bibnamedelimi P}{E\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=168c5cb805fc5cd50ac4f4aa923e0248}{Weber}{W\bibinitperiod}{E.\bibnamedelimi P}{E\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {{MIT} Press}%
+      }
+      \strng{namehash}{168c5cb805fc5cd50ac4f4aa923e0248}
+      \strng{fullhash}{168c5cb805fc5cd50ac4f4aa923e0248}
+      \field{sortinit}{W}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Bringing society back in: Grassroots ecosystem management, accountability, and sustainable communities}
+      \field{isbn}{0262731517}
+      \field{title}{Bringing society back in: Grassroots ecosystem management, accountability, and sustainable communities}
+      \field{year}{2003}
+    \endentry
+    \entry{weible2009}{article}{}
+      \name{labelname}{3}{}{%
+        {{hash=c6d14fc9b80786ac30f63a7b764fadce}{Weible}{W\bibinitperiod}{C.\bibnamedelimi M}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=aa93c8f9d7b16cee2b1ae6e367ccd055}{Sabatier}{S\bibinitperiod}{P.\bibnamedelimi A}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=9887eea930c375152a82accb13efee53}{{McQueen}}{M\bibinitperiod}{K.}{K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{3}{}{%
+        {{hash=c6d14fc9b80786ac30f63a7b764fadce}{Weible}{W\bibinitperiod}{C.\bibnamedelimi M}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=aa93c8f9d7b16cee2b1ae6e367ccd055}{Sabatier}{S\bibinitperiod}{P.\bibnamedelimi A}{P\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{hash=9887eea930c375152a82accb13efee53}{{McQueen}}{M\bibinitperiod}{K.}{K\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{6245118100648d59273e8405ebc35781}
+      \strng{fullhash}{d097c34f15349deb0daf90e7a2bcb6fb}
+      \field{sortinit}{W}
+      \field{labelyear}{2009}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Themes and variations: Taking stock of the advocacy coalition framework}
+      \field{journaltitle}{Policy Studies Journal}
+      \field{number}{1}
+      \field{title}{Themes and variations: Taking stock of the advocacy coalition framework}
+      \field{volume}{37}
+      \field{year}{2009}
+      \field{pages}{121\bibrangedash 140}
+    \endentry
+    \entry{wikle2003}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{8cef8867ba22184ba87bfb689033e03a}
+      \strng{fullhash}{8cef8867ba22184ba87bfb689033e03a}
+      \field{sortinit}{W}
+      \field{labelyear}{2003}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Hierarchical models in environmental science}
+      \field{journaltitle}{International Statistical Review}
+      \field{number}{2}
+      \field{title}{Hierarchical models in environmental science}
+      \field{volume}{71}
+      \field{year}{2003}
+      \field{pages}{181\bibrangedash 199}
+    \endentry
+    \entry{wikle2010}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+        {{hash=4b362c5b5fcfd5e70bcaa4cfbb81e1e9}{Hooten}{H\bibinitperiod}{Mevin\bibnamedelima B.}{M\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+        {{hash=4b362c5b5fcfd5e70bcaa4cfbb81e1e9}{Hooten}{H\bibinitperiod}{Mevin\bibnamedelima B.}{M\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{051467421cf339becd3cee9567306e9d}
+      \strng{fullhash}{051467421cf339becd3cee9567306e9d}
+      \field{sortinit}{W}
+      \field{labelyear}{2010}
+      \field{datelabelsource}{}
+      \field{labeltitle}{A general science-based framework for dynamical spatio-temporal models}
+      \field{journaltitle}{Test}
+      \field{number}{3}
+      \field{title}{A general science-based framework for dynamical spatio-temporal models}
+      \field{volume}{19}
+      \field{year}{2010}
+      \field{pages}{417\bibrangedash 451}
+    \endentry
+    \entry{wondolleck2000}{book}{}
+      \name{labelname}{2}{}{%
+        {{hash=4290300702725ea698f51193f525f9a8}{Wondolleck}{W\bibinitperiod}{J.\bibnamedelimi M}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=1456cd129ee33c95c72654e048f3ec5b}{Yaffee}{Y\bibinitperiod}{S.\bibnamedelimi L}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=4290300702725ea698f51193f525f9a8}{Wondolleck}{W\bibinitperiod}{J.\bibnamedelimi M}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{hash=1456cd129ee33c95c72654e048f3ec5b}{Yaffee}{Y\bibinitperiod}{S.\bibnamedelimi L}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Washington, {D.C.}}%
+      }
+      \list{publisher}{1}{%
+        {Island Press}%
+      }
+      \strng{namehash}{197d2af5b0a9d353b49de80e59a60a63}
+      \strng{fullhash}{197d2af5b0a9d353b49de80e59a60a63}
+      \field{sortinit}{W}
+      \field{labelyear}{2000}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Making collaboration work: Lessons from innovation in natural resource management}
+      \field{isbn}{1559634626}
+      \field{title}{Making collaboration work: Lessons from innovation in natural resource management}
+      \field{year}{2000}
+    \endentry
+    \entry{xu2007}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=6ccd6b6d635d297a3626c29742a8674c}{Xu}{X\bibinitperiod}{Ke}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=6ccd6b6d635d297a3626c29742a8674c}{Xu}{X\bibinitperiod}{Ke}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=8cef8867ba22184ba87bfb689033e03a}{Wikle}{W\bibinitperiod}{Christopher\bibnamedelima K.}{C\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{0b815f75e3fec83665da163a35a709bd}
+      \strng{fullhash}{0b815f75e3fec83665da163a35a709bd}
+      \field{sortinit}{X}
+      \field{labelyear}{2007}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Estimation of parameterized spatio-temporal dynamic models}
+      \field{journaltitle}{Journal of Statistical Planning and Inference}
+      \field{number}{2}
+      \field{title}{Estimation of parameterized spatio-temporal dynamic models}
+      \field{volume}{137}
+      \field{year}{2007}
+      \field{pages}{567\bibrangedash 588}
+    \endentry
+    \entry{yaffee1996}{book}{}
+      \name{labelname}{6}{}{%
+        {{hash=1456cd129ee33c95c72654e048f3ec5b}{Yaffee}{Y\bibinitperiod}{S.\bibnamedelimi L}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+        {{hash=63299c34e333ccd830e806877189a3ab}{Phillips}{P\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=a5c204b6d1fd273a49ce4a7bd79c2fad}{Frentz}{F\bibinitperiod}{I.\bibnamedelimi C}{I\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{hash=a0835ee114baa93ff683be34e76b572f}{Hardy}{H\bibinitperiod}{P.\bibnamedelimi W}{P\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=37e94f68a197db1ec5b0836e1c593fd0}{Maleki}{M\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=8bad6f96ea5309dc1fb57499c26a8a00}{Thorpe}{T\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{6}{}{%
+        {{hash=1456cd129ee33c95c72654e048f3ec5b}{Yaffee}{Y\bibinitperiod}{S.\bibnamedelimi L}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+        {{hash=63299c34e333ccd830e806877189a3ab}{Phillips}{P\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=a5c204b6d1fd273a49ce4a7bd79c2fad}{Frentz}{F\bibinitperiod}{I.\bibnamedelimi C}{I\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{hash=a0835ee114baa93ff683be34e76b572f}{Hardy}{H\bibinitperiod}{P.\bibnamedelimi W}{P\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{hash=37e94f68a197db1ec5b0836e1c593fd0}{Maleki}{M\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=8bad6f96ea5309dc1fb57499c26a8a00}{Thorpe}{T\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Washington, {D.C.}}%
+      }
+      \list{publisher}{1}{%
+        {Island Press}%
+      }
+      \strng{namehash}{92862b52d76b4145b3dc955c4e22d78f}
+      \strng{fullhash}{f3b698c9294406c924c46c439b10e06d}
+      \field{sortinit}{Y}
+      \field{labelyear}{1996}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Ecosystem Management in the United States: An assessment of current experience}
+      \field{isbn}{1559635029}
+      \field{title}{Ecosystem Management in the United States: An assessment of current experience}
+      \field{year}{1996}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+

@@ -1,0 +1,2235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>Is collaboration a good investment? Modeling the impact of government support for
+nonprofit collaborative watershed management councils</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.tug.org/tex4ht/)"> 
+<!-- html --> 
+<meta name="src" content="TScott_JPART_2014.tex"> 
+<meta name="date" content="2014-12-10 12:08:00"> 
+<link rel="stylesheet" type="text/css" href="TScott_JPART_2014.css"> 
+</head><body 
+>
+   <div class="maketitle">
+
+
+<h2 class="titleHead">Is collaboration a good investment? Modeling the
+impact of government support for nonprofit
+collaborative watershed management councils</h2>
+<div class="author" ></div><br />
+<div class="date" ><span 
+class="cmr-12x-x-120">December 10, 2014</span></div>
+
+   </div>
+   <div 
+class="abstract" 
+>
+<!--l. 19--><p class="indent" >
+
+<div class="center" 
+>
+<!--l. 19--><p class="noindent" >
+<!--l. 19--><p class="noindent" ><span 
+class="cmbx-12">Abstract</span></div>
+<!--l. 21--><p class="indent" >   This paper couples data concerning 2500 grants given to local watershed management
+councils by an Oregon state agency, the Oregon Watershed Enhancement Board (OWEB), with
+20 years of monthly water quality data sampled at 141 sites around the state. I examine
+whether public input, in the form of grant funding, to nonprofit watershed councils impacts
+water quality, and further compare the impacts of different grant types, such as restoration
+projects or stakeholder outreach. These data present some of the first evidence regarding the
+effect of collaborative management outputs on environmental outcomes (Carr et al. 2012;
+Koontz and Thomas 2006). In modeling these effects, this paper also makes a methodological
+contribution by demonstrating how spatio-temporal ecological and epidemiological
+modeling techniques can be used to test policy theory and analyze policy impacts using
+extant data. Specifically, I use integrated nested Laplace approximation (INLA) (Rue
+et al. 2009) and stochastic partial differential equations (SPDE) (Lindgren et al.
+2011) to fit a hierarchical Bayesian model that accounts for spatial and temporal
+dependency. I find that increased public support (in the form of OWEB grant funds) for
+nonprofit watershed council education and outreach actions are strongly linked to water
+quality improvements. Support for council administrative purposes and scientific
+or technical activities are also associated with improved water quality over longer
+timer periods. The impacts of restoration projects are positive on average but more
+uncertain.<br 
+class="newline" />
+<!--l. 24--><p class="noindent" ><span 
+class="cmbx-12">Keywords: Watersheds, collaborative management, non-profits, R-INLA, Bayesian</span>
+<span 
+class="cmbx-12">hierarchical modeling</span>
+<!--l. 26--><p class="indent" >
+
+   </div>
+   <h3 class="likesectionHead"><a 
+ id="x1-1000"></a>Introduction</h3>
+<!--l. 32--><p class="noindent" >Governments increasingly rely on collaborative relationships with non-profit organizations to
+implement policies or provide services (Salamon 2002). Collaborative management with local
+nonprofit groups gives governments a community-based vehicle through which to
+implement policies and programs, and provide nonprofits with access to funding and other
+resources (Nikolic and Koontz 2008). Management arrangements of this form are very
+common in environmental applications, particularly watershed management and
+water quality (e.g., Leach et al. 2013; Leach et al. 2002; Margerum 2011; Hardy and
+Koontz 2008). This paper builds on the considerable body of research discussing the
+role that governments play in&#8211;and resultant impacts of&#8211;supporting collaborative
+management (e.g., Nikolic and Koontz 2008; Lubell and Fulton 2008; Ansell and Gash
+2008; Emerson et al. 2012; Scott and Thomas 2014) by asking a relatively simple
+question that proves highly elusive in practice: How does government support for
+collaborative management affect environmental outcomes? To examine this question, I use
+publically available water quality monitoring data to explore the impact of 2500 grants
+given by a state agency, the Oregon Watershed Enhancement Board (OWEB), to
+local non-profit stakeholder councils engaged in ongoing watershed planning and
+management activities in watersheds across Oregon over the course of almost 20
+years.
+<!--l. 34--><p class="indent" >   To model these effects I use Bayesian hierarchical modeling, specifically Integrated Nested
+Laplace Approximation (INLA) (Rue et al. 2009) for estimating complex hierarchical models
+and Stochastic Partial Differential Equations (SPDE) (Lindgren et al. 2011) for modeling
+spatial and temporal dependency, in order to account for the complex spatio-temporal nature of
+these data. This paper makes a methodological contribution to the policy literature by helping
+to establish the use of these methods for policy evaluation. The INLA approach facilitates
+large-scale hierarchical models and complex specifications that account for irregular data
+
+and spatial and temporal relationships. This enables the use of publicly available,
+observational environmental data and helps address some of the analytical challenges
+that have prevented researchers from linking collaborative management efforts to
+environmental outcomes in the past (Koontz and Thomas 2006; Thomas and Koontz
+2011).
+<!--l. 36--><p class="indent" >   Using this model, I address two primary research questions: (1) Does government funding
+for collaborative watershed management groups have a measurable impact on water quality?
+and (2) How does this impact compare across different types of funded programs? Specifically,
+how does the predicted effect on water quality of funding collaborative group activities that
+have a direct environmental output (e.g., riparian revegetation) compare to supporting
+production of indirect outputs (e.g., supporting council administrative activities, which in turn
+shape future environmental outputs)? In what follows, I first describe the theoretical rationale
+for this research, and then provide background concerning the case analyzed. I then specify my
+analytical approach and introduce the INLA and SPDE methods. The remaining
+sections present the data and model results, and discuss the implications of these
+findings.
+<!--l. 39--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-2000"></a>Rationale</h3>
+<!--l. 41--><p class="noindent" >The idea that policy implementation does not solely involve autonomous actions by public
+agencies is long-established (e.g., Ostrom et al. 1961) and ubiquitous in modern policymaking
+(Salamon 2002, p. 8). In fact, it is unclear in practice what an alternative to the general
+concept of collaboration (Donahue and Zeckhauser 2011; Agranoff and McGuire 2003), in
+which government agencies communicate, consult, coordinate, or cooperate with
+other public, private, and nonprofit entities, would even be. A stricter definition of
+collaborative management, which involves government initiation and/or funding (Ansell
+and Gash 2008) for efforts in which a group of autonomous stakeholders deliberates
+to build consensus and develop networks (Margerum 2011, p. 6) in order to make
+
+or implement public policy or manage public programs or assets (Ansell and Gash
+2008, p. 544), raises a more interesting issue: collaboration by this definition does not
+just happen, but rather policymakers choose collaborative management as a means
+through which to design and implement policies (Layzer 2008; Hoornbeek et al. 2012;
+Koontz et al. 2004). Does using funding nonprofit collaborative stakeholder groups
+result in improved environmental outcomes? For instance, is it more beneficial for
+the state of Oregon to implement a restoration project directly or to provide grant
+funds to a local nonprofit watershed council to implement the restoration project
+instead?
+<!--l. 43--><p class="indent" >   While collaborative management is heavily documented in the policy and management
+literatures (Emerson et al. 2012; Margerum 2011; Sabatier et al. 2005; Ansell and Gash 2008;
+Lubell 2004), the complexity of social-environmental systems makes it difficult to trace how
+government support for non-profit collaborative groups ultimately impacts environmental
+outcomes (Koontz and Thomas 2006; Thomas and Koontz 2011). Clearly, the context of a
+particular locale or project greatly determines the answer to this question. More broadly,
+however, the literature concerning collaborative management provides a theoretical basis to
+help understand the rationale for governments to partner with nonprofit collaborative groups.
+The general rationale for supporting collaborative management, such as by funding a
+nonprofit collaborative management group, is that collaborative efforts yield more
+holistic and comprehensive management. For instance, collaborative management is
+shown to enhance cooperation amongst stakeholders (Lubell 2004), alter existing
+stakeholder beliefs (Leach et al. 2013), increase information exchange and learning
+amongst actors (Beierle 2002; Weible et al. 2009), foster trust and collective action
+(Lubell 2005), and incorporate a broader range of information (Innes and Booher 1999;
+Wondolleck and Yaffee 2000). Local nonprofit collaborative groups can be flexible
+and responsiveness, pivoting to meet local needs and concerns (Nikolic and Koontz
+2008).
+<!--l. 45--><p class="indent" >   On the other hand, since collaborative management is deliberative and consensus-oriented
+(Ansell and Gash 2008), it can involve a great deal of time and effort (Margerum 2011).
+
+Further, in contrast with direct government action in which the implementing agency has
+stricter control over policy efforts (Salamon 2002), policy implementation via collaborative
+management has a heightened degree of uncertainty from the perspective of the funding agency
+since the involvement of more actors creates issues of accountability and control (Weber 2003).
+There is also concern that government support for local collaborative management efforts can
+detract from the ability of these local organizations to operate with responsiveness and
+flexibility, reducing the very qualities that are presumed to make such groups effective (Smith
+2004; Nikolic and Koontz 2008).
+<!--l. 47--><p class="indent" >   Nonetheless, the use of collaborative management continues to proliferate (Ansell and Gash
+2008; Emerson et al. 2012) as a response to complex environmental problems (Margerum 2011).
+Among the practical rationales for public managers to choose collaborative management are the
+expectations that collaborative management will facilitate a more comprehensive understanding
+of policy problems (Leach et al. 2013), alleviate conflict between stakeholders (Berardo
+et al. 2014), reduce interorganizational transaction costs (Emerson et al. 2012; Scott
+and Thomas 2014), and foster greater buy-in from stakeholders (Ansell and Gash
+2008). In short, policymakers believe that collaborative management will improve the
+design and implementation of policies and programs and thereby improve policy
+outcomes.
+<!--l. 49--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-3000"></a>Background</h3>
+<!--l. 51--><p class="noindent" >Nonprofit watershed councils in the state of Oregon have proved to be a fruitful
+object of study for those interested in collaborative management (Griffin 1999; Dakins
+et al. 2005; Margerum 2002, 2007, 2008; Margerum 2011; Habron 2003; Margerum
+and Whitall 2004; Hibbard and Lurie 2006; Lurie and Hibbard 2008). My study
+differs significantly from the cited works in that none of these analyses evaluate the
+impact that these councils have on water quality on a long-term, statewide basis (most
+involve intensive case studies that focus on specific watersheds). Created by the state
+
+legislature in 1995, OWEB provides guidance, administrative support, and resources to 87
+local watershed councils. This support includes grants to local watershed councils
+for myriad purposes ranging from environmental assessment to hiring a full-time
+coordinator. Because grants are awarded by OWEB on a competitive basis, these data
+are not suitable for providing a generalizable estimate of how funding collaborative
+management in a randomly selected watershed improves water quality. This is because the
+grant application and approval process is intended to identify and select motivated
+parties and favorable circumstances, which results in selection bias at the watershed
+level of analysis. However, what is really of interest in this case is the efficacy of
+Oregon&#8217;s statewide support of a collaborative watershed management system. The case
+that I consider is the state of Oregons ongoing financial support for collaborative
+watershed management. In other words, the purpose of this analysis is to evaluate the
+statewide OWEB watershed management strategy (of providing public funds to nonprofit
+management councils) by modeling whether providing funds to watershed councils
+corresponds to improved water quality. It is difficult to envision a state or regional program
+not administered on similar grounds (with funds strategically allocated), and thus
+this analysis thus provides a good conception of the effectiveness of a grant-funded
+collaborative watershed management system implemented at a regional governance
+level.
+<!--l. 53--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-4000"></a>Hypotheses</h3>
+<!--l. 55--><p class="noindent" >The OWEB statewide, grant-based system also provides a unique way to address one of the
+challenges typically faced in estimating the impact of collaborative groups: even
+if budget data are available, it is difficult to determine the activities and relative
+effort level of each group. OWEB grant funds provide a consistent approximation of
+collaborative management effort taking place in given place and time in the state.
+Rather than simply comparing collaborative and non-collaborative watersheds, grant
+
+funding provides a continuous metric of collaborative management that can be used to
+estimate how increased support for collaborative management relates to environmental
+outcomes. If collaborative watershed management has an impact on water quality,
+greater support (as measured by grant funding in this case) should result in a larger
+impact:
+      <ul class="itemize1">
+      <li class="itemize"><span 
+class="cmti-12">Hypothesis 1: Grant funds given to nonprofit watershed councils improve water</span>
+      <span 
+class="cmti-12">quality in the targeted watershed.</span></li></ul>
+<!--l. 61--><p class="indent" >   Building upon this basic hypothesis, I then distinguish between grants that more directly
+target water quality through environmental restoration projects and grants that indirectly
+target water quality by funding: (1) assessment, monitoring, and other technical actions; (2)
+educational and outreach programs; and (3) council activities and personnel. Program logic
+(Bickman 1987), the narrative for how a given program will work to address an identified
+problem (Margerum 2011; McLaughlin and Jordan 1999), differs greatly for these different
+types of grants, particularly between restoration projects and the three non-restoration project
+types. In a simplistic sense, restoration projects can be viewed as a direct purchase of
+environmental outputs; Typical restoration projects implemented by watershed groups
+include abatement or prevention of nonpoint or point pollution sources, in-stream
+flow modifications or water allocation, stream channel restoration, and changes in
+land-use designations (Leach et al. 2002). These outputs directly contribute to water
+quality by altering physical conditions. While the extent to which these outputs
+will alter environmental outcomes might be uncertain, the program logic is fairly
+straightforward.
+<!--l. 63--><p class="indent" >   Conversely, grant types, including for assessment and monitoring, education and outreach,
+and council administrative actions, might best be characterized as an investment: Instead of
+directly purchasing environmental outputs, the program logic of supporting non-restorative
+actions is essentially that investing in council efforts that produce non-environmental outputs
+will ultimately engender a return in environmental outputs&#8211;and thus outcomes&#8211;over time.
+
+Much of the collaborative management literature implicitly revolves around this idea.
+Monitoring and assessment projects, for instance, provide data and information that managers
+can use for adaptive policymaking (Huntington 2000; Leach et al. 2002; Yaffee et al. 1996). The
+program logic for investing in monitoring and assessment is that investing in better information
+will facilitate improved management practices and decision-making, which will thereby result in
+improved outcomes.
+<!--l. 65--><p class="indent" >   Similarly, outreach projects seek to build community support for environmental efforts in a
+watershed (Huntington 2000) and educational projects seek to foster agreement on how to
+improve a watershed (when internal to the council) (Leach et al. 2002) or to promote
+environmentally responsible behaviors (when external to the council) (Nikolic and Koontz
+2008). Education and outreach program logic is that such programs foster learning that alters
+stakeholder beliefs and practices (e.g., Leach et al. 2013; Leach et al. 2002) or build
+community support and motivation (Huntington 2000; Emerson et al. 2012), serving
+to change environmental behaviors or improve implementation efforts and in turn
+improving environmental outcomes. For instance, Lubell and Fulton (2008) demonstrate
+that increased exposure to policy networks, such as might be fostered through an
+outreach project, increases the probability that landowners will adopt environmental
+practices.<span class="footnote-mark"><a 
+href="TScott_JPART_20142.html#fn1x0"><sup class="textsuperscript">1</sup></a></span><a 
+ id="x1-4001f1"></a>
+<!--l. 67--><p class="indent" >   Finally, council support grants fund group coordinators and group administrative functions.
+In other words, these types of grants support the existence and operation of the nonprofit
+
+watershed council itself. Collaborative management is theorized to engender principled
+engagement amongst participants that fosters shared motivation, which in turn enables joint
+actions which could not be accomplished separately (Emerson et al. 2012). Adequate support is
+shown to be critical to for collaborative efforts to be successful in this regard (Lubell
+et al. 2009). In particular, there are significant transaction costs associated with
+initiating and maintaining inter-organizational endeavors, and government provision of
+staffing, infrastructure, and other resources are shown facilitate such efforts (Schneider
+et al. 2003). Emerson et al. (2012) theorize that collaborative actions are likely to be
+implemented only to the extent to which the three collaborative dynamics (principled
+engagement, shared motivation, and capacity for joint action) function. Thus, to put
+a fine point on a broad and nuanced literature, the program logic for investing in
+council support is that a well-functioning collaborative group will result in policy and
+program outputs that draw on more relevant perspectives (Ansell and Gash 2008;
+O&#8216;Leary et al. 2006; Leach 2006), have increased commitment from participants (Bryson
+et al. 2006; Ansell and Gash 2008), and could not be produced separately (Emerson
+et al. 2012), and that these improved outputs will result in improved environmental
+outcomes.
+<!--l. 69--><p class="indent" >   As with any investment, the program logic for each type of grant speaks to a tradeoff of risk
+and reward. For instance, education projects are affordable and easy to carry out (Leach et al.
+2002), but have a much more uncertain causal link to environmental outcomes than do projects
+that produce direct environmental outputs. If a project does not alter stakeholder
+behavior, or if the impacts of stakeholder behaviors are relatively minor in the grand
+scheme of things, then it will not change environmental outcomes at all. However,
+if a project is successful in changing consequential stakeholder behaviors or helps
+the community agree on necessary improvement steps, then it might result in large
+changes in environmental outcomes at the cost of producing relatively inexpensive
+outputs. Similarly, a relatively minor investment in improving processes and policies via
+collaborative approaches might result in considerable impact. With the exception of certain
+economies of scale, such as that achieved by improving habitat connectivity, OWEB
+
+essentially gets only us much restoration as it pays for; other nonprofit watershed council
+activities can potentially produce more environmental outputs in excess of the original
+expenditure.
+<!--l. 71--><p class="indent" >   However, as mentioned previously the literature also emphasizes the time-consuming nature
+of collaborative management (e.g., Margerum 2011; Ansell and Gash 2008; Imperial 2005) and
+expresses skepticism about possible achievements of deliberative, consensus-based policymaking
+(Coglianese 2003; Gunton 2003). In any case, since we do not know a great deal about the
+relationship between collaborative management outputs and environmental outcomes generally
+(Carr et al. 2012; Koontz and Thomas 2006; Newig and Fritsch 2009), I pose a conservative
+hypothesis that assumes that restoration grants, which have the most direct theoretical
+causal link between outputs and policy outcomes (e.g., revegetation that directly
+alters streamside riparian areas, which has an effect on water quality), will produce
+measurable water quality changes and grants for other purposes (with non-environmental
+outputs) such as education, outreach, administrative support, and technical support will
+not:
+      <ul class="itemize1">
+      <li class="itemize"><span 
+class="cmti-12">Hypothesis 2: Grants for restoration will measurably improve water quality, while</span>
+      <span 
+class="cmti-12">grants for projects that to not have direct environmental outputs will not.</span></li></ul>
+   <h3 class="likesectionHead"><a 
+ id="x1-5000"></a>Model and Methods</h3>
+<!--l. 80--><p class="noindent" >In accordance with these hypotheses, the goal of this paper is to estimate the effect of grants
+given to watershed councils on water quality. Water quality index observations (<span 
+class="cmmi-12">Y</span> <sub><span 
+class="cmmi-8">itj</span></sub>) occur at
+location <span 
+class="cmmi-12">i </span>in time period <span 
+class="cmmi-12">t </span>within stratum (HUC8 watershed in this case) <span 
+class="cmmi-12">j</span>. Standard regression
+models are inappropriate in this application, since it is expected that two observations near to
+each other in spatial location or time, or within the same administrative boundary (e.g., under
+the purview of a given watershed council) are more similar than two randomly selected
+observations (and thus exhibit residual dependency, i.e., correlated residuals). These
+data are thus highly similar to many epidemiological data contexts, as there is an
+
+outcome (water quality) and a risk factor or confounder (grant funded projects)
+and where the spatial (sample sites in the state of Oregon) and temporal (monthly
+observations) structure of the data must be accounted for in order to make valid inferences.
+Accordingly, I use a suite of Bayesian hierarchical modeling methods found primarily in
+the epidemiological (Cameletti et al. 2013; Blangiardo et al. 2010, 2013), spatial
+econometrics (Bivand et al. 2008, 2013; Gomez-Rubio et al. 2014), and ecological modeling
+(Cosandey-Godin et al. 2014; Clark 2005; Clark and Gelfand 2006; Wikle 2003; Cressie
+et al. 2009; Wikle and Hooten 2010; Xu and Wikle 2007; Cressie and Wikle 2011)
+literatures.
+<!--l. 82--><p class="indent" >   A Bayesian model derives a statistical result (the posterior distribution) via an inferential
+process that combines the prior distribution (what was assumed prior to observing additional
+data) with the current data model (Bernardo and Smith 2009). For this application, there are
+two primary advantages of the Bayesian approach. First, since a posterior parameter
+distribution is estimated by the model, it is easy to obtain the posterior probability that the
+parameter does or does not exceed a given value (Blangiardo et al. 2013); this is easier to
+interpret than p-values used in frequentist statistics. Second, Bayesian methods greatly ease the
+use of hierarchical model structures, which use random effects to model variance at multiple
+levels of a model. The Bayesian model I use includes random effects that model spatial
+and temporal dependence amongst observations. Bayesian methods are shown to be
+highly effective for analyzing data with this type of spatio-temporal structure (Dunson
+2001).
+<!--l. 84--><p class="indent" >   Hierarchical Bayesian models are typically fit using Markov chain Monte Carlo (MCMC)
+algorithms which use a simulation-based approach to model the posterior parameter
+distributions (Brooks et al. 2011; Robert and Casella 2004; LeSage and Pace 2010).
+Since these methods rely on a very large number of simulations applied to complex
+model structures, MCMC methods are greatly time- and computationally-intensive
+(Blangiardo et al. 2013). In lieu of MCMC, I use a more computationally efficient
+method, Integrated Nested Laplace Approximation (INLA), developed by Rue et al.
+(2009) and widely employed for Bayesian hierarchical modeling (Beguin et al. 2012;
+
+Martino et al. 2011; Martino and Rue 2010; Lindgren et al. 2011; Cosandey-Godin et al.
+2014).
+<!--l. 86--><p class="indent" >   Given that INLA is relatively new and has as-of-yet limited penetration into the policy
+literature, along with describing the model specification used in this paper I also provide
+background on the INLA estimation method more generally. A full description of the
+INLA methodology is beyond the scope of this paper; Rue et al. (2014) and Lindgren
+and Rue (2013) provide excellent technical background. Based on the specifications
+of Cameletti et al. (2013)and Cosandey-Godin et al. (2014) for a spatio-temporal
+point-reference model, water quality observations in a given watershed at a specific time
+and location are linked to a structured additive predictor <span 
+class="cmmi-12">&#x03B7; </span>that is defined linearly
+as:
+   <table 
+class="equation"><tr><td>
+   <center class="math-display" >
+<img 
+src="TScott_JPART_20140x.png" alt="           &#x2211;M
+&#x03B7; = &#x03B1;h[i] +     &#x03B2;mSitei + f(.) + &#x03B6;t[i] + &#x03C4;t[i]
+           m=1
+" class="math-display" ><a 
+ id="x1-5001r1"></a></center></td><td class="equation-label">(1)</td></tr></table>
+<!--l. 91--><p class="nopar" >
+<!--l. 93--><p class="indent" >   where <span 
+class="cmmi-12">&#x03B2;</span><sub><span 
+class="cmmi-8">m</span></sub> is the coefficient associated with site covariate <span 
+class="cmmi-12">m </span>for observation <span 
+class="cmmi-12">i</span>
+(including elevation and distance from coast); <span 
+class="cmmi-12">f</span>(<span 
+class="cmmi-12">.</span>) represents the semi-parametric function
+used to model the spatio-temporal random effect (described in more detail below);
+<span 
+class="cmmi-12">&#x03C4;</span><sub><span 
+class="cmmi-8">t</span><span 
+class="cmr-8">[</span><span 
+class="cmmi-8">i</span><span 
+class="cmr-8">]</span></sub> = (<span 
+class="cmmi-12">t</span><sub><span 
+class="cmr-8">1</span></sub><span 
+class="cmmi-12">,...,t</span><sub><span 
+class="cmmi-8">T</span> </sub>) represents a smoothed linear trend (a generalized additive model [GAM] term)
+accounting for long term water quality trajectory; <span 
+class="cmmi-12">&#x03B6;</span><sub><span 
+class="cmmi-8">t</span><span 
+class="cmr-8">[</span><span 
+class="cmmi-8">i</span><span 
+class="cmr-8">]</span></sub> = (<span 
+class="cmmi-12">t</span><sub><span 
+class="cmr-8">1</span></sub><span 
+class="cmmi-12">,...,t</span><sub><span 
+class="cmmi-8">T</span> </sub>) is a seasonal
+component with periodicity (<span 
+class="cmmi-12">p </span>= 12) to account for expected seasonal variation in water
+
+quality in Oregon, particularly between low-flow (June to September) and high-flow
+(October to May) months (Cude 2001); and <span 
+class="cmmi-12">&#x03B1;</span><sub><span 
+class="cmmi-8">h</span><span 
+class="cmr-8">[</span><span 
+class="cmmi-8">i</span><span 
+class="cmr-8">]</span></sub> is the random intercept estimated for
+observation <span 
+class="cmmi-12">i </span>in a given HUC8 watershed <span 
+class="cmmi-12">h</span>. The advantage of fitting a random group
+effect as opposed to a fixed effect is twofold. First, the random effect accounts for
+differing within-group sample sizes by placing more emphasis on the group mean
+when there are many observations in the group and drawing more broadly from the
+population mean when there are very few observations in the group (Gelman 2006;
+Gelman et al. 2013). This helps ensure that predicted differences between watersheds
+are not simply a product of small within-watershed sample sizes by attenuating the
+group-level estimates for watersheds with fewer water quality samples towards the
+overall mean (producing more conservative group-level estimates than would a basic
+fixed-effect approach). Second, and of particular importance for this analysis, is that the
+random group effect can itself be modeled as a function of group-level covariates. This
+includes important water quality control variables, such as the percentage of land in
+the watershed that is developed (e.g., paved or contains buildings) and that is used
+for agricultural purposes. It also includes grant funding, the variable(s) of interest.
+Since grants are given to watershed councils, it makes the most sense to aggregate
+funding at the watershed level. The HUC8-specific adjustment is thus itself modeled
+as:
+   <table 
+class="equation"><tr><td>
+   <center class="math-display" >
+<img 
+src="TScott_JPART_20141x.png" alt="           &#x2211;W
+&#x03B1;h =  &#x03B1;0 +     &#x03B3;wW atershedwj [i]
+           w=1
+" class="math-display" ><a 
+ id="x1-5002r2"></a></center></td><td class="equation-label">(2)</td></tr></table>
+
+<!--l. 98--><p class="nopar" >
+<!--l. 100--><p class="indent" >   where <span 
+class="cmmi-12">&#x03B1;</span><sub><span 
+class="cmr-8">0</span></sub> is the population average and <span 
+class="cmmi-12">&#x03B3;</span><sub><span 
+class="cmmi-8">w</span></sub> represents a vector of coefficients
+corresponding to watershed-level variables 1 to <span 
+class="cmmi-12">W </span>for an observation (<span 
+class="cmmi-12">i</span>) in a given watershed
+(<span 
+class="cmmi-12">h</span>).
+<!--l. 102--><p class="indent" >   The way INLA facilitates Bayesian inference on model parameters is by assuming that these
+model parameters collectively constitute a latent field, <span 
+class="cmmi-12">&#x03B8; </span>= <span 
+class="cmsy-10x-x-120">{</span><span 
+class="cmmi-12">&#x03B1;</span><sub><span 
+class="cmmi-8">j</span></sub><span 
+class="cmmi-12">,&#x03B2;</span><sub><span 
+class="cmmi-8">m</span></sub><span 
+class="cmmi-12">,f,&#x03B6;</span><sub><span 
+class="cmmi-8">t</span></sub><span 
+class="cmmi-12">,&#x03C4;</span><sub><span 
+class="cmmi-8">t</span></sub><span 
+class="cmsy-10x-x-120">}</span>. This latent field is
+in turn assumed to be a defined by a Gaussian multivariate distribution of mean 0 and
+precision matrix <span 
+class="cmmi-12">Q</span>(<span 
+class="cmmi-12">&#x03C8;</span>), such that <span 
+class="cmmi-12">&#x03B8; </span><span 
+class="cmsy-10x-x-120">~ </span><span 
+class="cmmi-12">N</span>(0<span 
+class="cmmi-12">,Q</span><sup><span 
+class="cmsy-8">-</span><span 
+class="cmr-8">1</span></sup>(<span 
+class="cmmi-12">&#x03C8;</span>) (Blangiardo et al. 2013; Rue and Held 2005;
+Rue et al. 2009; Cosandey-Godin et al. 2014). Using this model, an individual observation
+<span 
+class="cmmi-12">y</span>(<span 
+class="cmmi-12">s</span><sub><span 
+class="cmmi-8">i</span></sub><span 
+class="cmmi-12">,t</span>) (at location <span 
+class="cmmi-12">s </span>and time <span 
+class="cmmi-12">t</span>) is modeled by a subset of <span 
+class="cmmi-12">&#x03B8; </span>according to its spatio-temporal
+characteristics:
+   <table 
+class="equation"><tr><td>
+   <center class="math-display" >
+<img 
+src="TScott_JPART_20142x.png" alt="                        &#x2211;
+y (si,t)|&#x03B8;, &#x03C8; ~ p(y(si,t)|  ,Aij&#x03B8;j,&#x03C8; )
+                         j
+" class="math-display" ><a 
+ id="x1-5003r3"></a></center></td><td class="equation-label">(3)</td></tr></table>
+<!--l. 107--><p class="nopar" >
+<!--l. 109--><p class="indent" >   In Equation &#x00A0;<a 
+href="#x1-5003r3">3<!--tex4ht:ref: eq:spacetime --></a>, the observation matrix <span 
+class="cmmi-12">A</span><sub><span 
+class="cmmi-8">ij</span></sub> is where the SPDE method enters in. In order to
+account for spatial dependence amongst water quality observations, this model includes a
+random spatial effect known as a Gaussian random field (GRF) (Cosandey-Godin et al. 2014).
+Modeling a continuous spatial process obviously poses a significant, and largely intractable,
+computational challenge. The SPDE method posed by Lindgren et al. (2011) indexes the
+
+continuous GRF as a discrete random process, or a Gaussian Markov random field (GMRF)
+(Lindgren and Rue 2013), by dividing the spatial domain (the state of Oregon in this
+case) into a mesh of triangles (Blangiardo et al. 2013). Essentially, this triangular
+grid is used to approximate the continuous field. The observation matrix <span 
+class="cmmi-12">A </span>contains
+the values of the spatio-temporal random field at the specific times and locations
+contained in the dataset and uses these values for parameter estimation (Cosandey-Godin
+et al. 2014). Since values are only stored for specific points (triangle vertices in the
+mesh) (points within a triangle can be estimated by extrapolating between values at
+neighboring vertices), this provides considerable computational savings. The latent field is
+thus linked to model likelihood via <span 
+class="cmmi-12">A</span>, such that <span 
+class="cmmi-12">&#x03B7;</span><sup><span 
+class="cmsy-8">*</span></sup> = <span 
+class="cmmi-12">A&#x03B7; </span>(Cosandey-Godin et al.
+2014):
+   <table 
+class="equation"><tr><td>
+   <center class="math-display" >
+<img 
+src="TScott_JPART_20143x.png" alt="                 n&#x220F;
+p(y(si,t)|&#x03B8;,&#x03C8; ) =    p(y(si,t)|&#x03B7;*,&#x03C8;)
+                 i=1
+" class="math-display" ><a 
+ id="x1-5004r4"></a></center></td><td class="equation-label">(4)</td></tr></table>
+<!--l. 114--><p class="nopar" >
+<!--l. 116--><p class="noindent" >Further details regarding INLA and SPDE methods are provided in the context of the analysis
+presented below. First, I describe the data used in this model.
+<!--l. 119--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-6000"></a>Data</h3>
+
+<!--l. 121--><p class="noindent" >
+   <h4 class="likesubsectionHead"><a 
+ id="x1-7000"></a>Dependent Variable</h4>
+<!--l. 122--><p class="noindent" >The dependent variable of interest, a water quality index score, is obtained from the Oregon
+Department of Environmental Quality (ODEQ). The Oregon Water Quality Index (OWQI) is a
+multimetric index that integrates eight water quality variables (temperature, dissolved
+oxygen, biochemical oxygen demand, pH, total nitrogen, total phosphorus, total
+solids, and fecal coliform) into one comprehensive metric (Cude 2001). For each of
+these eight subindices, the analytical measurement is converted into a quality rating
+between 10 (worst case) and 100 (ideal); ODEQ then uses a harmonic square mean
+formula:
+   <table 
+class="equation"><tr><td>
+   <center class="math-display" >
+<img 
+src="TScott_JPART_20144x.png" alt="           &#x250C; ---------
+           &#x2502;&#x2502;    S
+OW   QI =  &#x2218; &#x2211;S----1--
+               s=1SI2s
+" class="math-display" ><a 
+ id="x1-7001r5"></a></center></td><td class="equation-label">(5)</td></tr></table>
+<!--l. 127--><p class="nopar" >
+<!--l. 129--><p class="noindent" >where <span 
+class="cmmi-12">SI</span><sub><span 
+class="cmmi-8">s</span></sub> refers to subindex <span 
+class="cmmi-12">s </span>in subindices 1 to <span 
+class="cmmi-12">S </span>(e.g., pH level), to compute the OWQI
+score. In this method, the most impaired variable imparts the greatest influence on overall
+index score (Cude 2001), which thus provides a holistic measure of general water quality (since
+a site cannot have a relatively high overall score if it performs poorly on any metric). It
+is important to note that the OWQI is best suited as a comparative metric; not
+
+only is the index calibrated specifically for streams in the state of Oregon, but it
+does not reflect the suitability of water for specific uses (e.g., fishing or swimming).
+It does, however, provide an excellent synopsis of overall water quality that allows
+for comparison of observations from across the state over time. In particular, the
+OWQI is designed to facilitate comparisons between watersheds, and thus sub-indices
+such as pH and total solids are adjusted to account for geologic variability (Cude
+2001).
+<!--l. 132--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+
+<a 
+ id="x1-70021"></a>
+
+<a 
+ id="x1-7000doc"></a>
+<!--l. 136--><p class="noindent" ><img 
+src="obsbystation.png" alt="PIC"  
+>
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;1: </span><span  
+class="content"><span 
+class="cmti-12">Observations by sampling station: January 1995 to December 2013</span></span></div><!--tex4ht:label?: x1-70021 -->
+
+<!--l. 138--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 140--><p class="indent" >   OWQI scores are observed on an intermittent monthly basis from 1990 to 2013 at 141
+monitoring stations. Generally, in the data obtained from ODEQ index scores are tabulated
+every other month. For instance, some stations have observations in June and August while
+others have observations in July and September. In a few cases, however, there are only three
+or four total monthly observations in total at a given site. One major empirical advantage of
+the INLA hierarchical model and the random effects approach I use is that it can readily
+handle this type of irregular data. Thus, there is no need to drop any data or to impute
+data for undersampled sites or unsampled months. In total, there are 16,676 unique
+observations. Figure 1 shows how many observations are included for each of the 141
+sample sites; each dot represents a given month between January 1995 and December
+2013.
+   <h4 class="likesubsectionHead"><a 
+ id="x1-8000"></a>Independent Variables</h4>
+<!--l. 144--><p class="noindent" >The independent variables of interest are obtained from the Oregon Watershed Enhancement
+Board (OWEB). The grant database received from OWEB contains record of all grant projects
+funded by OWEB, including location (watershed), project start and end dates, project type,
+and funding amount; this analysis specifically considers 2509 grants given to watershed councils
+throughout the state between 1997 and 2013. Table &#x00A0;<a 
+href="#x1-80011">1<!--tex4ht:ref: table:grantsummary --></a> summarizes the nature of these
+grants:
+   <div class="table">
+
+<!--l. 4--><p class="indent" >   <a 
+ id="x1-80011"></a><hr class="float"><div class="float" 
+>
+
+ <div class="caption" 
+><span class="id">Table&#x00A0;1: </span><span  
+class="content">Grant summary statistics</span></div><!--tex4ht:label?: x1-80011 -->
+<div class="tabular"> <table id="TBL-2" class="tabular" 
+cellspacing="0" cellpadding="0"  
+><colgroup id="TBL-2-1g"><col 
+id="TBL-2-1"><col 
+id="TBL-2-2"><col 
+id="TBL-2-3"><col 
+id="TBL-2-4"></colgroup><tr  
+ style="vertical-align:baseline;" id="TBL-2-1-"><td  style="white-space:nowrap; text-align:center;" id="TBL-2-1-1"  
+class="td01">&#x00A0;                                                                                                                   </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-2-2-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-02-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-02-2-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-02-3-"><td  style="white-space:nowrap; text-align:center;" id="TBL-02-3-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-02-4-"><td  style="white-space:nowrap; text-align:center;" id="TBL-02-4-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-02-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-02-5-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-002-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-002-5-1"  
+class="td01">                                                                       </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-002-6-"><td  style="white-space:nowrap; text-align:center;" id="TBL-002-6-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-002-7-"><td  style="white-space:nowrap; text-align:center;" id="TBL-002-7-1"  
+class="td01">&#x00A0;                                                                                                                    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-002-7-2"  
+class="td11"> N  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-002-7-3"  
+class="td11">Avg. Amount ($)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-002-7-4"  
+class="td11">Avg. Length (months)</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-002-8-"><td  style="white-space:nowrap; text-align:center;" id="TBL-002-8-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-002-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-002-9-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-9-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-10-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-10-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-11-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-11-1"  
+class="td01">&#x00A0;                               Monitoring/Assessment/Tech. Assistance                               </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-11-2"  
+class="td11"> 579 </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-11-3"  
+class="td11">    41972.26      </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-11-4"  
+class="td11">       24.79           </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-12-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-12-1"  
+class="td01">&#x00A0;                                               Council Support                                               </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-12-2"  
+class="td11"> 372 </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-12-3"  
+class="td11">   104154.25     </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-12-4"  
+class="td11">       26.37           </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-13-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-13-1"  
+class="td01">&#x00A0;                                            Education/Outreach                                            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-13-2"  
+class="td11"> 159 </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-13-3"  
+class="td11">    23515.76      </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-13-4"  
+class="td11">       17.24           </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-14-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-14-1"  
+class="td01">&#x00A0;                                                  Restoration                                                  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-14-2"  
+class="td11">1384</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-14-3"  
+class="td11">    69498.97      </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-14-4"  
+class="td11">       24.91           </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-15-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-15-1"  
+class="td01">&#x00A0;                                                   All Grants                                                   </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-15-2"  
+class="td11">2494</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-15-3"  
+class="td11">    65345.99      </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0002-15-4"  
+class="td11">       24.61           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-16-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-16-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0002-17-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0002-17-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-00002-17-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00002-17-1"  
+class="td01">                                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00002-18-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00002-18-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00002-19-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00002-19-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr></table>
+</div>
+
+   </div><hr class="endfloat" />
+   </div>
+<!--l. 148--><p class="indent" >   While in some cases, a grant is targeted at a specific site (as is often the case for restoration
+grants), many OWEB grants have a more disparate spatial focus. For instance, an
+outreach project might be targeted at an entire watershed or basin. To model the
+spatial focus of grants, grants are aggregated by HUC8 for each month (228 months
+in total from 1995 to 2013). The total value of a grant is divided by the length of
+the project in months to calculate a monthly value of each grant; for instance, a
+$60,000 grant project started in March, 2001 and ending in May, 2001 results in a
+value of $20,000 for each of March, April, and May. While it is unlikely that grant
+funds are expended uniformly in practice, the true model of fund distribution is
+unclear from these data. The temporal distribution of funds also likely varies greatly
+between projects in any case. Assuming uniform monthly expenditure across the
+life of the project provides a consistent approach that is simple to interpret. This
+method also provides a consistent treatment of projects ongoing as of December, 2013,
+allocating funds in proportion to the portion of the project timeline that has already
+passed.
+<!--l. 150--><p class="indent" >   Measuring the impact of grants given to watershed councils poses several significant
+issues. The effects of a grant do not necessarily correspond directly to the actual
+project period. For instance, a restoration grant used to restore streamside riparian
+areas should have an ongoing impact on stream turbidity by reducing erosion for
+years after the project is finished. An OWEB education or outreach grant likewise is
+expected to have an ongoing impact on stakeholder behavior in the watershed. Of
+course, in the absence of ongoing maintenance efforts, the effect of restoration or
+outreach actions likely dissipate or diminish over time. In other words, recording the
+cumulative total of all grant funding is also inappropriate. To accommodate both the
+potential for effects that last beyond the actual project duration and for effects that
+diminish over time, I specify grant funding (for each category of grant) as a rolling
+sum of active funds for three different time periods: one year, three years, and five
+
+years.<span class="footnote-mark"><a 
+href="TScott_JPART_20143.html#fn2x0"><sup class="textsuperscript">2</sup></a></span><a 
+ id="x1-8002f2"></a>
+For instance, for the five-year metric, active grant funds in a given watershed in January 2005
+are the sum of all monthly grant funds in that watershed between January 2000 and
+January 2005. The three different specifications are compared below in the model
+results.
+   <h4 class="likesubsectionHead"><a 
+ id="x1-9000"></a>Covariates</h4>
+<!--l. 154--><p class="noindent" >One of the advantages of the spatio-temporal model is that accounting for temporal and spatial
+relationships between observations serves to address many of the factors that affect water
+quality. For instance, more or less rainfall than is typical in a given year might affect water
+quality scores by increasing or reducing water levels; grouping observations by time accounts
+for this sort of variation. Likewise, the HUC8 random effects describe above account for local
+characteristics that differ across watersheds, such as management institutions or population.
+Several additional covariates are included in the model, however, in order to address factors
+that are not accounted for by controlling for the relative location of an observation in space and
+time.
+<!--l. 156--><p class="indent" >   First, the western portion of Oregon in between the Pacific Ocean and the Cascade
+Mountains receives much more rainfall than does the eastern portion and has a much different
+
+climate. The distance between a given sample site and the coast makes a considerable difference
+for observations. Thus, the model includes a variable measuring the Euclidean distance between
+the sample site and the Oregon coast (mapped using geodata obtained from the Oregon
+Geospatial Data Library).
+<!--l. 158--><p class="indent" >   Further, land use and land cover are well established as key drivers of water quality (Tong
+and Chen 2002; Meador and Goldstein 2003). Agricultural land usage is linked to
+increased water chemical content (Skaggs et al. 1994; Johnes and Heathwaite 1997).
+Waterways near developed land also demonstrate higher pollution levels (Wang
+2001) (e.g., cars that leak oil onto pavement, which then washes into streams). To
+calculate the proportion of each HUC8 watershed that this used for agricultural
+purpose or that is developed, I use 30-meter by 30-meter raster (pixel image) data
+from the National Land Cover Database (NLCD). The NLCD includes national land
+cover data for 1992, 2001, 2006, and 2011. Using ArcGIS, I first produce a binary
+True/False raster for each land cover type (agricultural land [cropland or pasture],
+wetlands,<span class="footnote-mark"><a 
+href="TScott_JPART_20144.html#fn3x0"><sup class="textsuperscript">3</sup></a></span><a 
+ id="x1-9001f3"></a>
+forest, and developed land), where each 30-meter by 30-meter pixel is coded as a 1 if that pixel
+in the comprehensive NLCD raster corresponds to the designated land cover type, and a 0
+otherwise. I then use the <span 
+class="cmti-12">sp </span>(Pebesma and Bivand 2014) and <span 
+class="cmti-12">raster </span>(Hijmans 2014) packages in
+R to calculate the mean pixel value of all pixels within a 1000-meter radius surrounding each
+sample site for each land cover type. The buffer zone land cover values calculated using the
+1992 NLCD are then matched to water quality observations from 1995-2001, the 2001 NLCD
+data to water quality observations from 2002 to 2005, the 2006 NLCD data to water
+quality observations from 2006 to 2010, and the 2011 NLCD data to water quality
+observations from 2010 to 2013. While it would be ideal to have more fine-grained
+land cover data, perhaps on a yearly or quarterly basis, the NLCD data in this case
+satisfy the purpose at hand; the absolute values are less important than having a
+
+consistent way to account for relative differences in land usage amongst watersheds. I also
+use elevation data obtained from the CGIAR Consortium for Spatial Information
+using the R <span 
+class="cmti-12">raster </span>package (Hijmans 2014) to control for the elevation of the sample
+site.
+   <h3 class="likesectionHead"><a 
+ id="x1-10000"></a>Model Fitting and Selection</h3>
+<!--l. 162--><p class="noindent" >Before presenting results specifically pertaining to my hypotheses, I describe how
+I fit these data into the Bayesian hierarchical model and identify the best-fitting
+specification. All models are estimated using R (R Core Team, 2013) and the INLA package
+developed by Rue et al. (2009). As described above, Bayesian models estimation
+posterior parameter distributions; this implies that each parameter also has a prior
+distribution. Since there are no prior data in this case, prior estimates are specified vaguely
+using the default recommended INLA settings (Rue et al. 2009) and are said to be
+non-informative priors (Gelman et al. 2013). This means that posterior estimates are
+almost wholly generated in light of the data (i.e., the priors have little effect on the
+posterior estimates). The spatial mesh used for the SPDE approach is shown in Figure
+2:
+<!--l. 164--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+
+<a 
+ id="x1-100012"></a>
+
+<!--l. 166--><p class="noindent" ><img 
+src="oregonmeshplot.png" alt="PIC"  
+>
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;2: </span><span  
+class="content"><span 
+class="cmti-12">Triangular mesh used for SPDE model</span></span></div><!--tex4ht:label?: x1-100012 -->
+
+<!--l. 170--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 172--><p class="indent" >   Water quality sampling stations can be used, but do not need to be, as triangle vertices in
+the mesh (Lindgren et al. 2011). The mesh is more finely grained in areas where there are more
+water quality sampling stations; larger triangles represent areas with little or no information
+(Cosandey-Godin et al. 2014). Essentially, this serves so that the model estimates the field
+with increased accuracy where there are sufficient data, and conversely does not
+attempt to model the spatial random effect with great detail where there are no data.
+This model feature is important, since as Figure 2 demonstrates, there are no water
+quality sampling stations in much of eastern Oregon (in large part due to the fact that
+there are much fewer streams in the eastern portion of the state) while sample sites
+are highly concentrated in western Oregon. Figure 2 also shows that the mesh is
+extended beyond the boundaries of the sample area; this is done to avoid boundary
+effects wherein there is increased variance at the borders of a spatial field (since
+locations near the field border have fewer surrounding values) (Lindgren and Rue
+2013).
+<!--l. 174--><p class="indent" >   There are several possible methods by which to model spatio-temporal correlation posed by
+Cosandey-Godin et al. (2014) that I compare: (Model 0) no spatial correlation; (Model
+1) spatial correlation that is constant over time; (Model 2) spatial correlation that
+has a different realization for each year; (Model 3) spatial correlation that is itself
+correlated in consecutive years; (Model 4) spatial correlation that is repeated amongst
+years, so that the correlation between 2000 and 2001 is the same as that between
+2000 and 2007; (Model 5) spatial correlation that has a different realization for each
+month; (Model 6) spatial correlation in which consecutive months in the same year are
+correlated; and (Model 7) spatial correlation that is repeated amongst months in a
+given year, so that the correlation between March 2007 and April 2007 is the same
+as that between March 2007 and September 2007). Table &#x00A0;<a 
+href="#x1-100022">2<!--tex4ht:ref: table:dicscores --></a> presents the results
+associated with each of these models, as well as a model without an SPDE component, fit
+without the grant funding data. I select the optimal spatio-temporal model structure
+based upon Deviance Information Criterion (DIC) scores, which are a version of
+
+the traditional Akaike Information Criterion (AIC) score adapted to better suite
+hierarchical Bayesian models (<span 
+class="cmbx-12">speigelhalter2002</span>; Ward 2008). As with AIC (and
+Bayesian Information Criterion [BIC]) scores, lower DIC scores indicate a better-fitting
+model:
+   <div class="table">
+
+<!--l. 4--><p class="indent" >   <a 
+ id="x1-100022"></a><hr class="float"><div class="float" 
+>
+
+ <div class="caption" 
+><span class="id">Table&#x00A0;2: </span><span  
+class="content">Compare DIC scores for different SPDE models</span></div><!--tex4ht:label?: x1-100022 -->
+<div class="tabular"> <table id="TBL-3" class="tabular" 
+cellspacing="0" cellpadding="0"  
+><colgroup id="TBL-3-1g"><col 
+id="TBL-3-1"><col 
+id="TBL-3-2"><col 
+id="TBL-3-3"><col 
+id="TBL-3-4"><col 
+id="TBL-3-5"><col 
+id="TBL-3-6"><col 
+id="TBL-3-7"><col 
+id="TBL-3-8"><col 
+id="TBL-3-9"></colgroup><tr  
+ style="vertical-align:baseline;" id="TBL-3-1-"><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-1"  
+class="td01">&#x00A0;                                                                                                                   </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="9"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-03-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-03-2-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-03-3-"><td  style="white-space:nowrap; text-align:center;" id="TBL-03-3-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-03-4-"><td  style="white-space:nowrap; text-align:center;" id="TBL-03-4-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-03-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-03-5-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="9"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-003-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-003-5-1"  
+class="td01">                                                                       </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-003-6-"><td  style="white-space:nowrap; text-align:center;" id="TBL-003-6-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-003-7-"><td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-1"  
+class="td01">&#x00A0;                                                                                                                    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-2"  
+class="td11"> M0  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-3"  
+class="td11"> M1  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-4"  
+class="td11"> M2  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-5"  
+class="td11">M3</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-6"  
+class="td11">M4</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-7"  
+class="td11"> M5  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-8"  
+class="td11"> M6  </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-003-7-9"  
+class="td11"> M7  </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-003-8-"><td  style="white-space:nowrap; text-align:center;" id="TBL-003-8-1"  
+class="td01">&#x00A0; </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-003-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-003-9-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="9"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0003-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0003-9-1"  
+class="td01">                                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0003-10-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0003-10-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0003-11-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-1"  
+class="td01">&#x00A0;                                                   DIC score:                                                   </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-2"  
+class="td11">2<span 
+class="cmmi-12">, </span>765</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-3"  
+class="td11">2<span 
+class="cmmi-12">, </span>048</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-4"  
+class="td11">2<span 
+class="cmmi-12">, </span>227</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-5"  
+class="td11">-23</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-6"  
+class="td11"> 50 </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-7"  
+class="td11">2<span 
+class="cmmi-12">, </span>068</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-8"  
+class="td11">1<span 
+class="cmmi-12">, </span>637</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0003-11-9"  
+class="td11">1<span 
+class="cmmi-12">, </span>686</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0003-12-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0003-12-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0003-13-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0003-13-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="9"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-00003-13-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00003-13-1"  
+class="td01">                                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00003-14-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00003-14-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00003-15-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00003-15-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr></table>
+</div>
+
+   </div><hr class="endfloat" />
+   </div>
+<!--l. 178--><p class="indent" >   As Table &#x00A0;<a 
+href="#x1-100022">2<!--tex4ht:ref: table:dicscores --></a> demonstrates, Model 3 has the smallest DIC value by far, indicating that it
+provides the optimal method for modeling spatial correlation over time. Model three fits a
+separate spatial correlation for each year (1995 through 2013), but assumes that the spatial
+correlation between consecutive years is itself correlated. Relative to the some of the other
+specifications, this makes a great deal of intuitive sense. First, spatial correlation refers
+to the underlying spatial process assumed to present; while conditions at different
+sites might vary considerably, the role that spatial distance plays in these conditions
+likely remains relatively constant. Thus, it makes sense to model all months in a
+given year as having the same spatial correlation function. Depending on broader
+ecological, economic, or political changes, however, one might also expect to see
+the role of spatial relationships change at least somewhat over 20 year period, as is
+included in this analysis. Assuming that consecutive years are correlated (i.e., spatial
+correlation in one year is very much like that of the following year), but allowing spatial
+correlation to change over time accounts for such long-term, incremental changes.
+As discussed above, the model also includes terms to capture temporal trends and
+seasonal fluctuation. Figure 3 shows the smoothed time trend and seasonal trend fitted
+as part of Model 3. It is interesting to note that overall, water quality appears to
+fluctuate between 1995 and 2013 but there is no discernible upward or downward
+trend.
+<!--l. 180--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+
+<a 
+ id="x1-100033"></a>
+
+<!--l. 182--><p class="noindent" ><img 
+src="timetrendplot.png" alt="PIC"  
+>
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;3: </span><span  
+class="content"><span 
+class="cmti-12">Smoothed temporal trend and seasonality terms</span></span></div><!--tex4ht:label?: x1-100033 -->
+
+<!--l. 186--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 188--><p class="indent" >   Having identified the spatio-temporal correlation structure that best fits these data, I now
+proceed to fit grant funding into the model. First, I model the effect of all grant funds,
+regardless of type, computed using rolling 1-year, 3-year, and 5-year sums (e.g., where the
+3-year sum represents the total grant funds provided in a given watershed for the 36 months
+prior to the water quality observation). I use the 1-year interval because water quality is
+typically considered in terms of a 12-month &#8220;water year,&#8221; and the 3-year and 5-year intervals to
+potentially capture project impacts realized on a more long term basis. While as
+mentioned above there are few data that explicitly concern the effects of collaborative
+managmenet on water quality, Lubell et al. (2009, p. 281) note that the perceived
+effectiveness of collaborative efforts increases with time (see also Leach et al. 2002; Leach
+2006)
+<!--l. 191--><p class="indent" >   Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> shows the results of each of these three models. Since the dependent variable, the
+Oregon WQI score, is log-transformed, each coefficient from the model is interpreted as
+<span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">OWQI</span>) = <span 
+class="cmmi-12">&#x03B1; </span>+ <span 
+class="cmmi-12">&#x03B2;x</span>, so that a one unit increase in <span 
+class="cmmi-12">x </span>increases <span 
+class="cmmi-12">log</span>(<span 
+class="cmmi-12">OWQI</span>) by <span 
+class="cmmi-12">&#x03B2;</span>. An easier
+way to interpret these coefficients then is to exponentiate each coefficient so that it can be
+interpreted directly in terms of OWQI score where OWQI increases by a factor of exp <sup><span 
+class="cmmi-8">&#x03B2;</span></sup>. This
+multiplicative effect is how terms in Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> are presented; a coefficient greater than one
+indicates an increase in OWQI score, and a coefficient less than one indicates a decrease in
+OWQI score. As described in previously, Bayesian models produce estimates of the posterior
+distribution for each parameter; thus, what Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> presents is the quantile values that
+encompass 95% of the posterior distribution for each parameter. This is somewhat
+analogous to the confidence interval derived from a Frequentist approach; since the
+exponentiated effects are interpreted multiplicatively, the primary concern is whether these
+quantile bounds span 1 (because when <span 
+class="cmmi-12">&#x03B2; </span>= 1, <span 
+class="cmmi-12">x </span><span 
+class="cmsy-10x-x-120">* </span><span 
+class="cmmi-12">&#x03B2; </span>= <span 
+class="cmmi-12">x</span>, indicating no effect). Bounds
+that do not span one indicate a significant parameter, i.e., one that is statistically
+unlikely to be equal to zero. The DIC scores for each model in Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> are very
+similar, as is expected given the similarity between the 1-year, 3-year, and 5-year
+metrics; each model has a lower DIC score than Model 3 above, evidencing that the
+
+addition of grant funding does improve model fit. Note that each model in Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> also
+includes an intercept and random effect terms for HUC8 watershed, time, season, and
+space.
+   <div class="table">
+
+<!--l. 4--><p class="indent" >   <a 
+ id="x1-100043"></a><hr class="float"><div class="float" 
+>
+
+ <div class="caption" 
+><span class="id">Table&#x00A0;3: </span><span  
+class="content">Posterior parameter estimates, all grant types</span></div><!--tex4ht:label?: x1-100043 -->
+<div class="tabular"> <table id="TBL-4" class="tabular" 
+cellspacing="0" cellpadding="0"  
+><colgroup id="TBL-4-1g"><col 
+id="TBL-4-1"><col 
+id="TBL-4-2"><col 
+id="TBL-4-3"><col 
+id="TBL-4-4"></colgroup><tr  
+ style="vertical-align:baseline;" id="TBL-4-1-"><td  style="white-space:nowrap; text-align:center;" id="TBL-4-1-1"  
+class="td01">&#x00A0;                                                                                                                   </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-4-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-4-2-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-04-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-04-2-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-04-3-"><td  style="white-space:nowrap; text-align:center;" id="TBL-04-3-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-04-4-"><td  style="white-space:nowrap; text-align:center;" id="TBL-04-4-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-04-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-04-5-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-004-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-004-5-1"  
+class="td01">                                                                       </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-004-6-"><td  style="white-space:nowrap; text-align:center;" id="TBL-004-6-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-004-7-"><td  style="white-space:nowrap; text-align:center;" id="TBL-004-7-1"  
+class="td01">&#x00A0;                                                                                                                    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-004-7-2"  
+class="td11">  <img 
+src="TScott_JPART_20145x.png" alt="&#x02C6;&#x03B2;"  class="circ" > [0<span 
+class="cmmi-12">.</span>025<span 
+class="cmmi-12">, </span>0<span 
+class="cmmi-12">.</span>975]    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-004-7-3"  
+class="td11">  <img 
+src="TScott_JPART_20146x.png" alt="                  &#x03B2;&#x02C6;"  class="circ" > [0<span 
+class="cmmi-12">.</span>025<span 
+class="cmmi-12">, </span>0<span 
+class="cmmi-12">.</span>975]    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-004-7-4"  
+class="td11">  <img 
+src="TScott_JPART_20147x.png" alt="                                         &#x02C6;&#x03B2;"  class="circ" > [0<span 
+class="cmmi-12">.</span>025<span 
+class="cmmi-12">, </span>0<span 
+class="cmmi-12">.</span>975]    </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-004-8-"><td  style="white-space:nowrap; text-align:center;" id="TBL-004-8-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-004-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-004-9-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-9-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-10-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-10-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-11-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-11-1"  
+class="td01">&#x00A0;                                          % Agric. (1000m buffer)                                          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-11-2"  
+class="td11">0.999 (0.998, 1.000)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-11-3"  
+class="td11">0.999 (0.998, 1.000)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-11-4"  
+class="td11">0.999 (0.998, 1.000)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-12-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-12-1"  
+class="td01">&#x00A0;                                          % Forest (1000m buffer)                                          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-12-2"  
+class="td11">0.999 (0.998, 1.000)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-12-3"  
+class="td11">0.999 (0.998, 1.000)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-12-4"  
+class="td11">0.999 (0.998, 1.000)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-13-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-13-1"  
+class="td01">&#x00A0;                                          % Devel. (1000m buffer)                                          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-13-2"  
+class="td11">1.002 (1.001, 1.003)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-13-3"  
+class="td11">1.002 (1.001, 1.003)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-13-4"  
+class="td11">1.002 (1.001, 1.003)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-14-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-14-1"  
+class="td01">&#x00A0;                                               Elevation (10m)                                               </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-14-2"  
+class="td11">1.065 (0.984, 1.153)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-14-3"  
+class="td11">1.065 (0.984, 1.152)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-14-4"  
+class="td11">1.065 (0.983, 1.152)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-15-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-15-1"  
+class="td01">&#x00A0;                                          Dist. from coast (10km)                                          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-15-2"  
+class="td11">1.087 (0.892, 1.355)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-15-3"  
+class="td11">1.087 (0.891, 1.357)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-15-4"  
+class="td11">1.089 (0.892, 1.362)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-16-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-16-1"  
+class="td01">&#x00A0;                                           12 month total ($100k)                                           </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-16-2"  
+class="td11">1.004 (1.001, 1.008)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-16-3"  
+class="td11">                </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-16-4"  
+class="td11">                </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-17-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-17-1"  
+class="td01">&#x00A0;                                           36 month total ($100k)                                           </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-17-2"  
+class="td11">                </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-17-3"  
+class="td11">1.002 (1.000, 1.003)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-17-4"  
+class="td11">                </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-18-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-18-1"  
+class="td01">&#x00A0;                                           60 month total ($100k)                                           </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-18-2"  
+class="td11">                </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-18-3"  
+class="td11">                </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-18-4"  
+class="td11">1.001 (1.000, 1.002)</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-19-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-19-1"  
+class="td01">&#x00A0;                                                       DIC:                                                       </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-19-2"  
+class="td11">      -28.1          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-19-3"  
+class="td11">      -26.9          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0004-19-4"  
+class="td11">      -28.5          </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-20-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-20-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0004-21-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0004-21-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-00004-21-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00004-21-1"  
+class="td01">                                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00004-22-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00004-22-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00004-23-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00004-23-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr></table>
+</div>
+
+   </div><hr class="endfloat" />
+   </div>
+<!--l. 195--><p class="indent" >   One important issue to note with regards to Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> is that, as the reader will recognize,
+the predicted effects of even well-known influencers of water quality such as agricultural land
+usage are minimal. Similarly, while elevation and distance from the Pacific Ocean are expected
+to be highly predictive of water quality, these coefficients are shown to be unimportant in this
+model. The reason for this is that when one controls for spatial correlation, as in the SPDE
+model, spatial correlation is not a phenomenon in and of itself, but rather is a proxy for
+covariates that vary geographically such as elevation or land usage. Thus, these fixed
+effects are blurred out due to&#8220;spatial confounding&#8221; (Hodges 2014). Likewise, fitting a
+smoothed temporal term accounts not only long term climatic and environmental
+changes, but also for social, political, and economic changes that might otherwise be
+represented by time-varying covariates such as land usage. Simple hierarchical models,
+particularly fit without the SPDE method, show each of these covariates to be highly
+influential for water quality and of an expected sign (i.e., development and agriculture
+are negatively linked to water quality, forest and elevation are positively linked to
+water quality). It is interesting to note that developed land is negatively linked to
+water quality in the non-spatial model, but positively linked to water quality once
+spatial correlation is factored in, though why this is the case is unclear. Regardless of
+covariate behavior, the models that account for spatial correlation explicitly are the best
+predictive models (as shown by comparing Models 1 through 7 with Model 0 in Table
+&#x00A0;<a 
+href="#x1-100022">2<!--tex4ht:ref: table:dicscores --></a>).
+<!--l. 197--><p class="indent" >   The implication of this issue is that controlling for spatial correlation makes it very
+difficult to tease out the effects of any variable that is itself spatially distributed.
+This includes not only the covariates discussed above, but also grant funds that are
+distributed to particular watersheds and not others. In light of this, it is noteworthy that
+Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> does show that increased grant funding is predictive of improved water
+quality. This effect is strongest for grant funds expended in the 12 months prior to
+the sample, where the middle 95% of the posterior distribution is between 1.001
+
+and 1.008. In other words, net of all other terms in the model, a $100,000 in grant
+funds received in the past year predicts a 0.1% to 0.8% increase in water quality
+index score. This supports Hypothesis 1, that providing increased grant funding to
+collaborative watershed councils serves to improve water quality. While magnitude of this
+effect might seem very small at first glance, given: (a) the complexity of factors that
+influence water quality; and (b) the indirect linkages between grant-funded projects and
+conditions at sample observation sites, it is noteworthy that the model identifies this
+relationship.
+<!--l. 199--><p class="indent" >   The terms associated with 3 years and 5 years of prior grant receipts are also positive, but
+the posterior distribution spans 1<span 
+class="cmmi-12">.</span>000. This speaks to the question raised in the data and
+modeling section concerning the temporal impact of grant projects. Table &#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> indicates
+that the effect of grant funds (considering all grants in total) are most pronounced
+within 12 months of expenditure, and dissipate somewhat over time. It is important
+to note that this does not necessarily mean that projects have only a short term
+impact, but rather likely speaks the complexity of measuring environmental policy
+impacts more generally: the further in time an observation is from a given policy
+action, the more difficult it is to disentangle policy impacts from ecological trends
+and other drivers. I continue to explore the temporal nature of grant funds in the
+context of specific grant types below. I break down grant funds into four categories:
+restoration, scientific and technical (grants labeled by OWEB as assessment, monitoring, or
+technical assistance), and education and outreach (grants labeled by OWEB as either
+and outreach or and educational project). Given that OWEB funds are allocated
+competitively, it is unsurprising that different grant types are somewhat correlated.
+Table presents the correlation for 12-month, 36-month, and 60-month rolling grant
+sums.
+   <div class="table">
+
+<!--l. 4--><p class="indent" >   <a 
+ id="x1-100054"></a><hr class="float"><div class="float" 
+>
+
+ <div class="caption" 
+><span class="id">Table&#x00A0;4: </span><span  
+class="content">Correlation amongst grant types (12/36/60 month values)</span></div><!--tex4ht:label?: x1-100054 -->
+<div class="tabular"> <table id="TBL-5" class="tabular" 
+cellspacing="0" cellpadding="0"  
+><colgroup id="TBL-5-1g"><col 
+id="TBL-5-1"><col 
+id="TBL-5-2"><col 
+id="TBL-5-3"><col 
+id="TBL-5-4"><col 
+id="TBL-5-5"></colgroup><tr  
+ style="vertical-align:baseline;" id="TBL-5-1-"><td  style="white-space:nowrap; text-align:center;" id="TBL-5-1-1"  
+class="td01">&#x00A0;                                                                                                                   </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-5-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-5-2-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="5"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-05-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-05-2-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-05-3-"><td  style="white-space:nowrap; text-align:center;" id="TBL-05-3-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-05-4-"><td  style="white-space:nowrap; text-align:center;" id="TBL-05-4-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-05-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-05-5-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="5"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-005-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-005-5-1"  
+class="td01">                                                                       </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-005-6-"><td  style="white-space:nowrap; text-align:center;" id="TBL-005-6-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-005-7-"><td  style="white-space:nowrap; text-align:center;" id="TBL-005-7-1"  
+class="td01">&#x00A0;                                                                                                                    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-005-7-2"  
+class="td11"> Science/Tech. </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-005-7-3"  
+class="td11">Ed./Outreach</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-005-7-4"  
+class="td11">    Rest.      </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-005-7-5"  
+class="td11">Council</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-005-8-"><td  style="white-space:nowrap; text-align:center;" id="TBL-005-8-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-005-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-005-9-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="5"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-9-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-10-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-10-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-11-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-11-1"  
+class="td01">&#x00A0;                                                 Science/Tech.                                                 </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-11-2"  
+class="td11">            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-11-3"  
+class="td11">            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-11-4"  
+class="td11">            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-11-5"  
+class="td11">      </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-12-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-12-1"  
+class="td01">&#x00A0;                                                 Ed./Outreach                                                 </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-12-2"  
+class="td11">0.26/0.28/0.34</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-12-3"  
+class="td11">            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-12-4"  
+class="td11">            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-12-5"  
+class="td11">      </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-13-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-13-1"  
+class="td01">&#x00A0;                                                      Rest.                                                      </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-13-2"  
+class="td11">0.64/0.77/0.82</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-13-3"  
+class="td11">0.19/0.24/0.30</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-13-4"  
+class="td11">            </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-13-5"  
+class="td11">      </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-14-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-14-1"  
+class="td01">&#x00A0;                                                     Council                                                     </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-14-2"  
+class="td11">0.60/0.70/0.75</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-14-3"  
+class="td11">0.40/0.46/0.51</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-14-4"  
+class="td11">0.64/0.67/0.69</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0005-14-5"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-15-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-15-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0005-16-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0005-16-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="5"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-00005-16-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00005-16-1"  
+class="td01">                                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00005-17-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00005-17-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00005-18-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00005-18-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr></table>
+</div>
+
+   </div><hr class="endfloat" />
+   </div>
+<!--l. 203--><p class="indent" >   Since some of these value (especially for the longer time windows) are highly correlated, this
+poses a multicollinearity problem for modeling. Thus, I fit a separate model for each grant
+type, and summarize the resulting coefficients in Table &#x00A0;<a 
+href="#x1-100065">5<!--tex4ht:ref: table:diffgrants --></a>. Note that I also tested an
+unrestricted model with all four grant types included; the resulting coefficients are
+highly similar to that of the restricted individual models: the primary difference is
+that while the posterior means are very similar, the posterior distributions are more
+uncertain (as might be expected given the correlation between different grant type
+funds).
+   <div class="table">
+
+<!--l. 4--><p class="indent" >   <a 
+ id="x1-100065"></a><hr class="float"><div class="float" 
+>
+
+ <div class="caption" 
+><span class="id">Table&#x00A0;5: </span><span  
+class="content">Comparing grant effects by type</span></div><!--tex4ht:label?: x1-100065 -->
+<div class="tabular"> <table id="TBL-6" class="tabular" 
+cellspacing="0" cellpadding="0"  
+><colgroup id="TBL-6-1g"><col 
+id="TBL-6-1"><col 
+id="TBL-6-2"><col 
+id="TBL-6-3"><col 
+id="TBL-6-4"></colgroup><tr  
+ style="vertical-align:baseline;" id="TBL-6-1-"><td  style="white-space:nowrap; text-align:center;" id="TBL-6-1-1"  
+class="td01">&#x00A0;                                                                                                                   </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-6-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-6-2-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-06-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-06-2-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-06-3-"><td  style="white-space:nowrap; text-align:center;" id="TBL-06-3-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-06-4-"><td  style="white-space:nowrap; text-align:center;" id="TBL-06-4-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-06-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-06-5-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-006-5-"><td  style="white-space:nowrap; text-align:center;" id="TBL-006-5-1"  
+class="td01">                                                                       </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-006-6-"><td  style="white-space:nowrap; text-align:center;" id="TBL-006-6-1"  
+class="td01">&#x00A0;</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-006-7-"><td  style="white-space:nowrap; text-align:center;" id="TBL-006-7-1"  
+class="td01">&#x00A0;                                                                                                                    </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-006-7-2"  
+class="td11"> <img 
+src="TScott_JPART_20148x.png" alt="&#x03B2;1&#x02C6;2m"  class="circ" >(0<span 
+class="cmmi-12">.</span>025<span 
+class="cmmi-12">, </span>0<span 
+class="cmmi-12">.</span>975) </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-006-7-3"  
+class="td11"> <img 
+src="TScott_JPART_20149x.png" alt="                 &#x03B2;&#x02C6;36m"  class="circ" >(0<span 
+class="cmmi-12">.</span>025<span 
+class="cmmi-12">, </span>0<span 
+class="cmmi-12">.</span>975) </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-006-7-4"  
+class="td11"> <img 
+src="TScott_JPART_201410x.png" alt="                                       &#x03B2;6&#x02C6;0m"  class="circ" >(0<span 
+class="cmmi-12">.</span>025<span 
+class="cmmi-12">, </span>0<span 
+class="cmmi-12">.</span>975) </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-006-8-"><td  style="white-space:nowrap; text-align:center;" id="TBL-006-8-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-006-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-006-9-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-9-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-9-1"  
+class="td01"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-10-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-10-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-11-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-11-1"  
+class="td01">&#x00A0;                                             Restoration ($100k)                                             </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-11-2"  
+class="td11">1.004 (0.999, 1.008)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-11-3"  
+class="td11">1.001 (1.000, 1.003)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-11-4"  
+class="td11">1.001 (1.000, 1.003)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-12-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-12-1"  
+class="td01">&#x00A0;                                           Ed./Outreach ($100k)                                           </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-12-2"  
+class="td11">1.068 (1.022, 1.116)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-12-3"  
+class="td11">1.037 (1.019, 1.056)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-12-4"  
+class="td11">1.026 (1.013, 1.040)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-13-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-13-1"  
+class="td01">&#x00A0;                                           Science/Tech. ($100k)                                           </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-13-2"  
+class="td11">1.017 (1.000, 1.035)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-13-3"  
+class="td11">1.009 (1.001, 1.017)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-13-4"  
+class="td11">1.009 (1.003, 1.015)</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-14-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-14-1"  
+class="td01">&#x00A0;                                          Council Support ($100k)                                          </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-14-2"  
+class="td11">1.020 (0.998, 1.043)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-14-3"  
+class="td11">1.009 (1.001, 1.017)</td> <td  style="white-space:nowrap; text-align:center;" id="TBL-0006-14-4"  
+class="td11">1.006 (1.001, 1.012)</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-15-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-15-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-0006-16-"><td  style="white-space:nowrap; text-align:center;" id="TBL-0006-16-1"  
+class="td01">&#x00A0;</td></tr><tr><td colspan="4"></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-00006-16-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00006-16-1"  
+class="td01">                                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00006-17-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00006-17-1"  
+class="td01">&#x00A0;                                                                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-00006-18-"><td  style="white-space:nowrap; text-align:center;" id="TBL-00006-18-1"  
+class="td01">&#x00A0;                                                                                                                    </td></tr></table>
+</div>
+
+   </div><hr class="endfloat" />
+   </div>
+<!--l. 207--><p class="indent" >   Table &#x00A0;<a 
+href="#x1-100065">5<!--tex4ht:ref: table:diffgrants --></a> shows that the mean parameter value for each type of grant funding is positive,
+indicating (as expected) that grant funds of all kinds improve the impacts of watershed
+councils. For the 12-month rolling sum, only grants for education and outreach projects have a
+posterior parameter distribution for which the middle 95% of the distribution does not
+encompass 1.000 (again bearing in mind that since water quality is log-transformed,
+each coefficient is exponentiated and interpreted as a multiplicative factor). A $100k
+increase in education and outreach grant funding within 12 months prior to the water
+quality observation predicts a 6.8% increase in water quality at the mean parameter
+value.
+<!--l. 209--><p class="indent" >   Using the 36-month rolling sum as a measure of grant funds, all three non-restoration grant
+types have posterior distributions where the middle 95% does not include 1.000. A $100k
+increase in education and outreach funding increases water quality by an average of 3.7%, a
+$100k increase in scientific and technical support or in council support both increase water
+quality by an average of 0.9%. The results at the 60-month mark are similar, with a $100k
+increase in education/outreach, scientific/technical, or council support increasing water quality
+by an average of 2.6%, 0.9%, and 0.6%, respectively. In the section below, I discuss the
+implications of these results.
+   <h3 class="likesectionHead"><a 
+ id="x1-11000"></a>Discussion and Conclusion</h3>
+<!--l. 213--><p class="noindent" >Table &#x00A0;<a 
+href="#x1-100065">5<!--tex4ht:ref: table:diffgrants --></a> reveals an interesting pattern: the coefficient means decrease in magnitude (or
+in two cases remain constant) as the time window for which grants are summed
+increases, but the posterior distributions become more leptokurtic (i.e., narrower) and
+fewer posterior distributions encompass 1<span 
+class="cmmi-12">.</span>000. In other words, as the time window
+increases, the environmental impact of all grants are estimated to be positive with
+greater certainy, but the average impact is estimated to lessen. One likely reason
+for the reduced uncertainty regarding estimated impacts is that the increased time
+
+window provides a more consistent measure of ongoing council efforts. These data
+assume a uniform monthly expenditure profile for the life of every grant type. In
+practice, different projects (even within a single grant type) certainly have different
+implementation and output profiles, both during and after the project period. Thus,
+36-month and 60-month post expenditure time windows likely best capture all grant
+expenditures at &#8220;full strength&#8221; (i.e., we can be more certain that each project has
+run its course), explaining the narrower posterior distributions. The reason why the
+mean estimates decrease as the time window increases in Table &#x00A0;<a 
+href="#x1-100065">5<!--tex4ht:ref: table:diffgrants --></a> (and also in Table
+&#x00A0;<a 
+href="#x1-100043">3<!--tex4ht:ref: table:basecoefs --></a> for all grants combined) is likely due to the data and measurement approach
+I employ. Water quality is a product of myriad complex factors, and so it follows
+that the magnitude of any predicted grant impact should decrease over time simply
+because there is greater opportunity for intervening factors. While it is possible that
+the effects of certain projects do not diminish (or perhaps even increase) over time,
+from a simple cause-and-effect standpoint the 36-month and 60-month time windows
+place greater emphasis on projects much more distant to the actual water quality
+observation.
+<!--l. 215--><p class="indent" >   Measurement challenges also likely account for the fact that I do not identify a significant
+measurable impact from spending on restoration projects, in spite of the preponderance of
+ecological and environmental science demonstrating that restoration grants have an
+environmental impact to one extent or another (assuming the project is conducted). These data
+were not originally intended to serve the purpose of program evaluation. To best evaluate the
+efficacy of a grant, one would need to follow up directly with an evaluation protocol that
+explicitly monitors the outputs of grant-funded projects. However, such data collection efforts
+would obviously be very costly and time-intensive; OWEB is not able to track impacts in such
+detail or using comprehensive metrics that allow for comparison across the state. In lieu of
+direct evaluatory data, I use existing Oregon water quality sampling stations, which are
+selected independently of project sites. This best explains why I find the reverse of what I
+hypothesize in Hypothesis 2 and do not find a measurable impact from restoration
+grants. Identifying a measurable impact from restoration projects is particularly
+
+challenging in this case because I am essentially selecting a stream point within an HUC8
+watershed at random and testing whether spending on restoration projects within that
+same watershed is associated with water quality at that site. If the sample site is
+near to the actual restoration project site, then the impact might be clear; if the
+sample site is nowhere near the project site, then measuring the impact is highly
+unlikely.
+<!--l. 217--><p class="indent" >   Conversely, these data are likely better suited for evaluating non-restoration projects, since
+the nonpoint nature of many of these projects (in that restoration occurs at a specific site,
+whereas an outreach project for instance attempts to influence stakeholder behavior at many
+sites in the watershed) means the project impact has a broader spatial distribution in practice.
+For instance, an outreach project might influence various individuals throughout the watershed,
+and funds supporting council operations might be used to provide tools and services
+that serve people and organizations throughout the watershed. A randomly selected
+water quality sample site is more likely to be nearby a project site in this case there
+are more &#8220;sites&#8221; involved. Generally speaking, the sampling approach of the OWQI
+lends itself towards evaluating broader management efforts, not wholesale changes in
+specific areas. In fact, the OWQI itself is billed explicitly as a tool for evaluating water
+quality management effectiveness (Cude 2001). While the impact of a restoration
+project might be very pronounced at or near the project site, these impacts are the
+most difficult to assess using this model. Thus, while this analysis does support the
+idea that watershed council actions have a meaningful impact on water quality, it is
+important to emphasize that these results should not discredit the impact of restoration
+activities.
+<!--l. 219--><p class="indent" >   The primary implication of these findings are that government investment in collaborative
+management efforts, specifically providing funds to nonprofit watershed councils in this case,
+can produce changes in environmental outcomes. Returning to the investment perspective
+advanced above, I find that OWEBs investment in the production of non-environmental
+outputs (e.g., educational programs, stakeholder meetings, monitoring and data collection) does
+appears to engender an environmental return. The extant literature described in this paper
+
+provides a great deal of theoretical support as to why governments might invest in
+local nonprofit collaborative management groups. As evidenced by the considerable
+funding governments provide to collaborative management bodies (e.g., Sabatier
+et al. 2005), many practioners already assume the viability of this type of governance
+approach. These data provide some of the first available evidence quantifying such
+returns.
+<!--l. 221--><p class="indent" >   More broadly, this research demonstrates the use of hierarchical Bayesian spatio-temporal
+modeling as a means by which publicly available observational data produced by states and the
+Federal government for environmental monitoring purposes can be repurposed to test
+environmental policy theory and evaluate public environmental programs. While the results of
+this analysis speak to the tradeoffs amongst different types of environmental projects, the
+exploratory nature of this work is insufficient to provide direct guidance to policy makers
+about how they should best allocate limited resources. Nonetheless, this provides a
+basis for further inquiry. In particular, this analysis advances beyond the limiting
+&#8220;collaborative&#8221; versus &#8220;non-collaborative&#8221; dichotomy to pose a more interesting and
+relevant question: how should policymakers distribute resources between policies and
+programs that produce environmental outputs at a relatively fixed input-output
+ratio (e.g., restoration projects) and those that produce non-environmental outputs
+(e.g., meetings, educational programs, administrative support) with the potential for
+returns that exceed inputs (e.g., motivating landowners and resource users to take
+restorative actions or modify their environmental behaviors in ways that far outstrip the
+input level of the original outreach program)? Much additional work is needed to
+understand how these different types of policies ultimately relate to environmental
+outcomes.
+<!--l. 224--><p class="noindent" >
+   <h3 class="sectionHead"><a 
+ id="x1-12000"></a>References</h3>
+<!--l. 224--><p class="noindent" >
+
+   <dl class="thebibliography"><dt id="X0-agranoff2003" class="thebibliography">
+</dt><dd 
+id="bib-1" class="thebibliography">
+   <!--l. 224--><p class="noindent" ><a id="page.50"></a><a 
+href="TScott_JPART_2014.html" id="X0-" ></a>Agranoff, R., and M. McGuire. 2003. &#8220;Inside the matrix: Integrating the paradigms
+   of  intergovernmental  and  network  management&#8221;.  <span 
+class="cmti-12">International  Journal  of  Public</span>
+   <span 
+class="cmti-12">Administration </span>26 (12): 1401&#8211;1422.
+   </dd><dt id="X0-ansell2008" class="thebibliography">
+</dt><dd 
+id="bib-2" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Ansell, C., and A. Gash. 2008. &#8220;Collaborative governance in theory and practice&#8221;.
+   <span 
+class="cmti-12">Journal of Public Administration Research and Theory </span>18 (4): 543&#8211;571.
+   </dd><dt id="X0-beguin2012" class="thebibliography">
+</dt><dd 
+id="bib-3" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Beguin, Julien, et al. 2012. &#8220;Hierarchical analysis of spatially autocorrelated ecological
+   data  using  integrated  nested  Laplace  approximation&#8221;.  <span 
+class="cmti-12">Methods  in  Ecology  and</span>
+   <span 
+class="cmti-12">Evolution </span>3 (5): 921&#8211;929.
+   </dd><dt id="X0-beierle2002" class="thebibliography">
+</dt><dd 
+id="bib-4" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Beierle, Thomas C. 2002. &#8220;The Quality of Stakeholder-Based Decisions&#8221;. <span 
+class="cmti-12">Risk Analysis</span>
+   22 (4): 739&#8211;749.
+   </dd><dt id="X0-berardo2014" class="thebibliography">
+</dt><dd 
+id="bib-5" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Berardo, Ramiro, Tanya Heikkila, and Andrea K. Gerlak. 2014. &#8220;Interorganizational
+   Engagement in Collaborative Environmental Management: Evidence from the South
+   Florida  Ecosystem  Restoration  Task  Force&#8221;.  <span 
+class="cmti-12">Journal  of  Public  Administration</span>
+   <span 
+class="cmti-12">Research and Theory</span>:muu003.
+   </dd><dt id="X0-bernardo2009" class="thebibliography">
+</dt><dd 
+id="bib-6" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Bernardo, José M., and Adrian FM Smith. 2009. <span 
+class="cmti-12">Bayesian theory</span>. Vol.&#x00A0;405. John
+   Wiley &amp; Sons.
+
+   </dd><dt id="X0-bickman1987" class="thebibliography">
+</dt><dd 
+id="bib-7" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Bickman,  Leonard.  1987.  &#8220;The  functions  of  program  theory&#8221;.  <span 
+class="cmti-12">New Directions for</span>
+   <span 
+class="cmti-12">Program Evaluation</span>, no. 33:5&#8211;18.
+   </dd><dt id="X0-bivand2008" class="thebibliography">
+</dt><dd 
+id="bib-8" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Bivand, Roger S., Edzer J. Pebesma, and Virgilio Gomez-Rubio. 2008. <span 
+class="cmti-12">Applied spatial</span>
+   <span 
+class="cmti-12">data analysis with R</span>. Vol.&#x00A0;747248717. Springer.
+   </dd><dt id="X0-bivand2013" class="thebibliography">
+</dt><dd 
+id="bib-9" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Bivand,  Roger  S.,  Edzer  Pebesma,  and  Virgilio  Gomez-Rubio.  2013.  &#8220;Disease
+   Mapping&#8221;. In <span 
+class="cmti-12">Applied Spatial Data Analysis with R</span>, 319&#8211;361. Springer.
+   </dd><dt id="X0-blangiardo2010" class="thebibliography">
+</dt><dd 
+id="bib-10" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Blangiardo, Marta, et al. 2010. &#8220;A Bayesian analysis of the impact of air pollution
+   episodes  on  cardio-respiratory  hospital  admissions  in  the  Greater  London  area&#8221;.
+   <span 
+class="cmti-12">Statistical methods in medical research</span>.
+   </dd><dt id="X0-blangiardo2013" class="thebibliography">
+</dt><dd 
+id="bib-11" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Blangiardo, Marta, et al. 2013. &#8220;Spatial and spatio-temporal models with R-INLA&#8221;.
+   <span 
+class="cmti-12">Spatial and spatio-temporal epidemiology </span>7:39&#8211;55.
+   </dd><dt id="X0-brooks2011" class="thebibliography">
+</dt><dd 
+id="bib-12" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Brooks, Steve, et al. 2011. <span 
+class="cmti-12">Handbook of Markov Chain Monte Carlo</span>. CRC Press.
+   </dd><dt id="X0-bryson2006" class="thebibliography">
+</dt><dd 
+id="bib-13" class="thebibliography">
+
+   <!--l. 224--><p class="noindent" >Bryson, John M., Barbara C. Crosby, and Melissa Middleton Stone. 2006. &#8220;The design
+   and implementation of Cross-Sector collaborations: Propositions from the literature&#8221;.
+   <span 
+class="cmti-12">Public administration review </span>66 (s1): 44&#8211;55.
+   </dd><dt id="X0-cameletti2013" class="thebibliography">
+</dt><dd 
+id="bib-14" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Cameletti,  Michela,  et  al.  2013.  &#8220;Spatio-temporal  modeling  of  particulate  matter
+   concentration through the SPDE approach&#8221;. <span 
+class="cmti-12">AStA Advances in Statistical Analysis</span>
+   97 (2): 109&#8211;131.
+   </dd><dt id="X0-carr2012" class="thebibliography">
+</dt><dd 
+id="bib-15" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Carr, G., G. Bloschl, and D. P. Loucks. 2012. &#8220;Evaluating Participation in Water
+   Resource Management: A review&#8221;. <span 
+class="cmti-12">Water Resources Research </span>48 (11).
+   </dd><dt id="X0-clark2005" class="thebibliography">
+</dt><dd 
+id="bib-16" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Clark,  James  S.  2005.  &#8220;Why  environmental  scientists  are  becoming  Bayesians&#8221;.
+   <span 
+class="cmti-12">Ecology letters </span>8 (1): 2&#8211;14.
+   </dd><dt id="X0-clark2006" class="thebibliography">
+</dt><dd 
+id="bib-17" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Clark,  James  S.,  and  Alan  E.  Gelfand.  2006.  <span 
+class="cmti-12">Hierarchical  Modelling  for  the</span>
+   <span 
+class="cmti-12">Environmental Sciences: Statistical methods and applications: Statistical methods and</span>
+   <span 
+class="cmti-12">applications</span>. Oxford University Press.
+   </dd><dt id="X0-coglianese2003" class="thebibliography">
+</dt><dd 
+id="bib-18" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Coglianese,  Cary.  2003.  &#8220;Is  satisfaction  success?  Evaluating  public  participation
+   in  regulatory  policymaking&#8221;.  In  <span 
+class="cmti-12">The Promise and Performance of Environmental</span>
+   <span 
+class="cmti-12">Conflict Resolution</span>, ed. by R. O&#8217;Leary and L. B. Bingham, 69&#8211;89. Washington, D.C.:
+   RFF Press.
+
+   </dd><dt id="X0-cosandey-godin2014" class="thebibliography">
+</dt><dd 
+id="bib-19" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Cosandey-Godin, Aurelie, et al. 2014. &#8220;Applying Bayesian spatio-temporal models to
+   fisheries bycatch in the Canadian Arctic&#8221;. <span 
+class="cmti-12">Canadian Journal of Fisheries and Aquatic</span>
+   <span 
+class="cmti-12">Sciences</span>, no. ja.
+   </dd><dt id="X0-cressie2011" class="thebibliography">
+</dt><dd 
+id="bib-20" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Cressie, Noel, and Christopher K. Wikle. 2011. <span 
+class="cmti-12">Statistics for spatio-temporal data</span>.
+   John Wiley &amp; Sons.
+   </dd><dt id="X0-cressie2009" class="thebibliography">
+</dt><dd 
+id="bib-21" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Cressie,  Noel,  et  al.  2009.  &#8220;Accounting  for  uncertainty  in  ecological  analysis:  the
+   strengths and limitations of hierarchical statistical modeling&#8221;. <span 
+class="cmti-12">Ecological Applications</span>
+   19 (3): 553&#8211;570.
+   </dd><dt id="X0-cude2001" class="thebibliography">
+</dt><dd 
+id="bib-22" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Cude,  Curtis  G.  2001.  &#8220;Oregon  Water  Quality  Index:  A  tool  for  evaluating
+   water quality management effectiveness.&#8221; <span 
+class="cmti-12">Journal of the American Water Resources</span>
+   <span 
+class="cmti-12">Association </span>37 (1): 125&#8211;137.
+   </dd><dt id="X0-dakins2005" class="thebibliography">
+</dt><dd 
+id="bib-23" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Dakins,  Maxine  E.,  Jeffery  D.  Long,  and  Michael  Hart.  2005.  &#8220;Collaborative
+   Environmental  Decision  Making  in  Oregon  Watershed  Groups:  Perceptions  of
+   Effectiveness&#8221;. <span 
+class="cmti-12">JAWRA Journal of the American Water Resources Association </span>41 (1):
+   171&#8211;180.
+   </dd><dt id="X0-donahue2011" class="thebibliography">
+</dt><dd 
+id="bib-24" class="thebibliography">
+
+   <!--l. 224--><p class="noindent" >Donahue, J. D, and R. Zeckhauser. 2011. <span 
+class="cmti-12">Collaborative Governance: Private Roles for</span>
+   <span 
+class="cmti-12">Public Goals in Turbulent Times</span>. Princeton, N.J.: Princeton University Press.
+   </dd><dt id="X0-dunson2001" class="thebibliography">
+</dt><dd 
+id="bib-25" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Dunson, David B. 2001. &#8220;Commentary: practical advantages of Bayesian analysis of
+   epidemiologic data&#8221;. <span 
+class="cmti-12">American Journal of Epidemiology </span>153 (12): 1222&#8211;1226.
+   </dd><dt id="X0-emerson2012" class="thebibliography">
+</dt><dd 
+id="bib-26" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Emerson,  K.,  T.  Nabatchi,  and  S.  Balogh.  2012.  &#8220;An  integrative  framework  for
+   collaborative governance&#8221;. <span 
+class="cmti-12">Journal of Public Administration Research and Theory </span>22
+   (1): 1&#8211;29.
+   </dd><dt id="X0-gelman2006" class="thebibliography">
+</dt><dd 
+id="bib-27" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Gelman, A. 2006. &#8220;Multilevel (Hierarchical) Modeling: What It Can and Cannot Do&#8221;.
+   <span 
+class="cmti-12">Technometrics </span>48, no. 3 (): 432&#8211;435. doi:10.1198/004017005000000661.
+   </dd><dt id="X0-gelman2013" class="thebibliography">
+</dt><dd 
+id="bib-28" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Gelman, Andrew, et al. 2013. <span 
+class="cmti-12">Bayesian data analysis</span>. CRC press.
+   </dd><dt id="X0-gomez-rubio2014" class="thebibliography">
+</dt><dd 
+id="bib-29" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Gomez-Rubio, Virgilio, Roger S. Bivand, and Havard Rue. 2014. &#8220;Spatial Models
+   Using Laplace Approximation Methods&#8221;. In <span 
+class="cmti-12">Handbook of Regional Science</span>, 1401&#8211;1417.
+   Springer.
+   </dd><dt id="X0-griffin1999" class="thebibliography">
+</dt><dd 
+id="bib-30" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Griffin,  Carol  B.  1999.  &#8220;Watershed  Councils:  An  Emerging  Form  of  Public
+   Participation in Natural Resource Management&#8221;. <span 
+class="cmti-12">JAWRA Journal of the American</span>
+   <span 
+class="cmti-12">Water Resources Association </span>35 (3): 505&#8211;518.
+
+   </dd><dt id="X0-gunton2003" class="thebibliography">
+</dt><dd 
+id="bib-31" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Gunton,  Thomas  I.  2003.  &#8220;The  theory  and  practice  of  collaborative  planning
+   in   resource   and   environmental   management&#8221;.   <span 
+class="cmti-12">Environments:   a   journal   of</span>
+   <span 
+class="cmti-12">interdisciplinary studies </span>31 (2).
+   </dd><dt id="X0-habron2003" class="thebibliography">
+</dt><dd 
+id="bib-32" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Habron,  Geoffrey.  2003.  &#8220;Role  of  adaptive  management  for  watershed  councils&#8221;.
+   <span 
+class="cmti-12">Environmental Management </span>31 (1): 0029&#8211;0041.
+   </dd><dt id="X0-hardy2008" class="thebibliography">
+</dt><dd 
+id="bib-33" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Hardy,   ScottD.,   and   TomasM.   Koontz.   2008.   &#8220;Reducing   Nonpoint   Source
+   Pollution Through Collaboration: Policies and Programs Across the U.S. States&#8221;.
+   <span 
+class="cmti-12">Environmental Management </span>41, no. 3 (): 301&#8211;310. doi:10.1007/s00267-007-9038-6.
+   </dd><dt id="X0-hibbard2006" class="thebibliography">
+</dt><dd 
+id="bib-34" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Hibbard, Michael, and Susan Lurie. 2006. &#8220;Some community socio-economic benefits
+   of watershed councils: A case study from Oregon&#8221;. <span 
+class="cmti-12">Journal of environmental planning</span>
+   <span 
+class="cmti-12">and management </span>49 (6): 891&#8211;908.
+   </dd><dt id="X0-hijmans2014" class="thebibliography">
+</dt><dd 
+id="bib-35" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Hijmans, Robert J. 2014. <span 
+class="cmti-12">raster: raster: Geographic data analysis and modeling</span>. R
+   package version 2.3-0.
+   </dd><dt id="X0-hodges2014" class="thebibliography">
+</dt><dd 
+id="bib-36" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Hodges, James S. 2014. <span 
+class="cmti-12">Richly Parameterized Linear Models Additive, Time Series,</span>
+   <span 
+class="cmti-12">and Spatial Models Using Random Effects. </span>Taylor / Francis.
+
+   </dd><dt id="X0-hoornbeek2012" class="thebibliography">
+</dt><dd 
+id="bib-37" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Hoornbeek, John, et al. 2012. &#8220;Implementing Water Pollution Policy in the United
+   States: Total Maximum Daily Loads and Collaborative Watershed Management&#8221;.
+   <span 
+class="cmti-12">Society &amp; Natural Resources </span>26 (4): 420&#8211;436.
+   </dd><dt id="X0-huntington2000" class="thebibliography">
+</dt><dd 
+id="bib-38" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Huntington, H. P. 2000. &#8220;Using traditional ecological knowledge in science: methods
+   and applications&#8221;. <span 
+class="cmti-12">Ecological applications </span>10 (5): 1270&#8211;1274.
+   </dd><dt id="X0-imperial2005" class="thebibliography">
+</dt><dd 
+id="bib-39" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Imperial, M. T. 2005. &#8220;Using collaboration as a governance strategy lessons from six
+   watershed management programs&#8221;. <span 
+class="cmti-12">Administration &amp; Society </span>37 (3): 281&#8211;320.
+   </dd><dt id="X0-innes1999" class="thebibliography">
+</dt><dd 
+id="bib-40" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Innes,  J.  E,  and  D.  E  Booher.  1999.  &#8220;Consensus  building  and  complex  adaptive
+   systems&#8221;. <span 
+class="cmti-12">Journal of the American Planning Association </span>65 (4): 412&#8211;423.
+   </dd><dt id="X0-johnes1997" class="thebibliography">
+</dt><dd 
+id="bib-41" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Johnes, P. J., and A. L. Heathwaite. 1997. &#8220;Modelling the impact of land use change
+   on water quality in agricultural catchments&#8221;. <span 
+class="cmti-12">Hydrological Processes </span>11 (3): 269&#8211;286.
+   </dd><dt id="X0-koontz2006" class="thebibliography">
+</dt><dd 
+id="bib-42" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Koontz, T. M, and C. W Thomas. 2006. &#8220;What do we know and need to know about
+   the environmental outcomes of collaborative management?&#8221; <span 
+class="cmti-12">Public Administration</span>
+   <span 
+class="cmti-12">Review </span>66:111&#8211;121.
+   </dd><dt id="X0-koontz2004" class="thebibliography">
+</dt><dd 
+id="bib-43" class="thebibliography">
+
+   <!--l. 224--><p class="noindent" >Koontz, T. M, et al. 2004. <span 
+class="cmti-12">Collaborative environmental management: What roles for</span>
+   <span 
+class="cmti-12">government? </span>Washington, D.C.: RFF Press.
+   </dd><dt id="X0-layzer2008" class="thebibliography">
+</dt><dd 
+id="bib-44" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Layzer, Judith A. 2008. <span 
+class="cmti-12">Natural Experiments: Ecosystem-based management and the</span>
+   <span 
+class="cmti-12">environment</span>. Cambridge, MA: MIT Press.
+   </dd><dt id="X0-leach2002" class="thebibliography">
+</dt><dd 
+id="bib-45" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Leach, W. D, N. W Pelkey, and P. A Sabatier. 2002. &#8220;Stakeholder partnerships as
+   collaborative policymaking: Evaluation criteria applied to watershed management in
+   California and Washington&#8221;. <span 
+class="cmti-12">Journal of Policy Analysis and Management  </span>21 (4):
+   645&#8211;670.
+   </dd><dt id="X0-leach2013" class="thebibliography">
+</dt><dd 
+id="bib-46" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Leach, W. D., et al. 2013. &#8220;Fostering Learning through Collaboration: Knowledge
+   Acquisition and Belief Change in Marine Aquaculture Partnerships&#8221;. <span 
+class="cmti-12">Journal of Public</span>
+   <span 
+class="cmti-12">Administration Research and Theory </span>24 (3): 591&#8211;622.
+   </dd><dt id="X0-leach2006" class="thebibliography">
+</dt><dd 
+id="bib-47" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Leach,  William  D.  2006.  &#8220;Collaborative  Public  Management  and  Democracy:
+   Evidence from Western Watershed Partnerships&#8221;. <span 
+class="cmti-12">Public Administration Review </span>66
+   (Supplement): 100&#8211;110.
+   </dd><dt id="X0-lesage2010" class="thebibliography">
+</dt><dd 
+id="bib-48" class="thebibliography">
+   <!--l. 224--><p class="noindent" >LeSage, James, and Robert Kelley Pace. 2010. <span 
+class="cmti-12">Introduction to spatial econometrics</span>.
+   CRC press.
+   </dd><dt id="X0-lindgren2013" class="thebibliography">
+</dt><dd 
+id="bib-49" class="thebibliography">
+
+   <!--l. 224--><p class="noindent" >Lindgren,  Finn,  and  Havard  Rue.  2013.  &#8220;Bayesian  spatial  and  spatiotemporal
+   modelling with r-inla&#8221;. <span 
+class="cmti-12">Journal of Statistical Software</span>.
+   </dd><dt id="X0-lindgren2011" class="thebibliography">
+</dt><dd 
+id="bib-50" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Lindgren, Finn, Håvard Rue, and Johan Lindström. 2011. &#8220;An explicit link between
+   Gaussian fields and Gaussian Markov random fields: the stochastic partial differential
+   equation approach&#8221;. <span 
+class="cmti-12">Journal of the Royal Statistical Society: Series B (Statistical</span>
+   <span 
+class="cmti-12">Methodology) </span>73 (4): 423&#8211;498.
+   </dd><dt id="X0-lubell2004" class="thebibliography">
+</dt><dd 
+id="bib-51" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Lubell, M. 2004. &#8220;Collaborative environmental institutions: All talk and no action?&#8221;
+   <span 
+class="cmti-12">Journal of Policy Analysis and Management </span>23 (3): 549&#8211;573.
+   </dd><dt id="X0-lubell2005" class="thebibliography">
+</dt><dd 
+id="bib-52" class="thebibliography">
+   <!--l. 224--><p class="noindent" >&#8212;  . 2005. &#8220;Political Institutions and Conservation by Local Governments&#8221;. <span 
+class="cmti-12">Urban</span>
+   <span 
+class="cmti-12">Affairs Review </span>40 (6): 706&#8211;729.
+   </dd><dt id="X0-lubell2008" class="thebibliography">
+</dt><dd 
+id="bib-53" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Lubell,  Mark,  and  Allan  Fulton.  2008.  &#8220;Local  policy  networks  and  agricultural
+   watershed management&#8221;. <span 
+class="cmti-12">Journal of Public Administration Research and Theory </span>18
+   (4): 673&#8211;696.
+   </dd><dt id="X0-lubell2009" class="thebibliography">
+</dt><dd 
+id="bib-54" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Lubell, Mark, William D. Leach, and Paul A. Sabatier. 2009. &#8220;Collaborative watershed
+   partnerships  in  the  epoch  of  sustainability&#8221;.  In  <span 
+class="cmti-12">Toward  sustainable  communities:</span>
+   <span 
+class="cmti-12">transition and transformations in environmental policy</span>, ed. by Daniel A. Mazmanian
+   and Michael E. Kraft, 255&#8211;88. Cambridge, MA: MIT Press.
+
+   </dd><dt id="X0-lurie2008" class="thebibliography">
+</dt><dd 
+id="bib-55" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Lurie,  Susan,  and  Michael  Hibbard.  2008.  &#8220;Community-based  natural  resource
+   management: Ideals and realities for oregon watershed councils&#8221;. <span 
+class="cmti-12">Society and natural</span>
+   <span 
+class="cmti-12">resources </span>21 (5): 430&#8211;440.
+   </dd><dt id="X0-margerum2011" class="thebibliography">
+</dt><dd 
+id="bib-56" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Margerum,  R.  D.  2011.  <span 
+class="cmti-12">Beyond Consensus: Improving collaborative planning and</span>
+   <span 
+class="cmti-12">management</span>. Cambridge, MA: MIT Press.
+   </dd><dt id="X0-margerum2002" class="thebibliography">
+</dt><dd 
+id="bib-57" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Margerum,  Richard  D.  2002.  &#8220;Collaborative  Planning  Building  Consensus  and
+   Building a Distinct Model for Practice&#8221;. <span 
+class="cmti-12">Journal of Planning Education and Research</span>
+   21 (3): 237&#8211;253.
+   </dd><dt id="X0-margerum2007" class="thebibliography">
+</dt><dd 
+id="bib-58" class="thebibliography">
+   <!--l. 224--><p class="noindent" >&#8212;  . 2007. &#8220;Overcoming locally based collaboration constraints&#8221;. <span 
+class="cmti-12">Society &amp; Natural</span>
+   <span 
+class="cmti-12">Resources </span>20 (2): 135&#8211;152.
+   </dd><dt id="X0-margerum2008" class="thebibliography">
+</dt><dd 
+id="bib-59" class="thebibliography">
+   <!--l. 224--><p class="noindent" >&#8212;  .  2008.  &#8220;A  typology  of  collaboration  efforts  in  environmental  management&#8221;.
+   <span 
+class="cmti-12">Environmental management </span>41 (4): 487&#8211;500.
+   </dd><dt id="X0-margerum2004" class="thebibliography">
+</dt><dd 
+id="bib-60" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Margerum, Richard D., and Debra Whitall. 2004. &#8220;The challenges and implications of
+   collaborative management on a river basin scale&#8221;. <span 
+class="cmti-12">Journal of environmental planning</span>
+   <span 
+class="cmti-12">and management </span>47 (3): 409&#8211;429.
+
+   </dd><dt id="X0-martino2011" class="thebibliography">
+</dt><dd 
+id="bib-61" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Martino,  Sara,  Rupali  Akerkar,  and  Havard  Rue.  2011.  &#8220;Approximate  Bayesian
+   inference for survival models&#8221;. <span 
+class="cmti-12">Scandinavian Journal of Statistics </span>38 (3): 514&#8211;528.
+   </dd><dt id="X0-martino2010" class="thebibliography">
+</dt><dd 
+id="bib-62" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Martino, Sara, and Havard Rue. 2010. &#8220;Case studies in Bayesian computation using
+   INLA&#8221;. In <span 
+class="cmti-12">Complex data modeling and computationally intensive statistical methods</span>,
+   99&#8211;114. Springer.
+   </dd><dt id="X0-mclaughlin1999" class="thebibliography">
+</dt><dd 
+id="bib-63" class="thebibliography">
+   <!--l. 224--><p class="noindent" >McLaughlin, John A., and Gretchen B. Jordan. 1999. &#8220;Logic models: a tool for telling
+   your programs performance story&#8221;. <span 
+class="cmti-12">Evaluation and program planning </span>22 (1): 65&#8211;72.
+   </dd><dt id="X0-meador2003" class="thebibliography">
+</dt><dd 
+id="bib-64" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Meador,  Michael  R.,  and  Robert  M.  Goldstein.  2003.  &#8220;Assessing  Water  Quality
+   at Large Geographic Scales: Relations Among Land Use, Water Physicochemistry,
+   Riparian Condition, and Fish Community Structure&#8221;. <span 
+class="cmti-12">Environmental Management</span>
+   31, no. 4 (): 0504&#8211;0517. doi:10.1007/s00267-002-2805-5.
+   </dd><dt id="X0-newig2009" class="thebibliography">
+</dt><dd 
+id="bib-65" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Newig,  Jens,  and  Oliver  Fritsch.  2009.  &#8220;Environmental  governance:  participatory,
+   multilevel, and effective?&#8221; <span 
+class="cmti-12">Environmental Policy and Governance </span>19 (3): 197&#8211;214.
+   </dd><dt id="X0-nikolic2008" class="thebibliography">
+</dt><dd 
+id="bib-66" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Nikolic,  Sara  JS,  and  Tomas  M.  Koontz.  2008.  &#8220;Nonprofit  organizations  in
+   environmental management: A comparative analysis of government impacts&#8221;. <span 
+class="cmti-12">Journal</span>
+   <span 
+class="cmti-12">of Public Administration Research and Theory </span>18 (3): 441&#8211;463.
+
+   </dd><dt id="X0-oleary2006" class="thebibliography">
+</dt><dd 
+id="bib-67" class="thebibliography">
+   <!--l. 224--><p class="noindent" >O&#8216;Leary, R., C. Gerard, and L. B Bingham. 2006. &#8220;Introduction to the symposium
+   on collaborative public management&#8221;. <span 
+class="cmti-12">Public Administration Review </span>66 (s1): 6&#8211;9.
+   </dd><dt id="X0-ostrom1961" class="thebibliography">
+</dt><dd 
+id="bib-68" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Ostrom, V., C. M Tiebout, and R. Warren. 1961. &#8220;The organization of government
+   in metropolitan areas: a theoretical inquiry&#8221;. <span 
+class="cmti-12">The American Political Science Review</span>
+   55 (4): 831&#8211;842.
+   </dd><dt id="X0-pebesma2014" class="thebibliography">
+</dt><dd 
+id="bib-69" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Pebesma, Edzer J., and Roger S. Bivand. 2014. <span 
+class="cmti-12">sp: Classes and methods for spatial</span>
+   <span 
+class="cmti-12">data in R.</span>
+   </dd><dt id="X0-robert2004" class="thebibliography">
+</dt><dd 
+id="bib-70" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Robert,  Christian  P.,  and  George  Casella.  2004.  <span 
+class="cmti-12">Monte Carlo statistical methods</span>.
+   Vol.&#x00A0;319. Citeseer.
+   </dd><dt id="X0-rue2005" class="thebibliography">
+</dt><dd 
+id="bib-71" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Rue, Havard, and Leonhard Held. 2005. <span 
+class="cmti-12">Gaussian Markov random fields: theory and</span>
+   <span 
+class="cmti-12">applications</span>. CRC Press.
+   </dd><dt id="X0-rue2009" class="thebibliography">
+</dt><dd 
+id="bib-72" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Rue,  Havard,  Sara  Martino,  and  Nicolas  Chopin.  2009.  &#8220;Approximate  Bayesian
+   inference   for   latent   Gaussian   models   by   using   integrated   nested   Laplace
+   approximations&#8221;.  <span 
+class="cmti-12">Journal  of  the  royal  statistical  society:  Series  b  (statistical</span>
+   <span 
+class="cmti-12">methodology) </span>71 (2): 319&#8211;392.
+
+   </dd><dt id="X0-rue2014" class="thebibliography">
+</dt><dd 
+id="bib-73" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Rue,  Havard,  et  al.  2014.  <span 
+class="cmti-12">INLA: Functions which allow to perform full Bayesian</span>
+   <span 
+class="cmti-12">analysis of latent Gaussian models using Integrated Nested Laplace Approximation</span>. R
+   package version 0.0-1404466487.
+   </dd><dt id="X0-sabatier2005" class="thebibliography">
+</dt><dd 
+id="bib-74" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Sabatier, P. A, et al. 2005. &#8220;Theoretical frameworks explaining partnership success&#8221;.
+   In <span 
+class="cmti-12">Swimming Upstream: Collaborative approaches to watershed management</span>, ed. by
+   P. Sabatier et al., 173&#8211;200. Cambridge, MA: MIT Press.
+   </dd><dt id="X0-salamon2002" class="thebibliography">
+</dt><dd 
+id="bib-75" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Salamon, L. M. 2002. <span 
+class="cmti-12">The Tools of Government: A guide to the new governance</span>. New
+   York, NY: Oxford University Press.
+   </dd><dt id="X0-schneider2003" class="thebibliography">
+</dt><dd 
+id="bib-76" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Schneider,  M.,  et  al.  2003.  &#8220;Building  consensual  institutions:  Networks  and  the
+   National Estuary Program&#8221;. <span 
+class="cmti-12">American Journal of Political Science </span>47 (1): 143&#8211;158.
+   </dd><dt id="X0-scott2014" class="thebibliography">
+</dt><dd 
+id="bib-77" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Scott, Tyler, and Craig Thomas. 2014. &#8220;The Effect of Collaborative Partnerships on
+   Inter-organizational Networks&#8221;. <span 
+class="cmti-12">Public Performance &amp; Management Review </span>Accepted
+   for Publication.
+   </dd><dt id="X0-skaggs1994" class="thebibliography">
+</dt><dd 
+id="bib-78" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Skaggs,  R.  W.,  M.  A.  Breve,  and  J.  W.  Gilliam.  1994.  &#8220;Hydrologic  and  water
+   quality impacts of agricultural drainage&#8221;. <span 
+class="cmti-12">Critical reviews in environmental science</span>
+   <span 
+class="cmti-12">and technology </span>24 (1): 1&#8211;32.
+
+   </dd><dt id="X0-smith2004" class="thebibliography">
+</dt><dd 
+id="bib-79" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Smith, Steven Rathgeb. 2004. &#8220;Government and nonprofits in the modern age: Is
+   independence possible?&#8221; In <span 
+class="cmti-12">In Search of the Nonprofit Sector</span>, ed. by Peter Frumkin
+   and Jonathan B. Imber, 3&#8211;18. New Brunswick, NJ: Transaction Publishers.
+   </dd><dt id="X0-thomas2011" class="thebibliography">
+</dt><dd 
+id="bib-80" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Thomas, C. W, and T. M Koontz. 2011. &#8220;Research designs for evaluating the impact of
+   community-based management on natural resource conservation&#8221;. <span 
+class="cmti-12">Journal of Natural</span>
+   <span 
+class="cmti-12">Resources Policy Research </span>3 (2): 97&#8211;111.
+   </dd><dt id="X0-tong2002" class="thebibliography">
+</dt><dd 
+id="bib-81" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Tong,  Susanna  TY,  and  Wenli  Chen.  2002.  &#8220;Modeling  the  relationship  between
+   land use and surface water quality&#8221;. <span 
+class="cmti-12">Journal of Environmental Management </span>66 (4):
+   377&#8211;393.
+   </dd><dt id="X0-wang2001" class="thebibliography">
+</dt><dd 
+id="bib-82" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Wang, Xinhao. 2001. &#8220;Integrating water-quality management and land-use planning
+   in a watershed context&#8221;. <span 
+class="cmti-12">Journal of Environmental Management </span>61 (1): 25&#8211;36.
+   </dd><dt id="X0-ward2008" class="thebibliography">
+</dt><dd 
+id="bib-83" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Ward,  Trevor  J.  2008.  &#8220;Barriers  to  biodiversity  conservation  in  marine  fishery
+   certification&#8221;. 2, <span 
+class="cmti-12">Fish and Fisheries </span>9:169&#8211;177.
+   </dd><dt id="X0-weber2003" class="thebibliography">
+</dt><dd 
+id="bib-84" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Weber,  E.  P.  2003.  <span 
+class="cmti-12">Bringing  society  back  in:  Grassroots  ecosystem  management,</span>
+   <span 
+class="cmti-12">accountability, and sustainable communities</span>. Cambridge, MA: MIT Press.
+
+   </dd><dt id="X0-weible2009" class="thebibliography">
+</dt><dd 
+id="bib-85" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Weible, C. M, P. A Sabatier, and K. McQueen. 2009. &#8220;Themes and variations: Taking
+   stock of the advocacy coalition framework&#8221;. <span 
+class="cmti-12">Policy Studies Journal </span>37 (1): 121&#8211;140.
+   </dd><dt id="X0-wikle2003" class="thebibliography">
+</dt><dd 
+id="bib-86" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Wikle,  Christopher  K.  2003.  &#8220;Hierarchical  models  in  environmental  science&#8221;.
+   <span 
+class="cmti-12">International Statistical Review </span>71 (2): 181&#8211;199.
+   </dd><dt id="X0-wikle2010" class="thebibliography">
+</dt><dd 
+id="bib-87" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Wikle,  Christopher  K.,  and  Mevin  B.  Hooten.  2010.  &#8220;A  general  science-based
+   framework for dynamical spatio-temporal models&#8221;. <span 
+class="cmti-12">Test </span>19 (3): 417&#8211;451.
+   </dd><dt id="X0-wondolleck2000" class="thebibliography">
+</dt><dd 
+id="bib-88" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Wondolleck, J. M, and S. L Yaffee. 2000. <span 
+class="cmti-12">Making collaboration work: Lessons from</span>
+   <span 
+class="cmti-12">innovation in natural resource management</span>. Washington, D.C.: Island Press.
+   </dd><dt id="X0-xu2007" class="thebibliography">
+</dt><dd 
+id="bib-89" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Xu,   Ke,   and   Christopher   K.   Wikle.   2007.   &#8220;Estimation   of   parameterized
+   spatio-temporal dynamic models&#8221;. <span 
+class="cmti-12">Journal of Statistical Planning and Inference </span>137
+   (2): 567&#8211;588.
+   </dd><dt id="X0-yaffee1996" class="thebibliography">
+</dt><dd 
+id="bib-90" class="thebibliography">
+   <!--l. 224--><p class="noindent" >Yaffee, S. L, et al. 1996. <span 
+class="cmti-12">Ecosystem Management in the United States: An assessment</span>
+   <span 
+class="cmti-12">of current experience</span>. Washington, D.C.: Island Press.</dd></dl>
+    
+</body></html> 
+
+
+

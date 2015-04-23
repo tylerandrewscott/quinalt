@@ -1,0 +1,27 @@
+\documentclass[11pt,a4paper,titlepage]{article}
+
+
+\usepackage[firstinits=false,url=false,isbn=false,style=chicago-authordate,backend=biber,sorting=nyt,maxcitenames=2,uniquelist=false]{biblatex}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+
+\title{Evaluating the impact of government support for nonprofit collaborative watershed management councils using environmental monitoring data with R-INLA and SPDE}
+\author{Tyler Scott\\ Evans School of Public Affairs, University of Washington}
+%\date{June 2014}
+
+\addbibresource{ScottRef.bib}
+
+\begin{document}
+
+
+\section*{PMRC 2015 Abstract}
+
+Governments increasingly rely on collaborative relationships with non-profit organizations to implement policies or provide services \parencite{salamon2002}. Collaborative management with local nonprofit groups give governments a community-based vehicle through which to implement policies and programs, and provide nonprofits with access to funding and other resources \parencite{nikolic2008}. Management arrangements of this form are very common in environmental applications, particularly watershed management \parencite[e.g.,][]{leach2013,leach2002,margerum2011}. This paper builds on the considerable body of research discussing the role that governments play in--and resultant impacts of--supporting collaborative management \parencite[e.g.,][]{nikolic2008,lubell2008,ansell2008,emerson2012} by asking a relatively simple question that proves highly elusive in practice: How does government support for collaborative management affect environmental outcomes? To examine this question, I use publically available water quality monitoring data to explore the impact of 2500 grants given by a state agency, the Oregon Watershed Enhancement Board (OWEB), to local non-profit stakeholder councils engaged in ongoing watershed planning and management activities in watersheds across Oregon over the course of almost 20 years.
+
+To model these effects I use Bayesian hierarchical modeling, specifically Integrated Nested Laplace Approximation (INLA) \parencite{rue2009} for estimating complex hierarchical models and Stochastic Partial Differential Equations (SPDE) \parencite{lindgren2011} for modeling spatial and temporal dependency, in order to account for the complex spatio-temporal nature of these data. This paper makes a methodological contribution to the policy literature by helping to establish the use of these methods for policy analysis applications. The INLA approach facilitates large-scale hierarchical models and complex specifications that account for irregular data and spatial and temporal relationships. This enables the use of publicly available, observational environmental data and helps address some of the analytical challenges that have prevented researchers from linking collaborative management efforts to environmental outcomes in the past \parencite{koontz2006}.
+
+Using this model, I address two primary research questions: (1) Does government funding for collaborative watershed management groups have a measurable impact on water quality? and (2) How does this impact compare across different types of funded programs? Specifically, how does the predicted effect on water quality of funding management activities that have a direct environmental output (e.g., riparian revegetation) compare to supporting production of indirect outputs (e.g., supporting council administrative activities)?
+
+\printbibliography
+
+\end{document}

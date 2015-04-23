@@ -1,0 +1,37 @@
+Latex Equations for Presentation
+
+
+
+Seasonal Trend Term
+\tau^{\frac{n-m+1}{2}} exp \left\{-\frac{1}{2}x^T Qx \right\}
+
+Temporal Trend (RW2 model)
+\tau^{(n-2)/2} exp \left\{-\frac{1}{2}x^T Qx \right\}
+
+
+
+HUC8 Model Level
+\alpha_h = \alpha_0 + \sum_{w=1}^{W} \gamma_{w} Watershed_{wj[i]}
+
+
+SITE Model Level
+\eta = \alpha_{h[i]} +\sum_{m=1}^{M} \beta_{m} Site_i + f(.) + \tau_{t[i]}+\zeta_{t[i]}
+
+
+Spatio-temporal correlation
+y(s_{i},t)|\theta,\psi \sim~ p(y(s_i,t)|\sum_j,A_{ij}\theta_j,\psi)
+
+
+
+
+
+
+The three different specifications are compared below in the model results. Figure \ref{fig:grantexample} provides an example of grant spending by watershed, showing all grant funds received between July 2002 and June 2003.
+
+\begin{figure}[!htbp]
+\graphicspath{ {`/Users/TScott/Google\space Drive/quinalt/APPAM_2014/'}}
+\centering
+\includegraphics[trim = 0mm 4mm 0mm 0mm, clip, width=6in]{oweb12mjul03.png}
+\caption{\textit{Total grant funds recieved, July 2002 to June 2003}}
+\label{fig:grantexample}
+\end{figure}
