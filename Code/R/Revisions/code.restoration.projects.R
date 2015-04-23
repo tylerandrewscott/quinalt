@@ -35,6 +35,11 @@ oregon.huc8@data$id = rownames(oregon.huc8@data)
 oregon.huc8.df = as.data.frame(oregon.huc8)
 
 
+localDir <- 'TempData'
+if (!file.exists(localDir)) {
+  dir.create(localDir)
+}
+
 url <- 'http://oe.oregonexplorer.info/ExternalContent/OWRI/OWRI_ExportToExcel_011315.zip'
 file <- paste(localDir,basename(url),sep='/')
 if (!file.exists(file)) {
