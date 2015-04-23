@@ -104,3 +104,4 @@ Input/*.accdb
 *.gdb
 
 SpatialData/*
+TempData/*
