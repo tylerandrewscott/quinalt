@@ -98,7 +98,7 @@ vignettes/*.pdf
 Input/*.accdb
 
 
-*.dbf
+
 *.shp
 *.shx
 *.gdb
