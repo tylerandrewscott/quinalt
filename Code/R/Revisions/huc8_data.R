@@ -329,7 +329,7 @@ for (i in 1:ncol(temp.huc8))
 temp.huc8[,grep('Total',colnames(temp.huc8))][is.na(temp.huc8[,grep('Total',colnames(temp.huc8))])] = 0
 
 
-oregon.huc8.df = temp.huc8
+huc8_data = temp.huc8
 
 
 ######
