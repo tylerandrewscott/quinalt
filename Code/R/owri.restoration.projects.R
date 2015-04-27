@@ -10,21 +10,23 @@ require(rgeos)
 require(maptools)
 require(ggplot2)
 require(reshape2)
-setwd('H:/quinalt')
-oregon.huc8 = readOGR(dsn="H:/quinalt/hydrologic_units", layer="wbdhu8_a_or")
+
+setwd("/homes/tscott1/win/user/quinalt_original/")
+
+oregon.huc8 = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/hydrologic_units", layer="wbdhu8_a_or")
 oregon.huc8@data$id = rownames(oregon.huc8@data)
 
-oregon.owri.points = readOGR(dsn="H:/quinalt", layer="OWRI_point_projects")
+oregon.owri.points = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/", layer="OWRI_point_projects")
 oregon.owri.points@data$id = rownames(oregon.owri.points@data)
 oregon.owri.points = spTransform(oregon.owri.points,CRS(proj4string(oregon.huc8)))
 oregon.owri.points.df = as.data.frame(oregon.owri.points)
 
-oregon.poly.proj = readOGR(dsn="H:/quinalt", layer="OWRI_poly_projects")
+oregon.poly.proj = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/", layer="OWRI_poly_projects")
 oregon.poly.proj@data$id = rownames(oregon.poly.proj@data)
 oregon.poly.proj.points = fortify(oregon.poly.proj, region="id")
 oregon.poly.proj.df = join(oregon.poly.proj.points, oregon.poly.proj@data, by="id")
 
-oregon.line.proj = readOGR(dsn="H:/quinalt", layer="OWRI_line_projects")
+oregon.line.proj = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/", layer="OWRI_line_projects")
 oregon.line.proj@data$id = rownames(oregon.line.proj@data)
 oregon.line.proj.points = fortify(oregon.line.proj, region="id")
 oregon.line.proj.df = join(oregon.line.proj.points, oregon.line.proj@data, by="id")
@@ -46,6 +48,17 @@ all.points  = do.call("rbind", all.points.list)
 
 all.points@data$id = rownames(all.points@data)
 all.points.df = as.data.frame(all.points)
+
+
+all.points.uq.df = all.points.df %>% select(-gis_source,-site_id,-id,-point_x,-point_y,-coords.x1,-coords.x2)
+all.points.uq.df = all.points.uq.df[!duplicated(all.points.uq.df$project_nb),]
+all.points.uq.df$PROJNUM = all.points.uq.df$project_nb
+
+proj.info = join(proj.info,all.points.uq.df,type='left')
+
+
+
+
 owri.projects<-read.dbf('owri_projects.dbf')
 owri.projects$project_nb<-owri.projects$PROJNUM
 owri.projects$OWRI.funded = ifelse(owri.projects$TotalBoth==0,0,1)
@@ -60,6 +73,7 @@ owri.projects = join(owri.projects,temp)
 owri.projects$pnum[is.na(owri.projects$pnum)] = 1
 owri.projects$TotalDiv = owri.projects$TotalBoth / owri.projects$pnum
 
+
 all.points@data <- join(all.points@data,owri.projects)
 
 which8.owri.points = over(all.points,oregon.huc8)
@@ -69,6 +83,9 @@ all.points@data = join(all.points@data,which8.owri.points)
 temp =stack(tapply(all.points@data$TotalDiv,as.character(all.points@data$HUC8),sum))
 colnames(temp) <- c('SpendHUC8','HUC8')
 oregon.huc8@data <- join(oregon.huc8@data,temp)
+
+head(oregon.huc8@data)
+
 
 oregon.huc8.points = fortify(oregon.huc8, region="id")
 oregon.huc8.df = join(oregon.huc8.points, oregon.huc8@data, by="id")
@@ -107,4 +124,6 @@ huc8.projects.df$YEAR = year(huc8.projects.df$end.date)
 huc8.projects.df$MONTH = month(huc8.projects.df$end.date)
 
 rm(list=ls()[grep('huc8.projects',ls(),invert=TRUE)])
+
+
 
