@@ -1,4 +1,4 @@
-rm(list=ls())
+
 ##CALCULATE OWRI ON RESTORATION PROJECT SPENDING BY HUC8 and YEAR
 ###################
 First.Year = 1990
@@ -68,12 +68,12 @@ oregon.huc8.df = merge(oregon.huc8.df,Year.Month,type='full')
 
 
 #1992 nlcd
-ag.huc8.1992 = read.dbf('LandUse_RasterData/or_agr_huc8_1992.dbf');colnames(ag.huc8.1992)[5] = 'ag.huc8'
-wet.huc8.1992 = read.dbf('LandUse_RasterData/or_wetl_huc8_1992.dbf');colnames(wet.huc8.1992)[5] = 'wet.huc8'
-forst.huc8.1992 = read.dbf('LandUse_RasterData/or_forst_huc8_1992.dbf');colnames(forst.huc8.1992)[5] = 'forst.huc8'
-dev.huc8.1992 = read.dbf('LandUse_RasterData/or_dev_huc8_1992.dbf');colnames(dev.huc8.1992)[5] = 'dev.huc8'
+ag.huc8.1992 = read.dbf('LandUse_RasterData/or_agr_huc8_1992.dbf');colnames(ag.huc8.1992$dbf)[5] = 'ag.huc8'
+wet.huc8.1992 = read.dbf('LandUse_RasterData/or_wetl_huc8_1992.dbf');colnames(wet.huc8.1992$dbf)[5] = 'wet.huc8'
+forst.huc8.1992 = read.dbf('LandUse_RasterData/or_forst_huc8_1992.dbf');colnames(forst.huc8.1992$dbf)[5] = 'forst.huc8'
+dev.huc8.1992 = read.dbf('LandUse_RasterData/or_dev_huc8_1992.dbf');colnames(dev.huc8.1992$dbf)[5] = 'dev.huc8'
 
-cover.1992 = join_all(list(ag.huc8.1992,wet.huc8.1992,forst.huc8.1992,dev.huc8.1992))
+cover.1992 = join_all(list(ag.huc8.1992$dbf,wet.huc8.1992$dbf,forst.huc8.1992$dbf,dev.huc8.1992$dbf))
 cover.1992$YEAR = 1992;cover.1992 = dplyr::select(cover.1992,-c(COUNT,AREA,ZONE_CODE))
 cover.1990 = cover.1992; cover.1990$YEAR = 1990
 cover.1991 = cover.1992; cover.1991$YEAR = 1991
@@ -88,16 +88,16 @@ cover.2000 = cover.1992; cover.2000$YEAR = 2000
 
 
 #2001 nlcd
-crop.huc8.2001 = read.dbf('LandUse_RasterData/crop_huc8_2001.dbf');colnames(crop.huc8.2001)[5] = 'crop.huc8'
-past.huc8.2001 = read.dbf('LandUse_RasterData/past_huc8_2001.dbf');colnames(past.huc8.2001)[5] = 'past.huc8'
-wet.huc8.2001 = read.dbf('LandUse_RasterData/wetl_huc8_2001.dbf');colnames(wet.huc8.2001)[5] = 'wet.huc8'
-forst.huc8.2001 = read.dbf('LandUse_RasterData/forst_huc8_2001.dbf');colnames(forst.huc8.2001)[5] = 'forst.huc8'
-dev.huc8.2001 = read.dbf('LandUse_RasterData/dev_huc8_2001.dbf');colnames(dev.huc8.2001)[5] = 'dev.huc8'
+crop.huc8.2001 = read.dbf('LandUse_RasterData/crop_huc8_2001.dbf');colnames(crop.huc8.2001$dbf)[5] = 'crop.huc8'
+past.huc8.2001 = read.dbf('LandUse_RasterData/past_huc8_2001.dbf');colnames(past.huc8.2001$dbf)[5] = 'past.huc8'
+wet.huc8.2001 = read.dbf('LandUse_RasterData/wetl_huc8_2001.dbf');colnames(wet.huc8.2001$dbf)[5] = 'wet.huc8'
+forst.huc8.2001 = read.dbf('LandUse_RasterData/forst_huc8_2001.dbf');colnames(forst.huc8.2001$dbf)[5] = 'forst.huc8'
+dev.huc8.2001 = read.dbf('LandUse_RasterData/dev_huc8_2001.dbf');colnames(dev.huc8.2001$dbf)[5] = 'dev.huc8'
 ag.huc8.2001 = crop.huc8.2001
 ag.huc8.2001$ag.huc8 = crop.huc8.2001$crop.huc8+
   past.huc8.2001$past.huc8[match(crop.huc8.2001$HUC8,past.huc8.2001$HUC8)]
 
-cover.2001 = join_all(list(ag.huc8.2001,wet.huc8.2001,forst.huc8.2001,dev.huc8.2001))
+cover.2001 = join_all(list(ag.huc8.2001$dbf,wet.huc8.2001$dbf,forst.huc8.2001$dbf,dev.huc8.2001$dbf))
 cover.2001$YEAR = 2001
 cover.2001 = dplyr::select(cover.2001,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
 cover.2002 = cover.2001; cover.2002$YEAR = 2002
@@ -106,16 +106,16 @@ cover.2004 = cover.2001; cover.2004$YEAR = 2004
 cover.2005 = cover.2001; cover.2005$YEAR = 2005
 
 #2006 nlcd
-crop.huc8.2006 = read.dbf('LandUse_RasterData/crop_huc8_2006.dbf');colnames(crop.huc8.2006)[5] = 'crop.huc8'
-past.huc8.2006 = read.dbf('LandUse_RasterData/past_huc8_2006.dbf');colnames(past.huc8.2006)[5] = 'past.huc8'
-wet.huc8.2006 = read.dbf('LandUse_RasterData/wetl_huc8_2006.dbf');colnames(wet.huc8.2006)[5] = 'wet.huc8'
-forst.huc8.2006 = read.dbf('LandUse_RasterData/forst_huc8_2006.dbf');colnames(forst.huc8.2006)[5] = 'forst.huc8'
-dev.huc8.2006 = read.dbf('LandUse_RasterData/dev_huc8_2006.dbf');colnames(dev.huc8.2006)[5] = 'dev.huc8'
+crop.huc8.2006 = read.dbf('LandUse_RasterData/crop_huc8_2006.dbf');colnames(crop.huc8.2006$dbf)[5] = 'crop.huc8'
+past.huc8.2006 = read.dbf('LandUse_RasterData/past_huc8_2006.dbf');colnames(past.huc8.2006$dbf)[5] = 'past.huc8'
+wet.huc8.2006 = read.dbf('LandUse_RasterData/wetl_huc8_2006.dbf');colnames(wet.huc8.2006$dbf)[5] = 'wet.huc8'
+forst.huc8.2006 = read.dbf('LandUse_RasterData/forst_huc8_2006.dbf');colnames(forst.huc8.2006$dbf)[5] = 'forst.huc8'
+dev.huc8.2006 = read.dbf('LandUse_RasterData/dev_huc8_2006.dbf');colnames(dev.huc8.2006$dbf)[5] = 'dev.huc8'
 ag.huc8.2006 = crop.huc8.2006
 ag.huc8.2006$ag.huc8 = crop.huc8.2006$crop.huc8+past.huc8.2006$past.huc8[match(crop.huc8.2006$HUC8,past.huc8.2006$HUC8)]
 
 
-cover.2006 = join_all(list(ag.huc8.2006,wet.huc8.2006,forst.huc8.2006,dev.huc8.2006))
+cover.2006 = join_all(list(ag.huc8.2006$dbf,wet.huc8.2006$dbf,forst.huc8.2006$dbf,dev.huc8.2006$dbf))
 cover.2006$YEAR = 2006
 cover.2006 = dplyr::select(cover.2006,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
 cover.2007 = cover.2006; cover.2007$YEAR = 2007
@@ -124,14 +124,14 @@ cover.2009 = cover.2006; cover.2009$YEAR = 2009
 cover.2010 = cover.2006; cover.2010$YEAR = 2010
 
 #2011 nlcd
-crop.huc8.2011 = read.dbf('LandUse_RasterData/crop_huc8_2011.dbf');colnames(crop.huc8.2011)[5] = 'crop.huc8'
-past.huc8.2011 = read.dbf('LandUse_RasterData/past_huc8_2011.dbf');colnames(past.huc8.2011)[5] = 'past.huc8'
-wet.huc8.2011 = read.dbf('LandUse_RasterData/wetl_huc8_2011.dbf');colnames(wet.huc8.2011)[5] = 'wet.huc8'
-forst.huc8.2011 = read.dbf('LandUse_RasterData/forst_huc8_2011.dbf');colnames(forst.huc8.2011)[5] = 'forst.huc8'
-dev.huc8.2011 = read.dbf('LandUse_RasterData/dev_huc8_2011.dbf');colnames(dev.huc8.2011)[5] = 'dev.huc8'
+crop.huc8.2011 = read.dbf('LandUse_RasterData/crop_huc8_2011.dbf');colnames(crop.huc8.2011$dbf)[5] = 'crop.huc8'
+past.huc8.2011 = read.dbf('LandUse_RasterData/past_huc8_2011.dbf');colnames(past.huc8.2011$dbf)[5] = 'past.huc8'
+wet.huc8.2011 = read.dbf('LandUse_RasterData/wetl_huc8_2011.dbf');colnames(wet.huc8.2011$dbf)[5] = 'wet.huc8'
+forst.huc8.2011 = read.dbf('LandUse_RasterData/forst_huc8_2011.dbf');colnames(forst.huc8.2011$dbf)[5] = 'forst.huc8'
+dev.huc8.2011 = read.dbf('LandUse_RasterData/dev_huc8_2011.dbf');colnames(dev.huc8.2011$dbf)[5] = 'dev.huc8'
 ag.huc8.2011 = crop.huc8.2011
 ag.huc8.2011$ag.huc8 = crop.huc8.2011$crop.huc8+past.huc8.2011$past.huc8[match(crop.huc8.2011$HUC8,past.huc8.2011$HUC8)]
-cover.2011 = join_all(list(ag.huc8.2011,wet.huc8.2011,forst.huc8.2011,dev.huc8.2011))
+cover.2011 = join_all(list(ag.huc8.2011$dbf,wet.huc8.2011$dbf,forst.huc8.2011$dbf,dev.huc8.2011$dbf))
 cover.2011$YEAR = 2011
 cover.2011 = dplyr::select(cover.2011,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
 cover.2012 = cover.2011; cover.2012$YEAR = 2012
@@ -331,7 +331,7 @@ temp.huc8[,grep('Total',colnames(temp.huc8))][is.na(temp.huc8[,grep('Total',coln
 
 huc8_data = temp.huc8
 
-
+rm(list=ls()[ls()!='huc8_data'])
 ######
 ######
 ######

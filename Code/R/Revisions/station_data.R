@@ -1,5 +1,7 @@
-rm(list=ls())
+
 setwd('/homes/tscott1/win/user/quinalt')
+First.Year = 1990
+Last.Year = 2016
 
 require(RODBC)
 require(plyr)
@@ -102,10 +104,10 @@ uq@data$seaDist <-  apply(mat.dists, 1, min)
 
 rm(mat.dists)
 rm(oregon.coast.df)
-rm(oregon.huc8.df)
+
 rm(oregon.df)
 rm(oregon)
-rm(oregon.huc8)
+
 
 R1.ag = raster('SpatialData/tf_rasters/tf_ag_1992')
 R1.dev = raster('SpatialData/tf_rasters/tf_dev_1992')
@@ -182,14 +184,46 @@ cov2011$Station = uq$Station
 
 cov = rbind(cov1992,cov2001,cov2006,cov2011)
 
-class(uq)
-tempdat = join(uq@data,cov)
+all.params.spdf@data = join(all.params.spdf@data,uq@data[,c('Station','elevation','seaDist')])
 
-uq@data = tempdat
-
+all.params.spdf@data = join(all.params.spdf@data,cov)
 
 
-library(rvest)
+which.huc8 = over(spTransform(all.params.spdf,CRS(proj4string(oregon.huc8))),oregon.huc8)
+
+all.params.spdf@data$HUC8 = which.huc8$HUC8
+
+#make sequence for years
+YEAR = data.frame(YEAR = seq(First.Year,Last.Year,1))
+MONTH = data.frame(MONTH = month.name,MONTH.ABB = month.abb)
+Year.Month = merge(YEAR,MONTH, type='full')
+
+Year.Month$Month.Num = match(Year.Month$MONTH,month.name)
+Year.Month$Year.Num = Year.Month$YEAR - First.Year + 1
+Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
+
+all.params.spdf@data = join(all.params.spdf@data,Year.Month)
 
 
+all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@data$Abs.Month,sep='_')
 
+rm(list=ls()[ls()%in%c('all.params.spdf','huc8_data')==FALSE])
+
+save.image('temporary_workspace.RData')
+# 
+# county.pop = read.csv('Input/oregon_county_populations.csv')
+# 
+# county.pop = melt(county.pop,id.vars=c('County'))
+# 
+# colnames(county.pop) = c('County','Year','Population')
+# 
+# county.pop$Year = gsub('Year_','',county.pop$Year)
+# county.pop$County = toupper(gsub(' County','',county.pop$County))
+# county.pop$Year = as.numeric(county.pop$Year)
+# county.pop = county.pop[county.pop$Year>1980,]
+# 
+# 
+# library(rvest)
+# 
+# 
+# 
