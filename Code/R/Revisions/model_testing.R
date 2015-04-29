@@ -25,6 +25,7 @@ covars = mod.data[,c(c('elevation','seaDist','HUC8','total.period','YEAR',
                     'ag.huc8','dev.huc8','wet.huc8','forst.huc8',
                  'seasonal','Ag','Dev','Wetl','Forst'),grep('Total',names(temp),value=T))]
 
+covars[,grep('Total',names(covars))] = covars[,grep('Total',names(covars))]/100000
 
 
 
@@ -37,16 +38,14 @@ covars = mod.data[,c(c('elevation','seaDist','HUC8','total.period','YEAR',
 #       temp$DECIMAL_LAT[!duplicated(temp$DECIMAL_LAT)],col='blue',pch=21)
 #legend(x=-116.5,y=41.75,legend='Station',pch=21,col='blue',pt.cex=1.5)
 
-
+covars$WC.TRUE.T
 #Model 0: No spatial effect
 form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + forst.huc8 + elevation + seaDist + 
-  f(HUC8,model='iid') +
+  WC.TRUE.TotalBoth_36 + WC.FALSE.TotalBoth_36+
+  f(HUC8,model='iid')+
  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
-  
-  names(mod.data)
-  
-  
+    
 mod0 <- inla(form0, family='gaussian', 
              data=data.frame(y=mod.data$l.owqi, covars,b0=1), 
              control.predictor=list(compute=TRUE),
@@ -54,8 +53,11 @@ mod0 <- inla(form0, family='gaussian',
              control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
 
 summary(mod0)
-summary(mod0)$dic$dic
 
+
+covars$TotalCash_36
+summary(mod0)$dic$dic
+6213.95
 
 #cREATE MESH, SPDE
 #note: mesh, spde object used for models 1-7

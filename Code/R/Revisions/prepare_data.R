@@ -35,6 +35,14 @@ library(shapefiles)
 library(rgdal)
 library(raster)
 
+library(rgeos)
+library(rgdal)
+library(sp)
+library(raster)
+library(maptools)
+library(rasterVis)  # raster visualisation
+library(rWBclimate)
+
 #source("http://www.math.ntnu.no/inla/givemeINLA.R")
 
 ####### MAKE YEAR.MONTH REFERENCE DF ###########
@@ -501,15 +509,6 @@ which.huc8 = over(spTransform(all.params.spdf,CRS(proj4string(oregon.huc8))),ore
 
 all.params.spdf@data$HUC8 = which.huc8$HUC8
 
-#make sequence for years
-YEAR = data.frame(YEAR = seq(First.Year,Last.Year,1))
-MONTH = data.frame(MONTH = month.name,MONTH.ABB = month.abb)
-Year.Month = merge(YEAR,MONTH, type='full')
-
-Year.Month$Month.Num = match(Year.Month$MONTH,month.name)
-Year.Month$Year.Num = Year.Month$YEAR - First.Year + 1
-Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
-
 all.params.spdf@data = join(all.params.spdf@data,Year.Month)
 
 
@@ -541,7 +540,72 @@ all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@d
   all.params.spdf@data = obs.data
 
 
+
+######## ADD PRECIP VARIABLE ###########
+
+oregon.outline = readOGR(dsn='SpatialData/government_units',
+                         layer = 'state_nrcs_a_or')
+
+
+# create a list of .bil files that exist in the wd
+files <- list.files('SpatialData/precip_rasters/',pattern='\\.bil$')
+files = files[nchar(files) != min(nchar(files))]
+
+# for each of vars, create raster object for each tile and merge
+# (this is a bit messy, but all I could think of for now...)
+# grids will be a list of rasters, each of which is the merged tiles for a BC var.
+setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')
+grids <- sapply(files, function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- files
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+# give the list elements names
+which.month = gsub('_bil','',
+                   gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_[0123456789]{4}','',files)))
+
+which.year = gsub('[0123456789]{2}$','',gsub('_bil','',
+                                             gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_','',files))))
+
+which.year.month = paste(which.year,which.month,sep='_')
+names(grids) = which.year.month
+# combine all list elements into a stack
+s <- stack(grids)
+s.crop <- crop(s, oregon.outline)
+
+all.params.spdf@data$monthly.precip = NA
+
+precip.data = data.frame(NULL)
+
+empty = list(NULL)
+for (i in 1:dim(s.crop)[3])
+{
+  empty[[i]] = extract(s.crop[[i]],all.params.spdf,method='simple')
+}
+precip.list = as.data.frame(empty)
+names(precip.list) = names(s.crop)
+
+which.grab = match(paste0('X',all.params.spdf@data$YEAR,'_',
+                          ifelse(all.params.spdf@data$Month.Num<10,paste0(0,all.params.spdf@data$Month.Num),
+                                 all.params.spdf@data$Month.Num)),names(precip.list))
+
+all.params.spdf@data$monthly.precip = NA
+
+for (i in 1:nrow(all.params.spdf@data))
+{
+  all.params.spdf@data$monthly.precip[i] = 
+    precip.list[,match(paste0('X',all.params.spdf@data$YEAR[i],'_',
+                              ifelse(all.params.spdf@data$Month.Num[i]<10,paste0(0,all.params.spdf@data$Month.Num[i]),
+                                     all.params.spdf@data$Month.Num[i])),names(precip.list))][i]
+}
+
+
+
+
 ###### REMOVE AND SAVE ########
+setwd('//Users/TScott/Google Drive/quinalt')
 rm(list=ls()[ls()%in%c('all.params.spdf','huc8_data')==FALSE])
 
 save.image('temporary_workspace.RData')
