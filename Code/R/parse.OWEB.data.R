@@ -52,6 +52,10 @@ grant.temp = oweb.grants@data
 param.temp = all.params.spdf@data
 
 
+sum(oweb.dat$Project.Number[oweb.dat$Project.Type=='Restoration'] %in% proj.info$drvdOwebNum)
+
+
+
 levels(grant.temp$project_ty)[8] = 'Education.Outreach'
 levels(grant.temp$project_ty)[5] = 'Education.Outreach'
 

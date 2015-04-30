@@ -3,7 +3,7 @@
 
 ######### SETUP BASICS ##########
 
-remote = FALSE
+remote = TRUE
 if(remote)
 {setwd('/homes/tscott1/win/user/quinalt')}
 if(!remote)
@@ -166,7 +166,7 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
   
   
 
-  #ADD GRANT DATA
+####### ADD GRANT DATA ##########
 
   proj.info = read.csv('Input/owri_project_info.csv')
   proj.info = proj.info %>% filter(StartYear!=0,CompleteYear!=0,StartMonth!=0,CompleteMonth!=0)
