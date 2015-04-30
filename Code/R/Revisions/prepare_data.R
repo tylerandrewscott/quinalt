@@ -1,9 +1,15 @@
 
 ##GENERATE DATA FOR MODELING
 
-
 ######### SETUP BASICS ##########
-setwd('/homes/tscott1/win/user/quinalt')
+
+remote = FALSE
+if(remote)
+{setwd('/homes/tscott1/win/user/quinalt')}
+if(!remote)
+{setwd('//Users/TScott/Google Drive/quinalt/')}
+
+
 First.Year = 1990
 Last.Year = 2016
 
@@ -32,14 +38,7 @@ require(splancs)
 require(fields)
 library(raster)
 library(shapefiles)
-library(rgdal)
 library(raster)
-
-library(rgeos)
-library(rgdal)
-library(sp)
-library(raster)
-library(maptools)
 library(rasterVis)  # raster visualisation
 library(rWBclimate)
 
@@ -57,9 +56,6 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
 
 
 ###### MAKE HUC8 DATAFRAME ##########
-###########
-#READ IN OREGON HUC8 SHAPEFILE, MAKE DATAFRAME
-
   localDir <- 'TempData'
   if (!file.exists(localDir)) {
     dir.create(localDir)
@@ -174,8 +170,7 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
 
   proj.info = read.csv('Input/owri_project_info.csv')
   proj.info = proj.info %>% filter(StartYear!=0,CompleteYear!=0,StartMonth!=0,CompleteMonth!=0)
-  
-  
+
   convertCurrency <- function(currency) {
     currency1 <- sub('$','',as.character(currency),fixed=TRUE)
     currency2 <- as.numeric(gsub('\\,','',as.character(currency1))) 
@@ -192,56 +187,14 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
   proj.info$Project.Number = proj.info$drvdOwebNum
   proj.info$HUC8 = proj.info$drvdHUC4thField
   proj.info = proj.info %>% filter(StartYear!=0,CompleteYear!=0,StartMonth!=0,CompleteMonth!=0)
-  
-  
-  oregon.huc8 = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/hydrologic_units", layer="wbdhu8_a_or")
-  oregon.huc8@data$id = rownames(oregon.huc8@data)
-  
-  oregon.owri.points = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/", layer="OWRI_point_projects")
-  oregon.owri.points@data$id = rownames(oregon.owri.points@data)
-  oregon.owri.points = spTransform(oregon.owri.points,CRS(proj4string(oregon.huc8)))
-  oregon.owri.points.df = as.data.frame(oregon.owri.points)
-  
-  oregon.poly.proj = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/", layer="OWRI_poly_projects")
-  oregon.poly.proj@data$id = rownames(oregon.poly.proj@data)
-  oregon.poly.proj.points = fortify(oregon.poly.proj, region="id")
-  oregon.poly.proj.df = join(oregon.poly.proj.points, oregon.poly.proj@data, by="id")
-  
-  oregon.line.proj = readOGR(dsn="/homes/tscott1/win/user/quinalt_original/", layer="OWRI_line_projects")
-  oregon.line.proj@data$id = rownames(oregon.line.proj@data)
-  oregon.line.proj.points = fortify(oregon.line.proj, region="id")
-  oregon.line.proj.df = join(oregon.line.proj.points, oregon.line.proj@data, by="id")
-  
-  #convert line and poly projects to point projects using centroids
-  poly.centroids<-coordinates(matrix(cbind(oregon.poly.proj@data$point_x,oregon.poly.proj@data$point_y),ncol=2))
-  oregon.poly.proj.points = SpatialPointsDataFrame(coords=poly.centroids,data=oregon.poly.proj@data,proj4string=CRS(proj4string(oregon.poly.proj)))
-  
-  line.centroids<-coordinates(matrix(cbind(oregon.line.proj@data$point_x,oregon.line.proj@data$point_y),ncol=2))
-  oregon.line.proj.points = SpatialPointsDataFrame(coords=line.centroids,data=oregon.line.proj@data,proj4string=CRS(proj4string(oregon.line.proj)))
-  
-  #make one larg spatialpointsdf with all point/poly/line projects as points
-  oregon.poly.proj.points = spTransform(oregon.poly.proj.points,CRS(proj4string(oregon.owri.points)))
-  oregon.line.proj.points = spTransform(oregon.line.proj.points,CRS(proj4string(oregon.owri.points)))
-  all.points.list = list(oregon.owri.points,oregon.line.proj.points,oregon.poly.proj.points)
-  all.points.list[[2]]@data = all.points.list[[2]]@data[,names(oregon.owri.points@data)]
-  all.points.list[[3]]@data = all.points.list[[3]]@data[,names(oregon.owri.points@data)]
-  all.points  = do.call("rbind", all.points.list)
-  
-  all.points@data$id = rownames(all.points@data)
-  all.points.df = as.data.frame(all.points)
-  
-  
-  all.points.uq.df = all.points.df %>% select(-gis_source,-site_id,-id,-point_x,-point_y,-coords.x1,-coords.x2)
-  all.points.uq.df = all.points.uq.df[!duplicated(all.points.uq.df$project_nb),]
-  all.points.uq.df$PROJNUM = all.points.uq.df$project_nb
-  
-  proj.info = join(proj.info,all.points.uq.df,type='left')
+ 
+ ### proj.info = join(proj.info,all.points.uq.df,type='left')
   proj.info$YEAR = proj.info$CompleteYear
   proj.info$Month.Num = proj.info$CompleteMonth
   
   proj.info = join(proj.info,Year.Month)
   proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
-  
+ 
   oregon.huc8.df$uq.tid = paste(oregon.huc8.df$HUC8,oregon.huc8.df$Abs.Month,sep='_')
   
   
@@ -266,13 +219,12 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
   proj.info = join(proj.info,t3)
   
   
-  
   #binary true/false: OWEB project?
   proj.info$OWEB.Grant = ifelse(proj.info$drvdOwebNum=='',FALSE,TRUE)
   
-  proj.info$activity_t = tolower(proj.info$activity_t)
+
+  #proj.info$activity_t = tolower(proj.info$activity_t)
   proj.info$drvdProjDesc = tolower(proj.info$drvdProjDesc)
-  
   
   ###Create true/false for project about water quality
 
@@ -304,10 +256,7 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
     ))
     ] = TRUE
 
-  
-  
-  
-  
+
   temp.huc8 = oregon.huc8.df
   
   temp = proj.info %>% dplyr::group_by(uq.tid) %>% dplyr::summarise_each(funs(sum),TotalCash,TotalInKind,TotalBoth)
@@ -329,7 +278,7 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
     {
       t1 = tt[tt$var.id == colnames(temp.huc8)[i],]
       temp.huc8[colnames(temp.huc8)[i]] = t1$value[match(temp.huc8$uq.tid,t1$uq.tid)]
-      print(i)
+ 
     }
   }
   
@@ -338,12 +287,6 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
   
   
   huc8_data = temp.huc8
-
-rm(list=ls()[ls()!='huc8_data'])
-######
-######
-######
-######
 
 ######### MAKE OBS STATION DATAFRAME ##########
 
@@ -448,31 +391,31 @@ R4.forst = raster('SpatialData/tf_rasters/tf_forst_2011')
 
 uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
 
-R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R1.dev.v = raster::extract(R1.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R1.wet.v = raster::extract(R1.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R1.forst.v = raster::extract(R1.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
 
-R2.crop.v = raster::extract(R2.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R2.past.v = raster::extract(R2.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R2.dev.v = raster::extract(R2.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R2.wet.v = raster::extract(R2.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R2.forst.v = raster::extract(R2.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
+R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R1.dev.v = raster::extract(R1.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R1.wet.v = raster::extract(R1.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R1.forst.v = raster::extract(R1.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+
+R2.crop.v = raster::extract(R2.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.past.v = raster::extract(R2.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.dev.v = raster::extract(R2.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.wet.v = raster::extract(R2.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.forst.v = raster::extract(R2.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
 R2.ag.v = data.frame(ID = R2.crop.v$ID,tf_ag_2001 = R2.crop.v$tf_crop_2001+R2.past.v$tf_past_2001)
 
-R3.crop.v = raster::extract(R3.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R3.past.v = raster::extract(R3.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R3.dev.v = raster::extract(R3.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R3.wet.v = raster::extract(R3.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R3.forst.v = raster::extract(R3.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
+R3.crop.v = raster::extract(R3.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.past.v = raster::extract(R3.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.dev.v = raster::extract(R3.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.wet.v = raster::extract(R3.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.forst.v = raster::extract(R3.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
 R3.ag.v = data.frame(ID = R3.crop.v$ID,tf_ag_2006 = R3.crop.v$tf_crop_2006+R3.past.v$tf_past_2006)
 
-R4.crop.v = raster::extract(R4.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R4.past.v = raster::extract(R4.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R4.dev.v = raster::extract(R4.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R4.wet.v = raster::extract(R4.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
-R4.forst.v = raster::extract(R4.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE)
+R4.crop.v = raster::extract(R4.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.past.v = raster::extract(R4.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.dev.v = raster::extract(R4.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.wet.v = raster::extract(R4.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.forst.v = raster::extract(R4.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
 R4.ag.v = data.frame(ID = R4.crop.v$ID,tf_ag_2011 = R4.crop.v$tf_crop_2011+R4.past.v$tf_past_2011)
 
 
@@ -534,10 +477,15 @@ all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@d
     dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('Total'))
   names(temp60)[grep('Total',names(temp60))] = paste(names(temp60)[grep('Total',names(temp60))],'60',sep='_')
   
-  temp = join_all(list(tempAll,temp12,temp36,temp60))
+  temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),
+                       as.data.frame(temp36),as.data.frame(temp60)))
 
   obs.data = join(obs.data,temp)
   all.params.spdf@data = obs.data
+
+all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10407] = 'MALHEUR'
+all.params.spdf@data$CountyName[all.params.spdf@data$Station == 12261] = 'MALHEUR'
+all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10616] = 'MULTNOMAH'
 
 
 
@@ -554,7 +502,12 @@ files = files[nchar(files) != min(nchar(files))]
 # for each of vars, create raster object for each tile and merge
 # (this is a bit messy, but all I could think of for now...)
 # grids will be a list of rasters, each of which is the merged tiles for a BC var.
-setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')
+
+if(remote)
+  {setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')}
+if(!remote)
+{setwd('//Users/TScott/Google Drive/quinalt/SpatialData/precip_rasters/')}
+
 grids <- sapply(files, function(x) {
   #patt <- paste('precip', x, '_', sep='')
   tiles <- files
@@ -602,6 +555,37 @@ for (i in 1:nrow(all.params.spdf@data))
 }
 
 
+
+######### ADD COUNTY POP ##########
+if(remote)
+{setwd('/homes/tscott1/win/user/quinalt')}
+if(!remote)
+{setwd('//Users/TScott/Google Drive/quinalt')}
+
+county.pop = read.csv('Input/oregon_county_populations.csv')
+county.pop  = filter(county.pop, County != '')
+county.pop$County = gsub(' County','',county.pop$County)
+
+county.pop$G1980 = round(100 * (county.pop[,3] - county.pop[,2])/county.pop[,2] / 10,1)
+county.pop$G1990 = round(100 * (county.pop[,4] - county.pop[,3])/county.pop[,3] / 10,1)
+county.pop$G2000 = round(100 * (county.pop[,5] - county.pop[,4])/county.pop[,4] / 10,1)
+county.pop$County = toupper(county.pop$County)
+recent.pop = read.csv('Input/oregon_county_populations2010_2013.csv')
+county.pop$G2010 = gsub('%','',recent.pop$Percent.Change.2010.13)[match(county.pop$County, recent.pop$County)]
+county.pop$G2010 = round(as.numeric(county.pop$G2010)/3,1)
+
+cpop = melt(county.pop,id.vars = 'County')
+cpop = cpop[grep('Year_',cpop$variable,invert=T),]
+cpop$YEAR = as.numeric(gsub('G','',cpop$variable))
+
+
+all.params.spdf@data$county.pop.growthrate = NA
+
+for (i in 1:nrow(all.params.spdf@data))
+{
+  t1 = cpop[cpop$YEAR < all.params.spdf@data$YEAR[i]&cpop$County==all.params.spdf@data$CountyName[i],]
+  all.params.spdf@data$county.pop.growthrate[i] = t1$value[t1$YEAR == min(t1$YEAR)]
+}
 
 
 ###### REMOVE AND SAVE ########
