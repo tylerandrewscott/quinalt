@@ -1,5 +1,269 @@
+
 setwd('/homes/tscott1/win/user/quinalt/')
 
+oweb.summary<-read.csv('Input/oweb_download_grant.csv')
+oweb.summary$Proj.Paste<-paste(paste(paste(paste(paste(paste(paste(paste(paste(paste(oweb.summary$Project.Summary,oweb.summary$X,sep=' '),
+                                                                           oweb.summary$X.1,sep=''),oweb.summary$X.2,sep=''),oweb.summary$X.3, sep=''),oweb.summary$X.4, sep =''),
+                                                   oweb.summary$X.5, sep = ''), oweb.summary$X.6, sep = ''), oweb.summary$X.7, sep = ''),
+                                 oweb.summary$X.8, sep = ''), oweb.summary$X.9, sep = '')
+oweb.summary = oweb.summary[,-c(grep('X',names(oweb.summary)))]
+
+
+
+oweb.grants = readOGR(dsn="SpatialData/OWEB_grants", layer="OWEB_Grants_8-4-2014")
+oweb.grants@data$id = rownames(oweb.grants@data)
+or.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")
+which.huc8 = over(oweb.grants,spTransform(or.huc8,CRS(proj4string(oweb.grants))))
+oweb.grants@data = cbind(oweb.grants@data,which.huc8)
+oweb.grants@data = oweb.grants@data %>% rename(Project.ID = gr_project,Project.Number = applicatio)
+grant.gis = oweb.grants@data
+
+oweb.cancelled = read.csv('Input/oweb_cancelled.csv')
+oweb.notawarded = read.csv('Input/oweb_notawarded.csv')
+oweb.withdrawn =  read.csv('Input/oweb_withdrawn.csv')
+oweb.monitoring = read.csv('Input/oweb_monitoring.csv')
+oweb.completed = read.csv('Input/oweb_completed.csv')
+oweb.funded =  read.csv('Input/oweb_funded.csv')
+oweb.pending = read.csv('Input/oweb_pending.csv')
+oweb.open = read.csv('Input/oweb_open.csv')
+
+oweb.ineligible = read.csv('Input/oweb_ineligible.csv')
+oweb.all = join_all(list(oweb.completed,oweb.cancelled,oweb.notawarded,oweb.monitoring,oweb.funded,
+              oweb.open,oweb.ineligible,oweb.withdrawn,oweb.pending),type='full')
+oweb.all[oweb.all==''] = NA
+
+oweb.all = oweb.all[!is.na(oweb.all$Project.End.Date),]
+
+oweb.all = oweb.all %>% filter(Project.Status != 'Cancelled') 
+
+oweb.all$End.Date = as.Date(oweb.all$Project.End.Date, format = "%m/%d/%y")
+
+oweb.all = oweb.all[year(oweb.all$End.Date)<2013,]
+
+oweb.restoration = oweb.all[oweb.all$Project.Type=='Restoration',]
+
+
+public.values = c('City','Federal Agency','State Agency','County','Special District','Tribe')
+
+oweb.restoration = which.group = ifelse(oweb.restoration$Grantee.Type %in% public.values ,'Public',
+       ifelse(oweb.restoration$Grantee.Type =='Watershed Council','WC','Other'))
+
+oweb.restoration$YEAR = year(oweb.restoration$Proj)
+
+
+
+'Watershed Council',
+
+'Corporation / Partnership','Landowner','Individual'
+
+table(oweb.all$Project.Type)
+
+oweb.all$Project.End.Date[year(oweb.all$End.Date)>2020]
+oweb.all$End.Date[year(oweb.all$End.Date)>2020]
+
+
+
+
+max(oweb.all$Project.End.Date)
+
+
+table(year(oweb.all$Project.End.Date))
+
+date(oweb.all$Project.End.Date,'%mm%dd%yyyy')
+
+oweb.all[oweb.all$Project.Number=='213-8004',]
+oweb.all$YEAR = year(mdy(oweb.all$Project.End.Date))
+oweb.all$YEAR = ifelse(oweb.all$YEAR>2050,oweb.all$YEAR-100,oweb.all$YEAR)
+
+oweb.all[oweb.all$YEAR==2034,]
+table(oweb.all$YEAR)
+
+test = 
+  
+
+
+
+table(year(test))
+test = join(oweb.all,grant.gis)
+
+
+table(oweb.all$Project.Status)
+
+
+sum(duplicated(paste(oweb.all$Project.Number,oweb.all$Project.ID)))
+
+table(year(mdy(oweb.all$Project.End.Date)))
+
+
+
+test = join(oweb.all,grant.gis,type='left')
+
+
+sum(duplicated(paste(grant.gis$Project.Number,grant.gis$Project.ID)))
+
+
+table(oweb.all$Project.Type)
+
+sum(is.na(oweb.all$Project.Start.Date))
+sum(is.na(oweb.all$Award.Date))
+
+names(oweb.completed)
+names(oweb.cancelled)
+names(oweb.notawarded)
+names(oweb.monitoring)
+
+oweb.all$Project.Status[is.na(oweb.all$Award.Date)]
+
+
+sum(year(mdy(oweb.all$Project.End.Date))<=2013,na.rm=T)
+
+year(mdy(oweb.all$Project.End.Date))
+
+
+test = oweb.all[oweb.all$Project.End.Date=='',]
+head(test)
+oweb.all$Project.End.Date
+oweb.all$Project.Start.Date
+oweb.all$Award.Date[oweb.all$Project.Status=='Open']
+
+
+
+table(oweb.all$Project.Status)
+
+sum(dim(oweb.cancelled)[1],
+dim(oweb.notawarded)[1],
+dim(oweb.ineligible)[1],
+dim(oweb.withdrawn)[1],
+dim(oweb.completed)[1],
+dim(oweb.funded)[1],
+dim(oweb.open)[1],
+dim(oweb.monitoring)[1],
+dim(oweb.pending)[1])
+
+dim(oweb.completed)
+dim(oweb.all)
+
+
+test = join(oweb.completed,oweb.notawarded)
+oweb.notawarded$Project.Number %in% oweb.completed$Project.Number
+
+
+sum(duplicated(oweb.all$Project.ID))
+head(oweb.notawarded)
+
+
+
+table(oweb.grants@data$Project.Status)
+
+
+sum(is.na(oweb.grants@data$Project.Status))
+head(look[look$project_ty=='Restoration',])
+
+
+
+library(lubridate)
+table(year(mdy(look$Project.Start.Date)))
+look$Project.Start.Date
+look$origin_dat
+look$Award.Date
+head(look)
+look = grant.data[grant.data$Project.Status=='Funded',]
+
+head(oweb.grants@data[oweb.grants@data$Project.Status=='Funded',])
+head(oweb.grants@data)
+
+
+table(oweb.grants@data$Project.Status)
+levels(oweb.grants@data$Project.Status)
+
+
+plot(oweb.grants[!is.na(oweb.grants@data$HUC8),])
+plot(oweb.grants)
+
+oweb.grants@data = join(oweb.grants@data,oweb.dat)
+
+
+
+test = join(spat.dat,oweb.dat)
+
+
+names(oweb.grants@data)[1]
+names(oweb.dat)
+  
+  
+  
+intersect(names(oweb.grants@data),names(oweb.dat))
+
+match
+temp = data.frame(table(as.character(oweb.grants@data$gr_project)))
+
+not.in = oweb.grants@data[
+  
+  match(paste(oweb.grants@data$applicatio,oweb.grants@data$gr_project) %in%
+  paste(oweb.dat$Project.Number,oweb.dat$Project.ID)==FALSE,]
+
+head(oweb.dat)
+head(not.in)
+summary(oweb.grants@data$gr_project)
+head(oweb.grants@data)
+duplicated(oweb.grants@data$gr_project))
+
+
+
+head(oweb.grants@data)
+oweb.dat$HUC8 = oweb.grants@data$HUC8[match(oweb.dat$Project.Number,oweb.grants@data$applicatio)]
+
+sum(duplicated(paste(oweb.grants@data$gr_project,oweb.grants@data$applicatio)))
+sum(duplicated(oweb.grants@data$applicatio))
+
+
+
+not.mapped = read.csv('Input/Grants_not_Mapped_August_2014.csv')
+
+
+sum(sum(oweb.dat$Project.Number %in% not.mapped$APPLICATION.NUMBER))
+
+test = data.frame(table(oweb.dat$Project.Number))
+test = test[test[,2]>1,]
+
+not.mapped[not.mapped$APPLICATION.NUMBER == '097-093A',]
+head(test)
+test = oweb.dat[duplicated(oweb.dat$Project.Number),]
+
+head(test)
+no.huc8 = oweb.dat[is.na(oweb.dat$HUC8),]
+
+
+sum(no.huc8$Project.Number %in% oweb.grants@data$applicatio)
+
+
+
+head(not)
+
+
+head(no.huc8)
+
+
+
+
+
+
+
+
+
+
+
+
+not.mapped = not.mapped[not.mapped$APPLICATION.NUMBER %in% oweb.grants@data$applicatio==FALSE,]
+
+
+
+
+
+
+
+First.Year = 1990
+Last.Year = 2016
 YEAR = data.frame(YEAR = seq(First.Year,Last.Year,1))
 MONTH = data.frame(MONTH = month.name,MONTH.ABB = month.abb)
 Year.Month = merge(YEAR,MONTH, type='full')
@@ -100,12 +364,6 @@ proj.info$about_wq[
 
 
 
-oweb.dat<-read.csv('Input/oweb_download_grant.csv')
-
-oweb.dat$Proj.Paste<-paste(paste(paste(paste(paste(paste(paste(paste(paste(paste(oweb.dat$Project.Summary,oweb.dat$X,sep=' '),
-                                                                      oweb.dat$X.1,sep=''),oweb.dat$X.2,sep=''),oweb.dat$X.3, sep=''),oweb.dat$X.4, sep =''),
-                                              oweb.dat$X.5, sep = ''), oweb.dat$X.6, sep = ''), oweb.dat$X.7, sep = ''),
-                            oweb.dat$X.8, sep = ''), oweb.dat$X.9, sep = '')
 
 
 
@@ -113,13 +371,36 @@ oweb.dat$Proj.Paste<-paste(paste(paste(paste(paste(paste(paste(paste(paste(paste
 
 
 
-head(oweb.dat[oweb.dat$Project.Status=='Open',])
-levels(oweb.dat$Project.Status)
-oweb.dat$Project.Start.Date[oweb.dat$Project.Statues=='Open']
+
+nrow(oweb.dat)
+
+nrow(oweb.grants@data)+
+nrow(not.mapped)
+
+test =  oweb.grants@data[oweb.grants@data$applicatio %in% not.mapped$APPLICATION.NUMBER,]
+head(test)
 
 
-dim(proj.info)
-dim(oweb.dat)
+oweb.dat$MAPPED = oweb.dat$Project.Number %in% not.mapped$APPLICATION.NUMBER == FALSE
+
+oweb.dat$MAPPED[oweb.dat$MAPPED==FALSE&!is.na(oweb.dat$HUC8)] = TRUE
+
+
+
+oweb.dat$HUC8[is.na(oweb.dat$HUC8)&oweb.dat$MAPPED==TRUE]
+table(oweb.dat$MAPPED,!is.na(oweb.dat$HUC8))
+
+oweb.dat$MAPPED[!is.na(oweb.dat$HUC8)] = TRUE
+table(oweb.dat$MAPPED,is.na(oweb.dat$HUC8))
+
+
+sum(oweb.dat$Project.Number[is.na(oweb.dat$HUC8)] %in% not.mapped$APPLICATION.NUMBER)
+
+
+library(plyr)
+library(dplyr)
+library(rgdal)
+
 proj.info$Project.Number %in% oweb.dat$Project.Number[oweb.dat$Project.Type=='Restoration']
 
 table(oweb.dat$Project.Number[oweb.dat$Project.Type=='Restoration'] %in% proj.info$Project.Number)
@@ -134,15 +415,6 @@ table(test$Grantee.Type)
 table(test$Dominant.Activity)
 
 
-
-
-oweb.grants = readOGR(dsn="SpatialData/OWEB_grants", layer="OWEB_Grants_8-4-2014")
-oweb.grants@data$id = rownames(oweb.grants@data)
-or.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")
-which.huc8 = over(oweb.grants,spTransform(or.huc8,CRS(proj4string(oweb.grants))))
-oweb.grants@data = cbind(oweb.grants@data,which.huc8)
-
-oweb.dat$HUC8 = oweb.grants@data$HUC8[match(oweb.dat$Project.Number,oweb.grants@data$applicatio)]
 
 
 dim(oweb.grants@data)
@@ -332,3 +604,4 @@ huc8_data = temp.huc8
 
 
 
+[1]
