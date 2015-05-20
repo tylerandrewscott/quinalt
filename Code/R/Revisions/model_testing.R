@@ -1,19 +1,31 @@
 
-#source("http://www.math.ntnu.no/inla/givemeINLA.R")
 
-setwd('/homes/tscott1/win/user/quinalt/')
+install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
+
+
+library(INLA)
+
+options(respos = c(getOption("repos"), INLA="http://www.math.ntnu.no/inla/R/testing"))
+update.packages("INLA")
+install.packages('INLA')
+library(INLA)
+
+        setwd('/homes/tscott1/win/user/quinalt/')
 
 require(xtable)
 library(INLA)
 #library(rgdal);library(rgeos);
 library(maptools)
+load('temporary_workspace.RData')
+
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
 
 inla.setOption(num.threads=16) 
 
 mod.data = all.params.spdf@data
-
+mod.data = mod.data[,-grep('Total.Solids',colnames(mod.data))]
+mod.data = mod.data[,-grep('Total.Phos',colnames(mod.data))]
 mod.data$seasonal = mod.data$Abs.Month
 mod.data$total.period = mod.data$Abs.Month
 mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
@@ -22,12 +34,27 @@ mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
 mod.data$HUC8 = as.character(mod.data$HUC8)
 
 covars = mod.data[,c(c('elevation','seaDist','HUC8','total.period','YEAR',
-                    'ag.huc8','dev.huc8','wet.huc8','forst.huc8',
-                 'seasonal','Ag','Dev','Wetl','Forst'),grep('Total',names(temp),value=T))]
+                    'ag.huc8','dev.huc8','wet.huc8','forst.huc8','monthly.precip','county.pop.growthrate',
+                 'seasonal','Ag','Dev','Wetl','Forst'),grep('Total',names(mod.data),value=T),
+                 grep('OWEB',names(mod.data),value=T))]
 
 covars[,grep('Total',names(covars))] = covars[,grep('Total',names(covars))]/100000
+covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/100000
+
+colnames(covars) = gsub('Monitoring/Assessment/Tech. Assistance','Tech',colnames(covars))
+colnames(covars) = gsub('Education/Outreach','Ed',colnames(covars))
+colnames(covars) = gsub('Council Support','Council',colnames(covars))
 
 
+covars$Total_OWEB_All = rowSums(covars[,intersect(grep('All',names(covars),value=T), grep('OWEB',names(covars),value=T))])
+covars$Total_OWEB_12 = rowSums(covars[,intersect(grep('12',names(covars),value=T), grep('OWEB',names(covars),value=T))])
+covars$Total_OWEB_36 = rowSums(covars[,intersect(grep('36',names(covars),value=T), grep('OWEB',names(covars),value=T))])
+covars$Total_OWEB_60 = rowSums(covars[,intersect(grep('60',names(covars),value=T), grep('OWEB',names(covars),value=T))])
+
+covars$Total_Non_OWEB_36 = covars$Other.FALSE.TotalCash_36 + covars$Public.FALSE.TotalCash_36
+covars$Total_Non_OWEB_12 = covars$Other.FALSE.TotalCash_12 + covars$Public.FALSE.TotalCash_12
+covars$Total_Non_OWEB_60 = covars$Other.FALSE.TotalCash_60 + covars$Public.FALSE.TotalCash_60
+covars$Total_Non_OWEB_All = covars$Other.FALSE.TotalCash_All + covars$Public.FALSE.TotalCash_All
 
 ##
 #plot(test,border='grey90',col='grey80',
@@ -38,13 +65,32 @@ covars[,grep('Total',names(covars))] = covars[,grep('Total',names(covars))]/1000
 #       temp$DECIMAL_LAT[!duplicated(temp$DECIMAL_LAT)],col='blue',pch=21)
 #legend(x=-116.5,y=41.75,legend='Station',pch=21,col='blue',pt.cex=1.5)
 
-covars$WC.TRUE.T
+covars$Total_Prior_To_12 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
+(covars$Total_Non_OWEB_12 + covars$Total_OWEB_12)
+
+covars$Total_Prior_To_36 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
+  (covars$Total_Non_OWEB_36 + covars$Total_OWEB_36)
+
+covars$Total_Prior_To_60 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
+  (covars$Total_Non_OWEB_60 + covars$Total_OWEB_60)
+
+
 #Model 0: No spatial effect
 form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + forst.huc8 + elevation + seaDist + 
-  WC.TRUE.TotalBoth_36 + WC.FALSE.TotalBoth_36+
+  Total_Prior_To_12+
+  OWEB_Restoration.WC_12+
+  OWEB_Tech.WC_12+
+  OWEB_Ed.WC_12+
+  OWEB_Council.WC_12+
+  OWEB_Restoration.WC_12:OWEB_Tech.WC_12:OWEB_Ed.WC_12:OWEB_Council.WC_12+
+  OWEB_Restoration.Public_12+
+  OWEB_Tech.Public_12+
+  OWEB_Ed.Public_12+
+  OWEB_Restoration.Public_12:OWEB_Tech.Public_12:OWEB_Ed.Public_12+
   f(HUC8,model='iid')+
  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
+sum(is.na(covars$OWEB_Restoration.Public_12 * covars$OWEB_Tech.Public_12 * covars$OWEB_Ed.Public_12))
     
 mod0 <- inla(form0, family='gaussian', 
              data=data.frame(y=mod.data$l.owqi, covars,b0=1), 
@@ -52,16 +98,19 @@ mod0 <- inla(form0, family='gaussian',
         #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
              control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
 
-summary(mod0)
-
-
+modsum = summary(mod0)
+modsum
+modsum$fixed[10:nrow(modsum$fixed),]
 covars$TotalCash_36
 summary(mod0)$dic$dic
 6213.95
-
+library(INLA)
+install.packages('INLA')
 #cREATE MESH, SPDE
+mod.data$Decimal_long
+
 #note: mesh, spde object used for models 1-7
-(mesh.a <- inla.mesh.2d(cbind(temp$DECIMAL_LONG,temp$DECIMAL_LAT), max.edge=c(5,40),cut=.10))$n
+(mesh.a <- inla.mesh.2d(cbind(mod.data$Decimal_long,mod.data$Decimal_Lat), max.edge=c(5,40),cut=.10))$n
 plot(mesh.a)
 spde.a <- inla.spde2.matern(mesh.a) 
 
@@ -76,16 +125,28 @@ spde.a <- inla.spde2.matern(mesh.a)
 
 
 # Model 1: constant spatial effect
-A.1 <- inla.spde.make.A(mesh.a, loc=cbind(temp$DECIMAL_LONG,temp$DECIMAL_LAT))
+A.1 <- inla.spde.make.A(mesh.a, loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
 
-stk.1 <- inla.stack(data=list(y=temp$l.owqi), A=list(A.1,1),
+stk.1 <- inla.stack(data=list(y=mod.data$l.owqi), A=list(A.1,1),
                     effects=list(ind.1, list(data.frame(b0=1,covars))))
 
-form1 <-  y ~ 0 + b0 + Ag + Forst + Dev  + elevation + seaDist + 
+
+form1 <-   y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + forst.huc8 + elevation + seaDist + 
+  Total_Prior_To_12+
+  OWEB_Restoration.WC_12+
+  OWEB_Tech.WC_12+
+  OWEB_Ed.WC_12+
+  OWEB_Council.WC_12+
+  OWEB_Restoration.WC_12:OWEB_Tech.WC_12:OWEB_Ed.WC_12:OWEB_Council.WC_12+
+  OWEB_Restoration.Public_12+
+  OWEB_Tech.Public_12+
+  OWEB_Ed.Public_12+
+  OWEB_Restoration.Public_12:OWEB_Tech.Public_12:OWEB_Ed.Public_12+
   f(HUC8,model='iid')+
-  f(total.period,model='rw2') +
-  f(seasonal,model='seasonal',season.length=12)+  f(s, model=spde.a)
+  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+
+  f(s, model=spde.a)
+
 mod1 <- inla(form1, family='gaussian', data=inla.stack.data(stk.1),
                control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
              #  control.inla=list(strategy='laplace'), 
