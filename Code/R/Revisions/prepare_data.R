@@ -399,6 +399,97 @@ huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnam
 
 summary(huc8_data$OWEB_Restoration.Other)
 
+
+
+########## ADD WC DATA ###################
+
+surv = read.csv('https://github.com/tylerascott/quinalt/raw/master/Input/Winter-2012-Council-Survey_Scott.csv')
+surv[surv==''] = NA
+
+wc.data = data.frame(NAME = surv$Custom.Data)
+wc.data$RECOGNIZED = surv$Is.your.council.officially.designated.or.recognized.by.a.local.government.=='Yes'
+wc.data$NONPROFIT = surv$Is.your.council.a.designated.501.c..3..non.profit.organization.=='Yes'
+wc.data$CITY = surv$X.80
+wc.data$ZIPCODE = surv$X.82
+
+te.foun = melt(surv[,c(1,87:109)],id.vars='Custom.Data')
+te.foun = te.foun[!is.na(te.foun$value),]
+colnames(te.foun) = c('NAME','Question','YEAR.FOUNDED')
+wc.data = join(wc.data,te.foun[,-2])
+
+te.bud = melt(surv[,c(1,118:124)],id.vars='Custom.Data')
+te.bud = te.bud[!is.na(te.bud$value),]
+colnames(te.bud) = c('NAME','Question','OPERATING.BUDGET')
+wc.data = join(wc.data,te.bud[,-2])
+
+te.bud = melt(surv[,c(1,127:133)],id.vars='Custom.Data')
+te.bud = te.bud[!is.na(te.bud$value),]
+colnames(te.bud) = c('NAME','Question','TOTAL.BUDGET')
+wc.data = join(wc.data,te.bud[,-2])
+
+
+te.coord = melt(surv[,c(1,134:136)],id.vars='Custom.Data')
+te.coord = te.coord[!is.na(te.coord$value),]
+colnames(te.coord) = c('NAME','Question','COORD.TYPE')
+wc.data = join(wc.data,te.coord[,-2])
+
+te.coord.fte = melt(surv[,c(1,134:136)],id.vars='Custom.Data')
+te.coord.fte = te.coord.fte[!is.na(te.coord.fte$value),]
+colnames(te.coord.fte) = c('NAME','Question','COORD.FTE')
+wc.data = join(wc.data,te.coord.fte[,-2])
+
+te.staff.fte = melt(surv[,c(1,156:166)],id.vars='Custom.Data')
+te.staff.fte = te.staff.fte[!is.na(te.staff.fte$value),]
+colnames(te.staff.fte) = c('NAME','Question','STAFF.FTE')
+wc.data = join(wc.data,te.staff.fte[,-2])
+
+wc.data = cbind(wc.data,!is.na(surv[,c(211:216)]))
+colnames(wc.data)[13:ncol(wc.data)] = c(paste(c('OWEB','Federal','Foundation','Donors','Membership','Other'),'Support',sep='.'))
+
+wc.data$VOLUNTEERS = surv$Approximately.how.many.non.board.volunteers.have.you.engaged.over.the.past.year.
+
+wc.data$BOARD.SIZE = surv$How.many.members.serve.on.your.board.
+
+#write.csv(oregon.wc@data,'Input/watershed_councils.csv')
+
+oregon.wc = readOGR(dsn='SpatialData/watershed_councils', layer="OregonWatershedCouncils")
+oregon.wc@data$id = rownames(oregon.wc@data)
+
+oregon.wc@data$altName = gsub('WCl','WC',oregon.wc@data$altName)
+oregon.wc@data$altName = gsub('River Basin Council','RBC',oregon.wc@data$altName)
+wc.data$NAME = gsub('WSC','WC',wc.data$NAME)
+
+wc.data$NAME
+
+sort(oregon.wc@data$altName)
+
+oregon.wc@data$altName[unlist(sapply(wc.data$NAME,agrep,oregon.wc@data$altName,ignore.case=TRUE,max=2))]
+
+
+sapply(wc.data$NAME,agrep,oregon.wc@data$altName,ignore.case=TRUE,max=2)
+
+
+oregon.wc@data[21:22,]
+
+wc.data$NAME
+
+agrep(wc.data$NAME,oregon.wc@data$altName)
+
+wc.data$NAME[1]
+agrep()
+
+
+head(oregon.wc@data)
+
+
+# oregon.eco = spTransform(x = oregon.eco,CRSobj = CRS(proj4string(all.params.spdf)),)
+# oregon.eco.points = fortify(oregon.eco, region="id")
+# oregon.eco.df = join(oregon.eco.points, oregon.eco@data, by="id")
+# 
+
+
+
+
 ######### MAKE OBS STATION DATAFRAME ##########
 
 
@@ -643,6 +734,45 @@ if(remote)
 if(!remote)
 {setwd('//Users/TScott/Google Drive/quinalt/SpatialData/precip_rasters/')}
 
+
+
+head(huc8_data)
+test = lapply(files[1:10],raster)
+
+huc8_data$pull_raster = paste0(huc8_data$YEAR,ifelse(nchar(huc8_data$Month.Num)==2,huc8_data$Month.Num,paste0(0,huc8_data$Month.Num)))
+which.file = unlist(sapply(huc8_data$pull_raster,FUN = grep,x=files))
+
+
+cropped.rasters = lapply(lapply(as.list(files),raster),crop,y=oregon.outline)
+
+pre.raster = crop(raster(files[which.file[1]]),oregon.outline)
+
+for (i in which.file)
+{
+  if(grep(names(which.file[i]),names(pre.raster)))
+  {
+    extract()
+  }
+  
+}  
+
+
+
+
+as.vector(t)
+unlist(t)
+
+
+
+?grep
+files
+
+test = crop(raster(files[1]),oregon.outline)
+test = crop(test,oregon.outline)
+plot(test)
+
+
+
 select1990 = files[grep('1990',files)]
 grids1990<- sapply(select1990 , function(x) {
   #patt <- paste('precip', x, '_', sep='')
@@ -862,23 +992,29 @@ which.year = gsub('[0123456789]{2}$','',gsub('_bil','',
 which.year.month = paste(which.year,which.month,sep='_')
 names(all.grids) = which.year.month
 
-
 # combine all list elements into a stack
 s <- stack(all.grids)
 s.crop <- crop(s, oregon.outline)
 
-all.params.spdf@data$monthly.precip = NA
-
-precip.data = data.frame(NULL)
+# all.params.spdf@data$monthly.precip = NA
+# precip.data = data.frame(NULL)
+# empty = list(NULL)
+# for (i in 1:dim(s.crop)[3])
+# {
+#   empty[[i]] = extract(s.crop[[i]],all.params.spdf,method='bilinear',buffer)
+# }
+# precip.list = as.data.frame(empty)
+# names(precip.list) = names(s.crop)
 
 empty = list(NULL)
 for (i in 1:dim(s.crop)[3])
 {
-  empty[[i]] = extract(s.crop[[i]],all.params.spdf,method='simple')
+  empty[[i]] = raster::extract(s.crop[[i]],oregon.huc8,fun=median,na.rm=T)
 }
-precip.list = as.data.frame(empty)
 
-names(precip.list) = names(s.crop)
+names(empty) = names(s.crop)
+
+
 
 
 which.grab =  match(paste0('X',all.params.spdf@data$YEAR,'_',

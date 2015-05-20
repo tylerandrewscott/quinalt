@@ -76,7 +76,8 @@ covars$Total_Prior_To_60 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
 
 
 #Model 0: No spatial effect
-form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + forst.huc8 + elevation + seaDist + 
+form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + 
+  forst.huc8 + elevation + seaDist + monthly.precip + 
   Total_Prior_To_12+
   OWEB_Restoration.WC_12+
   OWEB_Tech.WC_12+
@@ -90,8 +91,7 @@ form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + forst.huc8 + ele
   f(HUC8,model='iid')+
  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
-sum(is.na(covars$OWEB_Restoration.Public_12 * covars$OWEB_Tech.Public_12 * covars$OWEB_Ed.Public_12))
-    
+
 mod0 <- inla(form0, family='gaussian', 
              data=data.frame(y=mod.data$l.owqi, covars,b0=1), 
              control.predictor=list(compute=TRUE),
