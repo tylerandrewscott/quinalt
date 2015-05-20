@@ -1,0 +1,63 @@
+"","NAME","RECOGNIZED","NONPROFIT","CITY","ZIPCODE","YEAR.FOUNDED","OPERATING.BUDGET","TOTAL.BUDGET","COORD.TYPE","COORD.FTE","STAFF.FTE","Which.of.the.following.funding.sources.play.the.most.critical.role.in.supporting.your.council.s.operations....Check.all.that.apply..","OWEB.Support","Federal.Support","Foundation.Support","Donors.Support","Membership.Support","VOLUNTEERS","BOARD.SIZE"
+"1","ELK CREEK WC",TRUE,TRUE,"Yoncalla","97499",2001,"$0 - $50,000","$100,001 - $250,000","Contractor","Contractor","1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,8,NA
+"2","Williams Creek WC",TRUE,TRUE,"Williams","97544",1996,"$0 - $50,000","$0 - $100,000","Contractor","Contractor","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,10,NA
+"3","Molalla River Watch",TRUE,TRUE,"Molalla","97038",2009,"$50,001 - $100,000","$100,001 - $250,000","Hired employee","Hired employee","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,150,NA
+"4","Mid-John Day WC",TRUE,TRUE,"Fossil","97830",1990,"$50,001 - $100,000","$100,001 - $250,000","Hired employee","Hired employee","1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,NA,NA
+"5","Wasco Co WC",TRUE,NA,"The Dalles","97058",1995,"$50,001 - $100,000","$100,001 - $250,000","Hired employee","Hired employee","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,10,NA
+"6","Lower Nehalem WC",NA,TRUE,"NEHALEM","97131",NA,NA,NA,"Hired employee","Hired employee","less than 1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,NA,NA
+"7","N Clackamas Urban WC",TRUE,TRUE,"Milwaukie","97222",2009,"$50,001 - $100,000","$0 - $100,000","Contractor","Contractor","less than 1",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,100,NA
+"8","Pudding River WC",TRUE,NA,"Woodburn","97071",1997,"$0 - $50,000","$0 - $100,000","Contractor","Contractor","less than 1",TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,50,NA
+"9","UPPER NEHALEM WC",TRUE,TRUE,"Vernonia","97064",1996,"$100,001 - $150,000","$250,001 - $500,000","Hired employee","Hired employee","less than 1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,40,NA
+"10","U SOUTH FRK JOHN DAY WC",TRUE,NA,"John Day","97845",1990,"$50,001 - $100,000","$0 - $100,000","Contractor","Contractor","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,2,NA
+"11","SANDY BASIN WC",TRUE,TRUE,"Sandy","97055",1997,"$200,001 - $400,000","$250,001 - $500,000","Hired employee","Hired employee","2",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,300,NA
+"12","JOHNSON CREEK WC",TRUE,TRUE,"Portland","97222",1995,"$200,001 - $400,000","$250,001 - $500,000","Hired employee","Hired employee","5",TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,1100,NA
+"13","KLAMATH PARTNERSHIP",TRUE,TRUE,"Klamath Falls,  OR","97601",2007,"$150,001 - $200,000","$500,001 - $1,000,000","Hired employee","Hired employee","5",TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,963,NA
+"14","NESTUCCA NESKOWIN WC",TRUE,TRUE,"Pacific City","97135",1996,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","less than 1",TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,30,NA
+"15","SMITH RIVER WC",TRUE,TRUE,"Reedsport","97467",2002,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,15,NA
+"16","TENMILE LAKES WC",TRUE,NA,"Lakeside","97449",1996,"$100,001 - $150,000","$250,001 - $500,000","Hired employee","Hired employee","2",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,50,NA
+"17","HUNTER CR/PISTOL RIVER WC",TRUE,NA,"Gold Beach","97444",1992,"$150,001 - $200,000","$100,001 - $250,000","Contractor","Contractor","less than 1",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,50,NA
+"18","NORTH FORK JOHN DAY WC",NA,TRUE,"Long Creek","97856",2003,NA,"$500,001 - $1,000,000","Hired employee","Hired employee","4",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,100,NA
+"19","SEVEN BASINS WC",TRUE,NA,"Gold Hill","97525",2002,"$0 - $50,000","$100,001 - $250,000","Contractor","Contractor",NA,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,160,NA
+"20","COQUILLE WATERSHED ASSOC",TRUE,TRUE,"Coquille","97423",1994,"$100,001 - $150,000","$500,001 - $1,000,000","Hired employee","Hired employee","4",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,50,NA
+"21","SOUTH COAST WC",TRUE,TRUE,"Gold Beach, OR","97444",1994,"$400,001 - $600,000","$500,001 - $1,000,000","Contractor","Contractor","5",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,50,NA
+"22","LITTLE BUTTE CR WC",TRUE,TRUE,"Eagle Point","97524",1994,"$0 - $50,000","$100,001 - $250,000","Contractor","Contractor","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,50,NA
+"23","ECOLA CR WC",TRUE,TRUE,"Astoria","97103",1997,"$0 - $50,000","$100,001 - $250,000","Hired employee","Hired employee","less than 1",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,50,NA
+"24","TILLAMOOK BAY WC",NA,TRUE,"Garibaldi","97118",NA,NA,NA,"Hired employee","Hired employee","less than 1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,NA,NA
+"25","LONG TOM WC",TRUE,TRUE,"Eugene","97405",1997,"$150,001 - $200,000","$500,001 - $1,000,000","Hired employee","Hired employee","5",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,280,NA
+"26","OWYHEE WC",TRUE,TRUE,"Adrian","97901",2001,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","3",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,100,NA
+"27","LOWER COLUMBIA RIVER WC",TRUE,NA,"Clatskanie","97016",1997,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","less than 1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,8,NA
+"28","SIUSLAW WC",TRUE,TRUE,"Mapleton","97453",1997,"$50,001 - $100,000","$500,001 - $1,000,000","Hired employee","Hired employee","5",TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,200,NA
+"29","SOUTH SANTIAM WC",TRUE,TRUE,"Sweet Home","97386",1995,"$50,001 - $100,000","$500,001 - $1,000,000","Hired employee","Hired employee","3",TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,20,NA
+"30","TUALATIN WC",TRUE,TRUE,"Hillsboro","97123-0338",1993,"$100,001 - $150,000","$100,001 - $250,000","Hired employee","Hired employee","1",TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,25,NA
+"31","LUCKIAMUTE WC",TRUE,NA,"Independence","97352",2001,"$150,001 - $200,000","$500,001 - $1,000,000","Hired employee","Hired employee","2",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,NA,NA
+"32","LAKE COUNTY UMBRELLA WC",TRUE,TRUE,"Paisley, OR","97636",1997,"$50,001 - $100,000","$0 - $100,000","Contractor","Contractor","2",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,10,NA
+"33","MID WILLAMETTE WS ALLIANCE",TRUE,NA,"Salem","97304",NA,"$0 - $50,000","$0 - $100,000","Contractor","Contractor",NA,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,5,NA
+"34","CALAPOOIA WC",TRUE,TRUE,"Brownsville","97327",1999,"$200,001 - $400,000","$1,000,001 - $5,000,000","Hired employee","Hired employee",NA,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,80,NA
+"35","CLACKAMAS RBC",TRUE,TRUE,"Clackamas","97015",1997,NA,"$500,001 - $1,000,000","Hired employee","Hired employee","5",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,1296,NA
+"36","TRYON CR WATERSHED COUNCIL",TRUE,TRUE,"Portland","97219",1994,"$0 - $50,000","$0 - $100,000","Hired employee","Hired employee","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,500,NA
+"37","SHERMAN CO AREA WC",TRUE,NA,"Moro OR","97039",1996,"$50,001 - $100,000","$0 - $100,000","Hired employee","Hired employee","1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,12,NA
+"38","RICKREALL WC",TRUE,TRUE,"Dallas","97338",1997,"$0 - $50,000","$100,001 - $250,000","Contractor","Contractor","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,5,NA
+"39","POWDER BASIN WC",TRUE,TRUE,"Baker City","97814",1995,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","3",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,20,NA
+"40","SCAPPOOSE BAY WC",TRUE,TRUE,"Warren","97053",1997,"$150,001 - $200,000","$250,001 - $500,000","Hired employee","Hired employee","3",TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,60,NA
+"41","LOWER ROGUE WC",TRUE,NA,"Gold Beach, OR","97444",1995,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,80,NA
+"42","MARYS RIVER WC",TRUE,TRUE,"Corvallis","OR",1998,"$50,001 - $100,000","$500,001 - $1,000,000","Hired employee","Hired employee","2",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,150,NA
+"43","COLUMBIA SLOUGH WC",TRUE,TRUE,"Portland","97218",1994,"$200,001 - $400,000","$250,001 - $500,000","Hired employee","Hired employee","3",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,542,NA
+"44","UMATILLA BASIN WC",TRUE,TRUE,"Pendleton","97801",1998,"$50,001 - $100,000","$250,001 - $500,000","Hired employee","Hired employee","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,100,NA
+"45","GRANDE RONDE MODEL WS",TRUE,TRUE,"La Grande","97850",1992,NA,"$1,000,001 - $5,000,000","Hired employee","Hired employee",NA,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,100,NA
+"46","CHETCO WC",NA,TRUE,"Brookings","97415",1990,"$0 - $50,000","$0 - $100,000","Volunteer","Volunteer","less than 1",FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,6,NA
+"47","APPLEGATE PTNRS & WC",TRUE,TRUE,"Jacksonville","97530",1994,"$50,001 - $100,000","$100,001 - $250,000","Contractor","Contractor","less than 1",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,10,NA
+"48","GILLIAM-EAST JOHN DAY WC",TRUE,NA,"Condon","97823",1995,"$100,001 - $150,000","$250,001 - $500,000","Hired employee","Hired employee","1",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,20,NA
+"49","STREAM RESTORATION OF THE MIDDLE ROGUE",TRUE,TRUE,"Grants Pass","97526",1997,"$0 - $50,000","$100,001 - $250,000","Hired employee","Hired employee","2",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,50,NA
+"50","HOOD RIVER WS GROUP",TRUE,NA,"Hood River","97031",1993,"$150,001 - $200,000","$100,001 - $250,000","Hired employee","Hired employee","2",TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,30,NA
+"51","WILLOW & TROUT CREEKS WC",TRUE,NA,"Redmond, OR","97756",NA,"$0 - $50,000","$0 - $100,000",NA,NA,NA,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,NA,NA
+"52","BULLY CR WS COALITION",TRUE,NA,"Ontario","97914",1995,"$50,001 - $100,000","$100,001 - $250,000","Hired employee","Hired employee","2",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,2,NA
+"53","BEAR CREEK WC",TRUE,TRUE,"Medford","OR",1995,"$0 - $50,000","$100,001 - $250,000","Hired employee","Hired employee","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,150,NA
+"54","COAST FK WILLAMETTE WC",TRUE,TRUE,"Cottage Grove","97405",1999,"$100,001 - $150,000","$250,001 - $500,000","Hired employee","Hired employee","2",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,50,NA
+"55","MIDCOAST WC",TRUE,TRUE,"Newport, OR","97365",1994,"$50,001 - $100,000","$500,001 - $1,000,000","Hired employee","Hired employee","2",TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,40,NA
+"56","UPPER DESCHUTES WC",TRUE,TRUE,"Bend","97709",1996,"$150,001 - $200,000","$1,000,001 - $5,000,000","Hired employee","Hired employee","5",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,200,NA
+"57","NECANICUM WC",NA,TRUE,"Seaside","97138",1997,"$0 - $50,000","$1,000,001 - $5,000,000","Hired employee","Hired employee","1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,20,NA
+"58","MCKENZIE WC",TRUE,NA,"Springfield","97475",1993,"$200,001 - $400,000","$250,001 - $500,000","Hired employee","Hired employee","3",TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,90,NA
+"59","UPPER ROGUE WC",TRUE,TRUE,"Shady Cove","97539",1994,"$0 - $50,000","$100,001 - $250,000","Contractor","Contractor","less than 1",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,47,NA
+"60","CROOKED RIVER WC",TRUE,TRUE,"Prineville","97754",1993,"$150,001 - $200,000","$500,001 - $1,000,000","Hired employee","Hired employee","3",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,20,NA
+"61","WALLA WALLA WC",TRUE,TRUE,"Milton-Freewater, OR","97862",1994,"$600,001 - $800,000","$1,000,001 - $5,000,000","Hired employee","Hired employee","7",TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,40,NA
+"62","HARNEY COUNTY",TRUE,TRUE,"Burns","97720",1998,"$50,001 - $100,000","$100,001 - $250,000","Hired employee","Hired employee","less than 1",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,25,NA
