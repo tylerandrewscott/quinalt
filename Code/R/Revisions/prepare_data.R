@@ -11,7 +11,7 @@ if(!remote)
 
 
 First.Year = 1990
-Last.Year = 2016
+Last.Year = 2014
 
 
 ######### NEEDED PACKAGES #############
@@ -42,6 +42,8 @@ library(raster)
 library(rasterVis)  # raster visualisation
 library(rWBclimate)
 
+oregon.outline = readOGR(dsn='SpatialData/government_units',
+                         layer = 'state_nrcs_a_or')
 #source("http://www.math.ntnu.no/inla/givemeINLA.R")
 
 ####### MAKE YEAR.MONTH REFERENCE DF ###########
@@ -77,7 +79,63 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
   oregon.huc8.df = merge(oregon.huc8.df,Year.Month,type='full')
   
 
-  #ADD LANDCOVER DATA
+###### MAKE OREGON WC DATAFRAME ##########
+  localDir <- 'TempData'
+  if (!file.exists(localDir)) {
+    dir.create(localDir)
+  }
+  
+  url <- 'http://oe.oregonexplorer.info/ExternalContent/SpatialDataforDownload/Oregon_Watershed_Councils_2014.zip'
+  file <- paste(localDir,basename(url),sep='/')
+  if (!file.exists(file)) {
+    download.file(url, file)
+    unzip(file,exdir=localDir)
+  }
+  # layerName is the name of the unzipped shapefile without file type extensions 
+  layerName <- "Oregon_Watershed_Councils_2014"  
+  # Read in the data
+  oregon.wc <- readOGR(dsn=localDir, layer=layerName) 
+  oregon.wc@data$id = rownames(oregon.wc@data)
+  
+  oregon.wc@data$altName = gsub('WS Coalition','WSC',oregon.wc@data$altName)
+  oregon.wc@data$altName = gsub('Applegate River WC','Applegate WC',oregon.wc@data$altName)
+  oregon.wc@data$altName = gsub('Watershed','WS',oregon.wc@data$altName)
+  oregon.wc@data$altName = gsub('WS Association','WSA',oregon.wc@data$altName)
+  oregon.wc@data$altName = gsub('WS Partnership','WSP',oregon.wc@data$altName)
+  oregon.wc@data$altName = gsub('McKenzie River WC','McKenzie WC',oregon.wc@data$altName)
+  wc.in.huc8 = over(spTransform(sp::SpatialPoints(oregon.wc,CRS(proj4string(oregon.wc))),CRS=CRS(proj4string(oregon.huc8))),oregon.huc8)
+  wc.in.huc8$altName = oregon.wc@data$altName
+  wc.in.huc8 = wc.in.huc8 %>% dplyr::select(-id)
+  oregon.wc@data = join(oregon.wc@data,wc.in.huc8)
+  oregon.wc.df = as.data.frame(oregon.wc)
+  
+  #full merge to replicated huc8 by year and month
+  oregon.wc.df = merge(oregon.wc.df,Year.Month,type='full')
+
+
+###### MAKE OREGON SWCD DATAFRAME ##########
+
+  # Read in the data
+  oregon.swcd = readOGR(dsn='SpatialData/swcd', layer="oregon_swcd")
+  oregon.swcd@data$id = rownames(oregon.swcd@data)
+  oregon.swcd@data$SWCD_Name = gsub('Clastop','Clatsop',oregon.swcd@data$SWCD_Name)
+  oregon.swcd@data$SWCD_Name = gsub(' County','',oregon.swcd@data$SWCD_Name)
+  oregon.swcd@data$SWCD_Name[oregon.swcd@data$SWCD_Name =='Clackamas'] = 'Clackamas SWCD'
+  oregon.swcd@data$SWCD_Name = gsub('Gillam','Gilliam',oregon.swcd@data$SWCD_Name)
+  oregon.swcd@data$SWCD_Name[grep('Rock',oregon.swcd@data$SWCD_Name)] = 'Fort Rock/Silver Lake SWCD'
+
+  swcd.in.huc8 = over(spTransform(sp::SpatialPoints(oregon.swcd,CRS(proj4string(oregon.swcd))),CRS=CRS(proj4string(oregon.huc8))),oregon.huc8)
+  swcd.in.huc8$SWCD_Name = oregon.swcd@data$SWCD_Name
+  swcd.in.huc8 = swcd.in.huc8 %>% dplyr::select(-id)
+  oregon.swcd@data = join(oregon.swcd@data,swcd.in.huc8)
+  oregon.swcd.df = as.data.frame(oregon.swcd)
+  #full merge to replicated huc8 by year and month
+  oregon.swcd.df = merge(oregon.swcd.df,Year.Month,type='full')
+
+  
+  
+  
+###### ADD LANDCOVER DATA TO SPATIAL AREAS ############
   
   #1992 nlcd
   ag.huc8.1992 = read.dbf('LandUse_RasterData/or_agr_huc8_1992.dbf');colnames(ag.huc8.1992$dbf)[5] = 'ag.huc8'
@@ -195,39 +253,40 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
   proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
  
   oregon.huc8.df$uq.tid = paste(oregon.huc8.df$HUC8,oregon.huc8.df$Abs.Month,sep='_')
+
+
+#   proj.partners= read.csv('Input/owri_project_participants.csv')
+#   public.list = c('county','city','state agency or jobs program (or ownership), state universities',
+#                   'Soil & Water Conservation District',
+#                   'federal agency or jobs program (or ownership)',
+#                   'Extension Service (e.g. OSU Extension)')
+#   wc.list = 'watershed council'
+
   
+#   proj.partners$Category = ifelse(proj.partners$ParticipantType %in% public.list,'Public',
+#                                   ifelse(proj.partners$ParticipantType %in% wc.list,'WC','Other'))
+#   temp  = (table(proj.partners$PROJNUM,proj.partners$Category))
+#   t1 = data.frame((ifelse(temp[,3] > 0,'WC',ifelse(temp[,2]>0,'Public','Other'))))
+#   colnames(t1) = 'Lead.Type'
+#   t1$PROJNUM = rownames(t1)
+#   
+#   t2 = data.frame(rowSums(temp))
+#   colnames(t2) = 'Num.Partners'
+#   t2$PROJNUM = rownames(t2)
+#   t3 = join(t1,t2)
   
-  proj.partners= read.csv('Input/owri_project_participants.csv')
-  public.list = c('county','city','state agency or jobs program (or ownership), state universities',
-                  'Soil & Water Conservation District',
-                  'federal agency or jobs program (or ownership)',
-                  'Extension Service (e.g. OSU Extension)')
-  wc.list = 'watershed council'
-  proj.partners$Category = ifelse(proj.partners$ParticipantType %in% public.list,'Public',
-                                  ifelse(proj.partners$ParticipantType %in% wc.list,'WC','Other'))
-  temp  = (table(proj.partners$PROJNUM,proj.partners$Category))
-  t1 = data.frame((ifelse(temp[,3] > 0,'WC',ifelse(temp[,2]>0,'Public','Other'))))
-  colnames(t1) = 'Lead.Type'
-  t1$PROJNUM = rownames(t1)
-  
-  t2 = data.frame(rowSums(temp))
-  colnames(t2) = 'Num.Partners'
-  t2$PROJNUM = rownames(t2)
-  t3 = join(t1,t2)
-  
-  proj.info = join(proj.info,t3)
+#  proj.info = join(proj.info,t3)
   
   
   #binary true/false: OWEB project?
-  proj.info$OWEB.Grant = ifelse(proj.info$drvdOwebNum=='','NOT','OWEB')
+  proj.info$OWEB.Grant = ifelse(proj.info$drvdOwebNum=='','NOT_OWEB','OWEB')
   
-
   #proj.info$activity_t = tolower(proj.info$activity_t)
   proj.info$drvdProjDesc = tolower(proj.info$drvdProjDesc)
   
   ###Create true/false for project about water quality
 
-  proj.info$about_wq = FALSE
+  proj.info$about_wq = 'not_wq'
   proj.info$about_wq[
     unique(c(grep('restoration',proj.info$drvdProjDesc),
              grep('riparian',proj.info$drvdProjDesc),
@@ -253,23 +312,16 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
              grep('air diffuser',proj.info$drvdProjDesc),
              grep('waterbar',proj.info$drvdProjDesc)
     ))
-    ] = TRUE
+    ] = 'wq'
 
 
-  temp.huc8 = oregon.huc8.df
-  
-  temp = proj.info %>% dplyr::group_by(uq.tid) %>% dplyr::summarise_each(funs(sum),TotalCash,TotalInKind,TotalBoth)
-  
-  temp.huc8 = join(temp.huc8,temp)
-  
-  temp = proj.info %>% dplyr::group_by(uq.tid,Lead.Type,OWEB.Grant) %>% 
-    dplyr::summarise_each(funs(sum),TotalCash,TotalInKind,TotalBoth)
-  
-  tt = melt(temp,id.vars=c('uq.tid','Lead.Type','OWEB.Grant'))
-  tt$var.id = paste(tt$Lead.Type,tt$OWEB.Grant,tt$variable,sep='.')
-  
-  temp.huc8[,unique(tt$var.id)] = NA
-  
+temp.huc8 = oregon.huc8.df
+temp = proj.info %>% dplyr::group_by(uq.tid,about_wq,OWEB.Grant) %>% 
+  dplyr::summarise_each(funs(sum),TotalCash)
+tt = melt(temp,id.vars=c('uq.tid','about_wq','OWEB.Grant'))
+tt$var.id = paste(tt$OWEB.Grant,tt$about_wq,tt$variable,sep='.')
+temp.huc8[,unique(tt$var.id)] = NA
+
   #place subset values into proper column
   for (i in 1:ncol(temp.huc8))
   {
@@ -280,22 +332,12 @@ Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
     }
   }
   
-  
   temp.huc8[,grep('Total',colnames(temp.huc8))][is.na(temp.huc8[,grep('Total',colnames(temp.huc8))])] = 0
-  
   
   huc8_data = temp.huc8
 
 
-########### ADD OWEB GRANTS ############
-oweb.summary<-read.csv('Input/oweb_download_grant.csv')
-oweb.summary$Proj.Paste<-paste(paste(paste(paste(paste(paste(paste(paste(paste(paste(oweb.summary$Project.Summary,oweb.summary$X,sep=' '),
-                                                                               oweb.summary$X.1,sep=''),oweb.summary$X.2,sep=''),oweb.summary$X.3, sep=''),oweb.summary$X.4, sep =''),
-                                                       oweb.summary$X.5, sep = ''), oweb.summary$X.6, sep = ''), oweb.summary$X.7, sep = ''),
-                                     oweb.summary$X.8, sep = ''), oweb.summary$X.9, sep = '')
-oweb.summary = oweb.summary[,-c(grep('X',names(oweb.summary)))]
-
-
+########### CLEAN OWEB WC GRANTS ############
 
 oweb.grants = readOGR(dsn="SpatialData/OWEB_grants", layer="OWEB_Grants_8-4-2014")
 oweb.grants@data$id = rownames(oweb.grants@data)
@@ -316,11 +358,18 @@ oweb.pending = read.csv('Input/oweb_pending.csv')
 oweb.open = read.csv('Input/oweb_open.csv')
 oweb.ineligible = read.csv('Input/oweb_ineligible.csv')
 
+oweb.all$Project.Status
 
 oweb.all = join_all(list(oweb.completed,oweb.cancelled,oweb.notawarded,oweb.monitoring,oweb.funded,
                          oweb.open,oweb.ineligible,oweb.withdrawn,oweb.pending),type='full')
 
-oweb.all = join(oweb.all,grant.gis)
+oweb.all[oweb.all==''] = NA
+
+oweb.all = oweb.all %>% filter(!is.na(Grantee)) %>% filter(Region!='SW') %>% filter(Project.Status!='Cancelled') %>%
+  filter(Project.Status!='Withdrawn') %>% filter(Project.Status != 'Ineligible') %>% filter(Project.Status !='Not Awarded')
+
+
+oweb.all =  join(oweb.all,grant.gis)
 
 # 
 # not.mapped = read.csv('Input/Grants_not_Mapped_August_2014.csv')
@@ -328,8 +377,6 @@ oweb.all = join(oweb.all,grant.gis)
 # not.mapped = not.mapped %>% dplyr::rename(Project.Number = APPLICATION.NUMBER,
 #                                           Project.ID = GRANT.PROJECT.ID,
 #                                           Project.Type = Grant.Type)
-
-oweb.all[oweb.all==''] = NA
 
 oweb.all = oweb.all[!is.na(oweb.all$Project.End.Date),]
 
@@ -347,17 +394,16 @@ oweb.all$uq.tid= paste(oweb.all$HUC8,oweb.all$Abs.Month,sep='_')
 
 oweb.all = filter(oweb.all,!is.na(oweb.all$HUC8))
 
-public.values = c('City','Federal Agency','State Agency','County','Special District','Tribe')
+public.values = c('City','Federal Agency','State Agency','County','Tribe')
 
-
-
-oweb.all$which.group = ifelse(oweb.all$Grantee.Type %in% public.values ,'Public',
-                                      ifelse(oweb.all$Grantee.Type =='Watershed Council','WC','Other'))
+oweb.all$which.group = NA
+oweb.all$which.group[grep('SWCD',oweb.all$Grantee)] = 'SWCD'
+oweb.all$which.group[grep('Watershed Council',oweb.all$Grantee.Type)] = 'WC'
+oweb.all$which.group[oweb.all$Grantee.Type %in%  public.values] = 'Public'
+oweb.all$which.group[is.na(oweb.all$which.group)] = 'Other'
 
 oweb.restoration = oweb.all[oweb.all$Project.Type=='Restoration',]
                   
-
-
 # nm = is.mapped[is.na(test$HUC8),]
                   # mapped  = is.mapped[!is.na(test$HUC8),]
                   # nm$HUC8 = mapped$HUC8[match(nm$Grantee,mapped$Grantee)]
@@ -370,33 +416,202 @@ oweb.restoration = oweb.all[oweb.all$Project.Type=='Restoration',]
                   # which.place = over(or.county,spTransform(oregon.huc8,CRS=CRS(proj4string(counties))))
                   # or.county@data = cbind(or.county@data,which.place)
                   
- levels(oweb.all$Project.Type) = c("Acquisition" ,'Monitoring/Assessment/Tech. Assistance',  "Council Support" , "Data Development"  ,   'Education',           
-                                                    "Holding"     ,         "Law Enforcement"  ,    'Monitoring/Assessment/Tech. Assistance'    , 'Outreach', 
-                                                    "OWEB Administration" ,
-                                                    "Research"    , "Restoration"   ,       "SWCD"     ,  'Monitoring/Assessment/Tech. Assistance','')
-                  
+
+oweb.all$Grantee = gsub('Watershed Council','WC',oweb.all$Grantee)
+oweb.all$Grantee[grep('Applegate',oweb.all$Grantee)] = 'Applegate WC'
+oweb.all$Grantee = gsub('Model WS Program','Model WS',oweb.all$Grantee)
+oweb.all$Grantee = gsub('Watershed Association','WSA',oweb.all$Grantee)
+oweb.all$Grantee = gsub('Harney WC','Harney County WC',oweb.all$Grantee)
+oweb.all$Grantee = gsub('Watersheds Council','WC',oweb.all$Grantee)
+oweb.all$Grantee = gsub('Watershed Partnership','WSP',oweb.all$Grantee)
+oweb.all$Grantee[grep('Lake County',oweb.all$Grantee)] = 'Lake County WC'
+oweb.all$Grantee = gsub('Molalla River Watch Inc','Molalla River Watch',oweb.all$Grantee)
+oweb.all$Grantee[grep('Walla Walla Basin WC',oweb.all$Grantee)] = 'Walla Walla WC'
+oweb.all$Grantee[grep('Wasco Area WCs',oweb.all$Grantee)] = 'Wasco County WC'
+oweb.all$Grantee[grep('Upper South Fork John Day WC',oweb.all$Grantee)] = 'Upper South Fork John Day River WC'
+oweb.all$Grantee[grep('Upper Chewaucan WC',oweb.all$Grantee)] = 'Upper Chewaucan River WC'
+oweb.all$Grantee[grep('Silver Lake Community WC',oweb.all$Grantee)] = 'Silver Lake WC'
+oweb.all$Grantee[grep('Tualatin River WC',oweb.all$Grantee)] = 'Tualatin WC'
+oweb.all$Grantee[grep('Salmon Drift Cr WC',oweb.all$Grantee)] = 'Salmon-Drift WC'
+oweb.all$Grantee[grep('Skipanon River WC',oweb.all$Grantee)] = 'Skipanon WC'
+oweb.all$Grantee[grep('Sherman County Area WC',oweb.all$Grantee)] = 'Sherman County WC'
+oweb.all$Grantee[grep("Grass Valley WC" ,oweb.all$Grantee)] = "Sherman County WC"
+oweb.all$Grantee[grep("Pedee Creek WC" ,oweb.all$Grantee)] = "Luckiamute WC" 
+oweb.all$Grantee[grep("Nestucca-Neskowin WC" ,oweb.all$Grantee)] = "Nestucca, Neskowin and Sand Lake WC"
+oweb.all$Grantee[grep("Lost Creek Watershed Group" ,oweb.all$Grantee)] = "Middle Fork Willamette WC"
+oweb.all$Grantee[grep("Middle Rogue WC" ,oweb.all$Grantee)] = "Stream Restoration Alliance of the Middle Rogue"
+oweb.all$Grantee[grep("Rogue River WC" ,oweb.all$Grantee)] = "Upper Rogue WC"
+oweb.all$Grantee[grep("Goose Lake Fishes Working Group" ,oweb.all$Grantee)] = "Lake County WC"
+oweb.all$Grantee[grep("Warner Valley WC" ,oweb.all$Grantee)] = "Lake County WC"
+oweb.all$Grantee[grep('The Dalles Area WC',oweb.all$Grantee)] = 'Wasco County WC'
+oweb.all$Grantee[grep('Yamhill Basin WC',oweb.all$Grantee)] = 'Greater Yamhill WC'
+oweb.all$Grantee[grep('Alsea WC',oweb.all$Grantee)] = 'Alsea Basin WC'
+oweb.all$Grantee[grep('Mid John Day-Bridge Creek WC',oweb.all$Grantee)] = 'Mid John Day Bridge Creek WC'
+oweb.all$Grantee[grep('Wheeler County WS Groups',oweb.all$Grantee)] = 'Mid John Day Bridge Creek WC'
+oweb.all$Grantee[oweb.all$Grantee == 'Mid John Day WC'] = 'Mid John Day Bridge Creek WC'
+oweb.all$Grantee[oweb.all$Grantee=='Bridge Creek WC'] = 'Mid John Day Bridge Creek WC'
+oweb.all$Grantee[oweb.all$Grantee=='Middle Deschutes WS Councils'] = 'Middle Deschutes'
+oweb.all$Grantee[oweb.all$Grantee=='Trout Creek WC'] = 'Middle Deschutes'
+oweb.all$Grantee[oweb.all$Grantee=='Willow Creek WC'] = 'Middle Deschutes'
+
+replace = rbind(oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),],
+                oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),],
+                oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),])
+
+replace$Grantee =
+  c(rep('Malheur WC',nrow(oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),])),
+    rep('Owyhee WC',nrow(oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),])),
+    rep('Bully Creek WS Coalition',nrow(oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),])))
+oweb.all =  rbind(oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee,invert=T),],replace)
+
+
+replace = rbind(oweb.all[grep("North Coast WS Assn",oweb.all$Grantee),],
+                oweb.all[grep("North Coast WS Assn",oweb.all$Grantee),],
+                oweb.all[grep("North Coast WS Assn",oweb.all$Grantee),],
+                oweb.all[grep("North Coast WS Assn",oweb.all$Grantee),])
+replace$Grantee =
+  c(rep('Youngs Bay WC',nrow(oweb.all[grep('North Coast WS Assn',oweb.all$Grantee),])),
+    rep("Skipanon WC",nrow(oweb.all[grep('North Coast WS Assn',oweb.all$Grantee),])),
+    rep("Nicolai-Wickiup WC",nrow(oweb.all[grep('North Coast WS Assn',oweb.all$Grantee),])),
+    rep("Ecola Creek WC",nrow(oweb.all[grep('North Coast WS Assn',oweb.all$Grantee),]))
+    )
+oweb.all =  rbind(oweb.all[grep('North Coast WS Assn',oweb.all$Grantee,invert=T),],replace)
+
+
+
+replace = rbind(oweb.all[grep("Clatsop Coordinating Council",oweb.all$Grantee),],
+                oweb.all[grep("Clatsop Coordinating Council",oweb.all$Grantee),],
+                oweb.all[grep("Clatsop Coordinating Council",oweb.all$Grantee),],
+                oweb.all[grep("Clatsop Coordinating Council",oweb.all$Grantee),])
+replace$Grantee =
+  c(rep('Youngs Bay WC',nrow(oweb.all[grep('Clatsop Coordinating Council',oweb.all$Grantee),])),
+    rep("Skipanon WC",nrow(oweb.all[grep('Clatsop Coordinating Council',oweb.all$Grantee),])),
+    rep("Nicolai-Wickiup WC",nrow(oweb.all[grep('Clatsop Coordinating Council',oweb.all$Grantee),])),
+    rep("Ecola Creek WC",nrow(oweb.all[grep('Clatsop Coordinating Council',oweb.all$Grantee),]))
+  )
+oweb.all =  rbind(oweb.all[grep('Clatsop Coordinating Council',oweb.all$Grantee,invert=T),],replace)
+
+
+replace = rbind(oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee),],
+                oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee),],
+                oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee),])
+replace$Grantee =
+  c(rep("Claggett Creek WC",nrow(oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee),])),
+    rep("Pringle Creek WC",nrow(oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee),])),
+    rep("Mill Creek WC" ,nrow(oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee),]))
+  )
+oweb.all =  rbind(oweb.all[grep('Salem-Keizer Urban WS Coordinating Council',oweb.all$Grantee,invert=T),],replace)
+
+
+replace = rbind(oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee),],
+                oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee),],
+                oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee),])
+replace$Grantee =
+  c(rep('Rickreall WC',nrow(oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee),])),
+    rep('Luckiamute WC',nrow(oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee),])),
+    rep('Glenn-Gibson WC',nrow(oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee),])))
+oweb.all =  rbind(oweb.all[grep('Rickreall/Luckiamute/Glenn-Gibson WCs',oweb.all$Grantee,invert=T),],replace)
+
+
+replace = rbind(oweb.all[oweb.all$Grantee=='Nehalem WC',],
+                oweb.all[oweb.all$Grantee=='Nehalem WC',])
+replace$Grantee =
+  c(rep('Upper Nehalem WC',nrow(oweb.all[oweb.all$Grantee=='Nehalem WC',])),
+    rep("Lower Nehalem WC",nrow(oweb.all[oweb.all$Grantee=='Nehalem WC',])))
+oweb.all =  rbind(oweb.all[oweb.all$Grantee!='Nehalem WC',],replace)
+
+replace = rbind(oweb.all[oweb.all$Grantee=='Nehalem WCs',],
+                oweb.all[oweb.all$Grantee=='Nehalem WCs',])
+replace$Grantee =
+  c(rep('Upper Nehalem WC',nrow(oweb.all[oweb.all$Grantee=='Nehalem WCs',])),
+    rep("Lower Nehalem WC",nrow(oweb.all[oweb.all$Grantee=='Nehalem WCs',])))
+oweb.all =  rbind(oweb.all[oweb.all$Grantee!='Nehalem WCs',],replace)
+
+
+replace = rbind(oweb.all[oweb.all$Grantee=='Smith River & Elk Cr WC',],
+                oweb.all[oweb.all$Grantee=='Smith River & Elk Cr WC',])
+replace$Grantee =
+  c(rep('Smith River WC',nrow(oweb.all[oweb.all$Grantee=='Smith River & Elk Cr WC',])),
+    rep("Elk Creek WC",nrow(oweb.all[oweb.all$Grantee=='Smith River & Elk Cr WC',])))
+oweb.all =  rbind(oweb.all[oweb.all$Grantee!='Smith River & Elk Cr WC',],replace)
+
+
+replace = rbind(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',],
+                oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',],
+                oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',],
+                oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',],
+                oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',],
+                oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])
+replace$Grantee =
+  c(rep('Applegate WC',nrow(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])),
+    rep("Upper Rogue WC",nrow(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])),
+    rep('Illinois Valley WC',nrow(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])),
+    rep("Lower Rogue WC",nrow(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])),
+    rep('Seven Basins WC',nrow(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])),
+    rep("Williams Creek WC",nrow(oweb.all[oweb.all$Grantee=='Rogue Basin Coordinating Council',])))
+oweb.all =  rbind(oweb.all[oweb.all$Grantee!='Rogue Basin Coordinating Council',],replace)
+
+replace = rbind(oweb.all[oweb.all$Grantee=='South Coast & Lower Rogue WCs',],
+                oweb.all[oweb.all$Grantee=='South Coast & Lower Rogue WCs',])
+replace$Grantee =
+  c(rep('South Coast WC',nrow(oweb.all[oweb.all$Grantee=='South Coast & Lower Rogue WCs',])),
+    rep("Lower Rogue WC",nrow(oweb.all[oweb.all$Grantee=='South Coast & Lower Rogue WCs',])))
+oweb.all =  rbind(oweb.all[oweb.all$Grantee!='South Coast & Lower Rogue WCs',],replace)
+
+
+################# CLEAN OWEB SWCD GRANTS#############
+
+oweb.all$Grantee[grep('East Lane SWCD',oweb.all$Grantee)] = 'Upper Willamette SWCD'
+oweb.all$Grantee[grep('Baker Assn of Conservation Dist',oweb.all$Grantee)] = 'Baker Valley SWCD'
+
+
+################# COMPILE OWEB WC GRANTS BY  HUC8 #############
+
 temp =  oweb.all %>% dplyr::group_by(uq.tid,Project.Type,which.group) %>% dplyr::summarise_each(funs(sum),Project.Amount)
-               
 
-huc8_data[,as.vector(outer(unique(paste('OWEB',oweb.all$Project.Type,sep='_')), 
+huc8_data[,as.vector(outer(unique(paste('OWEB_Grant',oweb.all$Project.Type,sep='_')), 
                            unique(oweb.all$which.group), paste, sep="."))] = NA
-
 
     for (i in 1:nrow(temp))
    {
    huc8_data[match(temp$uq.tid[i],huc8_data$uq.tid),
-             which(colnames(huc8_data)==paste(paste('OWEB',temp$Project.Type[i],sep='_'),
+             which(colnames(huc8_data)==paste(paste('OWEB_Grant',temp$Project.Type[i],sep='_'),
                                               temp$which.group[i],sep='.'))] = 
                       temp$Project.Amount[i]
    }
 
 
-huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB',oweb.all$Project.Type,paste,sep='_')))][
-  is.na(huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB',oweb.all$Project.Type,paste,sep='_')))])]  = 0
+huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all$Project.Type,paste,sep='_')))][
+  is.na(huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all$Project.Type,paste,sep='_')))])]  = 0
 
-huc8_data[,grep('Total',colnames(huc8_data))][is.na(huc8_data[,grep('Total',colnames(huc8_data))])] = 0
+
 huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnames(huc8_data))])] = 0
 
+
+################# COMPILE OWEB WC GRANTS BY WC #############
+
+# 
+# temp =  oweb.all %>% filter(Grantee.Type=='Watershed Council') dplyr::group_by(uq.tid,Project.Type,Grantee) %>% dplyr::summarise_each(funs(sum),Project.Amount)
+# 
+# wc_data = oregon.wc@data
+# wc_data[,as.vector(outer(unique(paste('OWEB',oweb.all$Project.Type,sep='_')), 
+#                            unique(oweb.all$which.group), paste, sep="."))] = NA
+# for (i in 1:nrow(temp))
+# {
+#   wc_data[match(temp$uq.tid[i],huc8_data$uq.tid),
+#             which(colnames(wc_data)==paste(paste('OWEB',temp$Project.Type[i],sep='_'),
+#                                              temp$which.group[i],sep='.'))] = 
+#     temp$Project.Amount[i]
+# }
+# 
+# 
+# huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB',oweb.all$Project.Type,paste,sep='_')))][
+#   is.na(huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB',oweb.all$Project.Type,paste,sep='_')))])]  = 0
+# 
+# huc8_data[,grep('Total',colnames(huc8_data))][is.na(huc8_data[,grep('Total',colnames(huc8_data))])] = 0
+# huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnames(huc8_data))])] = 0
+# 
+# 
 
 
 ########## ADD WC DATA ###################
@@ -453,18 +668,15 @@ huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnam
 # 
 # 
 # 
-# oregon.wc = readOGR(dsn='SpatialData/watershed_councils', layer="OregonWatershedCouncils")
-# oregon.wc@data$id = rownames(oregon.wc@data)
-# 
-# oregon.wc@data$altName = gsub('WCl','WC',oregon.wc@data$altName)
-# oregon.wc@data$altName = gsub('River Basin Council','RBC',oregon.wc@data$altName)
-# wc.data$NAME = gsub('WSC','WC',wc.data$NAME)
+
 # 
 # oregon.wc@data$altName[unlist(sapply(wc.data$NAME,agrep,oregon.wc@data$altName,ignore.case=TRUE,max=2))]
 # 
 # 
 # sapply(wc.data$NAME,agrep,oregon.wc@data$altName,ignore.case=TRUE,max=2)
 # 
+
+
 
 
 
@@ -568,9 +780,7 @@ R4.dev = raster('SpatialData/tf_rasters/tf_dev_2011')
 R4.wet = raster('SpatialData/tf_rasters/tf_wetl_2011')
 R4.forst = raster('SpatialData/tf_rasters/tf_forst_2011')
 
-
 uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
-
 
 R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
 R1.dev.v = raster::extract(R1.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
@@ -638,31 +848,13 @@ all.params.spdf@data = join(all.params.spdf@data,Year.Month)
 all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@data$Abs.Month,sep='_')
 
 
-######### COMPUTE RESTORATION COVARIATES #########
-  obs.data = all.params.spdf@data
-  
-  tempAll = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-    dplyr::mutate_each(funs(cumsum),contains('Total'))
-  names(tempAll)[grep('Total',names(tempAll))] = paste(names(tempAll)[grep('Total',names(tempAll))],'All',sep='_')
-  
-  temp12 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-    dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('Total'))
-  names(temp12)[grep('Total',names(temp12))] = paste(names(temp12)[grep('Total',names(temp12))],'12',sep='_')
-  
-  temp36 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-    dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('Total'))
-  names(temp36)[grep('Total',names(temp36))] = paste(names(temp36)[grep('Total',names(temp36))],'36',sep='_')
-  
-  temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-    dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('Total'))
-  names(temp60)[grep('Total',names(temp60))] = paste(names(temp60)[grep('Total',names(temp60))],'60',sep='_')
-  
-  temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),
-                       as.data.frame(temp36),as.data.frame(temp60)))
 
-  obs.data = join(obs.data,temp)
+write.csv(all.params.spdf@data,'Input/site_obs_data.csv')
 
-###compute oweb grant covariates
+
+######### COMPUTE RESTORATION AND GRANT COVARIATES #########
+ 
+###compute owri restoration and oweb grant covariates
 
 tempAll = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(cumsum),contains('OWEB'))
@@ -672,9 +864,19 @@ temp12 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) 
   dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
 names(temp12)[grep('OWEB',names(temp12))] = paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_')
 
+temp24 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
+names(temp24)[grep('OWEB',names(temp24))] = paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_')
+
+
 temp36 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
 names(temp36)[grep('OWEB',names(temp36))] = paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_')
+
+temp48 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
+names(temp48)[grep('OWEB',names(temp48))] = paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_')
+
 
 temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
@@ -715,25 +917,22 @@ if(!remote)
 
 
 
-test = lapply(files[1:2],raster)
-test2 = lapply(test,crop,oregon.outline)
-
 huc8_data$pull_raster = paste0(huc8_data$YEAR,ifelse(nchar(huc8_data$Month.Num)==2,huc8_data$Month.Num,paste0(0,huc8_data$Month.Num)))
 which.file = unlist(sapply(huc8_data$pull_raster,FUN = grep,x=files))
 
 huc8_data$monthly.precip = NA
 
+huc8_data = huc8_data[huc8_data$HUC8!='17070106',]
+
 for (i in 1:nrow(huc8_data))
 {
   if (!is.na(which.file[i]))
   {
-    huc8_data$monthly.precip[i] = extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
-            oregon.huc8[as.character(oregon.huc8@data$HUC8)==
-                          as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)
+     huc8_data$monthly.precip[i] = extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
+             oregon.huc8[as.character(oregon.huc8@data$HUC8)==
+                           as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)
   }
 }
-
-
 
 # 
 # select1990 = files[grep('1990',files)]
