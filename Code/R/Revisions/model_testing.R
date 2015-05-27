@@ -1,27 +1,21 @@
+rm(list=ls())
+load("temp_workspace_noprecip.RData")
 
 
-install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
-
+#install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
 
 library(INLA)
-
-options(respos = c(getOption("repos"), INLA="http://www.math.ntnu.no/inla/R/testing"))
-update.packages("INLA")
-install.packages('INLA')
-library(INLA)
-
-        setwd('/homes/tscott1/win/user/quinalt/')
 
 require(xtable)
 library(INLA)
 #library(rgdal);library(rgeos);
 library(maptools)
-load('temporary_workspace.RData')
 
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
 
 inla.setOption(num.threads=16) 
+
 
 mod.data = all.params.spdf@data
 mod.data = mod.data[,-grep('Total.Solids',colnames(mod.data))]
@@ -30,20 +24,65 @@ mod.data$seasonal = mod.data$Abs.Month
 mod.data$total.period = mod.data$Abs.Month
 mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
 mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
-
+mod.data = filter(mod.data,YEAR>=1995)
 mod.data$HUC8 = as.character(mod.data$HUC8)
 
-covars = mod.data[,c(c('elevation','seaDist','HUC8','total.period','YEAR',
-                    'ag.huc8','dev.huc8','wet.huc8','forst.huc8','monthly.precip','county.pop.growthrate',
-                 'seasonal','Ag','Dev','Wetl','Forst'),grep('Total',names(mod.data),value=T),
+covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
+                    'ag.huc8','dev.huc8','wet.huc8','forst.huc8','l.owqi',
+                    'county.pop.growthrate','owqi',
+                 'seasonal','Ag','Dev','Wetl','Forst',
                  grep('OWEB',names(mod.data),value=T))]
 
-covars[,grep('Total',names(covars))] = covars[,grep('Total',names(covars))]/100000
-covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/100000
+covars$OWEB.wq.TotalCash_Prior12 = (covars$OWEB.wq.TotalCash_All - covars$OWEB.wq.TotalCash_12)
+covars$OWEB_Grant_Capacity.WC_Prior12 = (covars$OWEB_Grant_Capacity.WC_All - covars$OWEB_Grant_Capacity.WC_12)
+covars$OWEB_Grant_Capacity.WC_Prior36 = (covars$OWEB_Grant_Capacity.WC_All - covars$OWEB_Grant_Capacity.WC_36)
+covars = covars[covars$YEAR>=1995,]
+k = 100000
+covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]+0.01/k
+covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))])
 
-colnames(covars) = gsub('Monitoring/Assessment/Tech. Assistance','Tech',colnames(covars))
-colnames(covars) = gsub('Education/Outreach','Ed',colnames(covars))
-colnames(covars) = gsub('Council Support','Council',colnames(covars))
+# non-oweb restoration funding to date
+# oweb restoration funding prior to number
+#
+
+form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + 
+  NOT_OWEB.wq.TotalCash_All+
+  OWEB_Grant_Outreach.WC_36+
+ # OWEB_Grant_Education.WC_36+
+  OWEB_Grant_Restoration.WC_36+
+  OWEB_Grant_Capacity.WC_36+
+  OWEB_Grant_Outreach.WC_36:OWEB_Grant_Education.WC_36:OWEB_Grant_Restoration.WC_36:OWEB_Grant_Capacity.WC_36+
+  OWEB_Grant_Restoration.SWCD_36+
+  OWEB_Grant_Capacity.SWCD_36+
+  OWEB_Grant_Outreach.SWCD_36+
+#  OWEB_Grant_Education.SWCD_36+
+  OWEB_Grant_Outreach.SWCD_36:OWEB_Grant_Education.SWCD_36:OWEB_Grant_Restoration.SWCD_36:OWEB_Grant_Capacity.SWCD_36+
+  f(HUC8,model='iid')+
+  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=36)
+
+mod0 <- inla(form0, family='gaussian', 
+             data=data.frame(y=covars$l.owqi, covars,b0=1), 
+             control.predictor=list(compute=TRUE),
+             #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
+             control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+
+round(exp(mod0$summary.fixed)[-c(1:5),1:2],2)
+
+
+
+
+mod0 = lmer(l.owqi~ elevation + seaDist+Ag + Dev + Wetl + Forst+OWEB_Grant_Capacity.WC_Prior12+
+              forst.huc8 + wet.huc8 + dev.huc8+
+              (1|HUC8) + (1|YEAR),data=covars)
+
+summary(mod0)
+sum0 = summary(mod0)
+
+
+
+
 
 
 covars$Total_OWEB_All = rowSums(covars[,intersect(grep('All',names(covars),value=T), grep('OWEB',names(covars),value=T))])
@@ -76,30 +115,30 @@ covars$Total_Prior_To_60 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
 
 
 #Model 0: No spatial effect
-form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + 
-  forst.huc8 + elevation + seaDist + monthly.precip + 
-  Total_Prior_To_12+
-  OWEB_Restoration.WC_12+
-  OWEB_Tech.WC_12+
-  OWEB_Ed.WC_12+
-  OWEB_Council.WC_12+
-  OWEB_Restoration.WC_12:OWEB_Tech.WC_12:OWEB_Ed.WC_12:OWEB_Council.WC_12+
-  OWEB_Restoration.Public_12+
-  OWEB_Tech.Public_12+
-  OWEB_Ed.Public_12+
-  OWEB_Restoration.Public_12:OWEB_Tech.Public_12:OWEB_Ed.Public_12+
+form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + 
+  forst.huc8 + elevation + seaDist + 
+ # OWEB.wq.TotalCash_Prior12+
+  #OWEB_Grant_Capacity.WC_12+
+#  OWEB_Grant_Restoration.WC_12+
+  
+  OWEB_Grant_Outreach.WC_12+
+  OWEB_Grant_Education.WC_12+
+  OWEB_Grant_Restoration.WC_12+
+  OWEB_Grant_Capacity.WC_12+
+  OWEB_Grant_Outreach.WC_12:OWEB_Grant_Education.WC_12:OWEB_Grant_Restoration.WC_12:OWEB_Grant_Capacity.WC_12+
   f(HUC8,model='iid')+
  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
 
-mod0 <- inla(form0, family='gaussian', 
-             data=data.frame(y=mod.data$l.owqi, covars,b0=1), 
-             control.predictor=list(compute=TRUE),
-        #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
-             control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+sum(is.na(covars$ag.huc8))
 
 modsum = summary(mod0)
+
+
 modsum
+
+
 modsum$fixed[10:nrow(modsum$fixed),]
 covars$TotalCash_36
 summary(mod0)$dic$dic
