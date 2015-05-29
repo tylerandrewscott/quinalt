@@ -11,7 +11,7 @@ if(!remote)
 
 
 First.Year = 1990
-Last.Year = 2014
+Last.Year = 2035
 
 
 ######### NEEDED PACKAGES #############
@@ -77,7 +77,8 @@ oregon.huc8.df = as.data.frame(oregon.huc8)
 
 #full merge to replicated huc8 by year and month
 oregon.huc8.df = merge(oregon.huc8.df,Year.Month,type='full')
-
+colnames(oregon.huc8.df)[which(colnames(oregon.huc8.df)=='HUC_8')] = 'HUC8'
+oregon.huc8.df$uq.tid = paste(oregon.huc8.df$HUC8,oregon.huc8.df$Abs.Month,sep='_')
 
 ###### MAKE OREGON WC DATAFRAME ##########
 localDir <- 'TempData'
@@ -228,6 +229,177 @@ oregon.huc8.df = join(oregon.huc8.df,land.cover.huc8,type='left')
 
 
 
+######### MAKE OBS STATION DATAFRAME ##########
+
+
+wq.dat = read.csv('Input/Scott_OWQI_1980_2013.csv',header=T,skip=1)
+station.locs = read.csv('Input/oregon_wq_stations.csv')
+
+wq.dat = join(wq.dat,station.locs)
+
+wq.dat = wq.dat[!is.na(wq.dat$Decimal_Lat),]
+
+all.params.spdf = SpatialPointsDataFrame(coords = matrix(cbind(wq.dat$Decimal_long,
+                                                               wq.dat$Decimal_Lat),ncol=2),
+                                         data=wq.dat,proj4string=CRS("+datum=NAD83 +proj=longlat"))
+
+foo <- function(x, year=1968){
+  m <- year(x) %% 100
+  year(x) <- ifelse(m > year %% 100, 1900+m, 2000+m)
+  x
+}
+
+all.params.spdf@data$DATE = mdy(all.params.spdf$Date)
+all.params.spdf@data$Month.Num = month(all.params.spdf$DATE)
+all.params.spdf@data$YEAR = year(foo(all.params.spdf$DATE))
+all.params.spdf@data$DATE = foo(all.params.spdf$DATE)
+
+
+all.params.spdf = all.params.spdf[all.params.spdf@data$YEAR>=1992,]
+
+
+uq = all.params.spdf[!duplicated(all.params.spdf@data$Station),]
+
+uq.coords = as.matrix(cbind(uq$Decimal_long,uq$Decimal_Lat))
+
+######ADD County location
+# oregon.eco = readOGR(dsn="SpatialData/ecoregion", layer="ecoregion")
+# oregon.eco@data$id = rownames(oregon.eco@data)
+# oregon.eco = spTransform(x = oregon.eco,CRSobj = CRS(proj4string(all.params.spdf)),)
+# oregon.eco.points = fortify(oregon.eco, region="id")
+# oregon.eco.df = join(oregon.eco.points, oregon.eco@data, by="id")
+# 
+# which.eco = over(all.params.spdf,oregon.eco)
+# all.params.spdf@data$ECOREG3 = which.eco$LEV3_NAME
+#oregon.prec.aug = readOGR(dsn="H:/quinalt/climate/precipitation", layer="precip1981_2010aug_a_or")
+#oregon.prec.aug@data$id = rownames(oregon.prec.aug@data)
+
+m = data.frame(lon = uq$Decimal_long,lat = uq$Decimal_Lat)
+us.alt = getData('alt',country='US')
+elevation.df = cbind(m, alt = raster::extract(us.alt[[1]], m, method = "bilinear"))
+uq@data$elevation = elevation.df$alt
+
+rm(elevation.df)
+rm(us.alt)
+
+
+#load oregon boundary shapefile
+oregon = readOGR(dsn="SpatialData/government_units", layer="state_nrcs_a_or")
+oregon@data$id = rownames(oregon@data)
+oregon.points = fortify(oregon, region="id")
+oregon.df = join(oregon.points, oregon@data, by="id")
+
+#load oregon huc8 shapefile
+oregon.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")
+oregon.huc8@data$id = rownames(oregon.huc8@data)
+#join into one polygon
+reg <- unionSpatialPolygons(oregon.huc8, rep(1,91),100)
+oregon.huc8.points = fortify(reg, region="id")
+oregon.huc8.reference = join(oregon.huc8.points, oregon.huc8@data, by="id")
+#create oregon coastline dataframe
+oregon.coast.df = subset(oregon.huc8.reference,long<(-124)&lat>=min(oregon.df[,2]))
+
+mat.dists <- spDists(uq.coords, as.matrix(oregon.coast.df[,1:2]), longlat=TRUE)
+uq@data$seaDist <-  apply(mat.dists, 1, min)
+
+rm(mat.dists)
+rm(oregon.coast.df)
+rm(oregon.huc8.reference)
+rm(oregon.df)
+rm(oregon)
+
+
+R1.ag = raster('SpatialData/tf_rasters/tf_ag_1992')
+R1.dev = raster('SpatialData/tf_rasters/tf_dev_1992')
+R1.wet = raster('SpatialData/tf_rasters/tf_wetl_1992')
+R1.forst = raster('SpatialData/tf_rasters/tf_forst_1992')
+R2.crop = raster('SpatialData/tf_rasters/tf_crop_2001')
+R2.past = raster('SpatialData/tf_rasters/tf_past_2001')
+R2.dev = raster('SpatialData/tf_rasters/tf_dev_2001')
+R2.wet = raster('SpatialData/tf_rasters/tf_wetl_2001')
+R2.forst = raster('SpatialData/tf_rasters/tf_forst_2001')
+R3.crop = raster('SpatialData/tf_rasters/tf_crop_2006')
+R3.past = raster('SpatialData/tf_rasters/tf_past_2006')
+R3.dev = raster('SpatialData/tf_rasters/tf_dev_2006')
+R3.wet = raster('SpatialData/tf_rasters/tf_wetl_2006')
+R3.forst = raster('SpatialData/tf_rasters/tf_forst_2006')
+R4.crop = raster('SpatialData/tf_rasters/tf_crop_2011')
+R4.past = raster('SpatialData/tf_rasters/tf_past_2011')
+R4.dev = raster('SpatialData/tf_rasters/tf_dev_2011')
+R4.wet = raster('SpatialData/tf_rasters/tf_wetl_2011')
+R4.forst = raster('SpatialData/tf_rasters/tf_forst_2011')
+
+uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
+
+R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R1.dev.v = raster::extract(R1.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R1.wet.v = raster::extract(R1.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R1.forst.v = raster::extract(R1.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+
+R2.crop.v = raster::extract(R2.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.past.v = raster::extract(R2.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.dev.v = raster::extract(R2.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.wet.v = raster::extract(R2.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.forst.v = raster::extract(R2.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R2.ag.v = data.frame(ID = R2.crop.v$ID,tf_ag_2001 = R2.crop.v$tf_crop_2001+R2.past.v$tf_past_2001)
+
+R3.crop.v = raster::extract(R3.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.past.v = raster::extract(R3.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.dev.v = raster::extract(R3.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.wet.v = raster::extract(R3.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.forst.v = raster::extract(R3.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R3.ag.v = data.frame(ID = R3.crop.v$ID,tf_ag_2006 = R3.crop.v$tf_crop_2006+R3.past.v$tf_past_2006)
+
+R4.crop.v = raster::extract(R4.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.past.v = raster::extract(R4.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.dev.v = raster::extract(R4.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.wet.v = raster::extract(R4.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.forst.v = raster::extract(R4.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
+R4.ag.v = data.frame(ID = R4.crop.v$ID,tf_ag_2011 = R4.crop.v$tf_crop_2011+R4.past.v$tf_past_2011)
+
+
+R1 = join_all(list(R1.ag.v,R1.dev.v,R1.wet.v,R1.forst.v))
+R2 = join_all(list(R2.ag.v,R2.dev.v,R2.wet.v,R2.forst.v))
+R3 = join_all(list(R3.ag.v,R3.dev.v,R3.wet.v,R3.forst.v))
+R4 = join_all(list(R4.ag.v,R4.dev.v,R4.wet.v,R4.forst.v))
+
+
+cov1992 = rbind(R1,R1,R1,R1,R1,R1,R1,R1,R1);colnames(cov1992) = c('ID','Ag','Dev','Wetl','Forst')
+cov1992$YEAR = rep(1992:2000,each=dim(uq)[1])
+cov1992$Station = uq$Station
+
+cov2001 = rbind(R2,R2,R2,R2,R2);colnames(cov2001) = c('ID','Ag','Dev','Wetl','Forst')
+cov2001$YEAR = rep(2001:2005,each=dim(uq)[1])
+cov2001$Station = uq$Station
+
+cov2006 = rbind(R3,R3,R3,R3,R3);colnames(cov2006) = c('ID','Ag','Dev','Wetl','Forst')
+cov2006$YEAR = rep(2006:2010,each=dim(uq)[1])
+cov2006$Station = uq$Station
+
+cov2011 = rbind(R4,R4,R4);colnames(cov2011) = c('ID','Ag','Dev','Wetl','Forst')
+cov2011$YEAR = rep(2011:2013,each=dim(uq)[1])
+cov2011$Station = uq$Station
+
+cov = rbind(cov1992,cov2001,cov2006,cov2011)
+
+all.params.spdf@data = join(all.params.spdf@data,uq@data[,c('Station','elevation','seaDist')])
+
+all.params.spdf@data = join(all.params.spdf@data,cov)
+
+
+which.huc8 = over(spTransform(all.params.spdf,CRS(proj4string(oregon.huc8))),oregon.huc8)
+
+all.params.spdf@data$HUC8 = which.huc8$HUC8
+
+all.params.spdf@data = join(all.params.spdf@data,Year.Month)
+
+
+all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@data$Abs.Month,sep='_')
+
+
+
+#write.csv(all.params.spdf@data,'Input/site_obs_data.csv')
+
 ####### ADD GRANT DATA ##########
 
 proj.info = read.csv('Input/owri_project_info.csv')
@@ -257,7 +429,6 @@ proj.info$Month.Num = proj.info$CompleteMonth
 proj.info = join(proj.info,Year.Month)
 proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
 
-oregon.huc8.df$uq.tid = paste(oregon.huc8.df$HUC8,oregon.huc8.df$Abs.Month,sep='_')
 
 
 #   proj.partners= read.csv('Input/owri_project_participants.csv')
@@ -376,6 +547,9 @@ oweb.all = oweb.all %>% filter(!is.na(Grantee)) %>% filter(Region!='SW') %>% fil
 
 oweb.all =  join(oweb.all,grant.gis)
 
+
+
+
 # 
 # not.mapped = read.csv('Input/Grants_not_Mapped_August_2014.csv')
 # 
@@ -388,17 +562,16 @@ oweb.all = oweb.all[!is.na(oweb.all$Project.End.Date),]
 oweb.all = oweb.all %>% filter(Project.Status != 'Cancelled') 
 
 oweb.all$End.Date = as.Date(oweb.all$Project.End.Date, format = "%m/%d/%y")
+oweb.all$Start.Date = as.Date(oweb.all$Project.Start.Date, format = "%m/%d/%y")
 
-oweb.all = oweb.all[year(oweb.all$End.Date)<=2013,]
+#oweb.all = oweb.all[year(oweb.all$End.Date)<=2013,]
 
-oweb.all$MONTH = month(oweb.all$End.Date)
-oweb.all$YEAR = (year(oweb.all$End.Date))
-oweb.all$Abs.Month = Year.Month$Abs.Month[match(paste(oweb.all$YEAR,oweb.all$MONTH),paste(Year.Month$YEAR,Year.Month$Month.Num))]
+oweb.all$START.MONTH = month(oweb.all$Start.Date)
+oweb.all$END.MONTH = month(oweb.all$End.Date)
+oweb.all$END.YEAR = (year(oweb.all$End.Date))
+oweb.all$START.YEAR = (year(oweb.all$Start.Date))
 
-oweb.all$uq.tid= paste(oweb.all$HUC8,oweb.all$Abs.Month,sep='_')
-
-oweb.all = filter(oweb.all,!is.na(oweb.all$HUC8))
-
+oweb.all$Abs.Month = Year.Month$Abs.Month[match(paste(oweb.all$START.YEAR,oweb.all$START.MONTH),paste(Year.Month$YEAR,Year.Month$MONTH))]
 public.values = c('City','Federal Agency','State Agency','County','Tribe')
 
 oweb.all$which.group = NA
@@ -458,6 +631,12 @@ oweb.all$Grantee[oweb.all$Grantee=='Bridge Creek WC'] = 'Mid John Day Bridge Cre
 oweb.all$Grantee[oweb.all$Grantee=='Middle Deschutes WS Councils'] = 'Middle Deschutes'
 oweb.all$Grantee[oweb.all$Grantee=='Trout Creek WC'] = 'Middle Deschutes'
 oweb.all$Grantee[oweb.all$Grantee=='Willow Creek WC'] = 'Middle Deschutes'
+oweb.all$Grantee[oweb.all$Grantee=='Glenn/Gibson Creeks WC - Bierly'] = 'Glenn-Gibson WC'
+oweb.all$Grantee[oweb.all$Grantee=='North Sherman WC'] = 'Sherman County WC'
+oweb.all$Grantee[oweb.all$Grantee=='Mosier WC'] = 'Wasco County WC'
+oweb.all$Grantee[oweb.all$Grantee=='Deep Creek WC'] = 'Clackamas River Basin Council'
+oweb.all$Grantee[oweb.all$Grantee=='Evans Creek WC'] = 'Applegate WC'
+oweb.all$Grantee[oweb.all$Grantee=='Mohawk WS Partnership'] = 'McKenzie WC'
 
 replace = rbind(oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),],
                 oweb.all[grep('Malheur-Owyhee',oweb.all$Grantee),],
@@ -564,19 +743,68 @@ replace$Grantee =
 oweb.all =  rbind(oweb.all[oweb.all$Grantee!='South Coast & Lower Rogue WCs',],replace)
 
 
-################# CLEAN OWEB SWCD GRANTS#############
+replace = rbind(oweb.all[oweb.all$Grantee=='Rickreall & Glenn-Gibson WCs',],
+                oweb.all[oweb.all$Grantee=='Rickreall & Glenn-Gibson WCs',])
+replace$Grantee =
+  c(rep('Glenn-Gibson WC',nrow(oweb.all[oweb.all$Grantee=='Rickreall & Glenn-Gibson WCs',])),
+    rep("Rickreall WC",nrow(oweb.all[oweb.all$Grantee=='Rickreall & Glenn-Gibson WCs',])))
+oweb.all =  rbind(oweb.all[oweb.all$Grantee!='Rickreall & Glenn-Gibson WCs',],replace)
 
 oweb.all$Grantee[grep('East Lane SWCD',oweb.all$Grantee)] = 'Upper Willamette SWCD'
 oweb.all$Grantee[grep('Baker Assn of Conservation Dist',oweb.all$Grantee)] = 'Baker Valley SWCD'
 
+for (i in 1:nrow(oweb.all))
+{
+  if(is.na(oweb.all$HUC8[i]) & oweb.all$which.group[i]=='WC')
+  {
+    oweb.all$HUC8[i] = oregon.wc@data$HUC_8[match(oweb.all$Grantee[i],oregon.wc@data$altName)]
+  }
+if(is.na(oweb.all$HUC8[i]) & oweb.all$which.group[i]=='SWCD')
+{
+  oweb.all$HUC8[i] = oregon.swcd@data$HUC_8[match(oweb.all$Grantee[i],oregon.swcd@data$SWCD_Name)]
+}
+}
 
-levels(oweb.all$Project.Type) = c("Acquisition"    ,      "Capacity"         ,  "Capacity"   ,   "Capacity"   ,  "Education"   ,        
-                                  "Holding"        ,      "Law_Enforcement"  ,    "Capacity" ,          "Outreach"    ,         "OWEB_Administration" ,
-                                  "Research"        ,     "Restoration"       ,   "SWCD"      ,           "Capacity" ,"NA" )
 
+
+oregon.swcd@data$HUC_8[which(oregon.swcd$SWCD_Name == oweb.all$Grantee[(is.na(oweb.all$HUC8))][i])]
+oweb.all$which.group[(is.na(oweb.all$HUC8))][i]=='SWCD'
+oweb.all$Grantee[(is.na(oweb.all$HUC8))][i]
+oregon.wc@data$HUC_8[which(oregon.wc$altName == oweb.all$Grantee[(is.na(oweb.all$HUC8))][i])]
+
+
+oweb.all$uq.tid= paste(oweb.all$HUC8,oweb.all$Abs.Month,sep='_')
+
+oweb.all = filter(oweb.all,!is.na(oweb.all$HUC8))
+
+
+
+
+levels(oweb.all$Project.Type) = c("Acquisition"    ,      "Tech"         ,  "Capacity"   ,   "Data Development"   ,  "Education"   ,        
+                                  "Holding"        ,      "Law_Enforcement"  ,    "Tech" ,          "Outreach"    ,         "OWEB_Administration" ,
+                                  "Research"        ,     "Restoration"       ,   "SWCD"      ,           "Tech" ,"NA" )
+
+oweb.all = filter(oweb.all,Project.Type != 'Acquisition',Project.Type!='Data Development',Project.Type !='Law Enforcement',
+                  Project.Type !='Holding',Project.Type != 'OWEB Administration')
+oweb.all$Project.Type = as.character(oweb.all$Project.Type)
+
+
+oweb.all$sabs = Year.Month$Abs.Month[match(paste(oweb.all$START.YEAR,oweb.all$START.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
+oweb.all$eabs = Year.Month$Abs.Month[match(paste(oweb.all$END.YEAR,oweb.all$END.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
+oweb.all$abs.length = abs(oweb.all$eabs-oweb.all$sabs)
+oweb.all$abs.length = ifelse(oweb.all$abs.length==0,1,oweb.all@abs.length)
+empty = oweb.all[-c(1:nrow(oweb.all)),]
+
+for (i in 1:nrow(oweb.all))
+{
+  temp = oweb.all[c(rep(i,oweb.all$abs.length[i])),]
+  temp$uq.tid = paste(oweb.all$HUC8[i],oweb.all$sabs[i] + 1:oweb.all$abs.length[i],sep='_')
+  temp$Project.Amount = oweb.all$Project.Amount[i]/oweb.all$abs.length[i]
+  empty=rbind(empty,temp)
+}
 
 ################# COMPILE OWEB WC GRANTS BY  HUC8 #############
-
+oweb.all = empty
 temp =  oweb.all %>% dplyr::group_by(uq.tid,Project.Type,which.group) %>% dplyr::summarise_each(funs(sum),Project.Amount)
 
 huc8_data[,as.vector(outer(unique(paste('OWEB_Grant',oweb.all$Project.Type,sep='_')), 
@@ -599,27 +827,30 @@ huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnam
 
 
 ################# COMPILE OWEB GRANTS BY WC #############
-site.in.wc = over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.wc))),oregon.wc)
-site.in.swcd = over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.swcd))),oregon.swcd)
+
+
+site.in.wc = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.wc))),oregon.wc)
+site.in.swcd = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.swcd))),oregon.swcd)
 all.params.spdf@data$which.wc = site.in.wc$altName
 all.params.spdf@data$which.swcd = site.in.swcd$SWCD_Name
-
-obs.data = all.params.spdf@data
+all.params.spdf@data$uq.wc.tid = paste(all.params.spdf@data$which.wc,all.params.spdf@data$Abs.Month,sep='_')
+all.params.spdf@data$uq.swcd.tid = paste(all.params.spdf@data$which.swcd,all.params.spdf@data$Abs.Month,sep='_')
 
 wc.year.month = merge(as.data.frame(oregon.wc@data$altName),Year.Month)
 names(wc.year.month)[1] = 'altName'
-wc.year.month$uq.grantee.tid = paste(wc.year.month$altName,wc.year.month$Abs.Month,sep='_')
+wc.year.month$uq.wc.tid = paste(wc.year.month$altName,wc.year.month$Abs.Month,sep='_')
 
 swcd.year.month = merge(as.data.frame(oregon.swcd@data$SWCD_Name),Year.Month)
 names(swcd.year.month)[1] = 'SWCD_Name'
-swcd.year.month$uq.grantee.tid = paste(swcd.year.month$SWCD_Name,swcd.year.month$Abs.Month,sep='_')
+swcd.year.month$uq.swcd.tid = paste(swcd.year.month$SWCD_Name,swcd.year.month$Abs.Month,sep='_')
 
-oweb.all$uq.grantee.tid = paste(oweb.all$Grantee,oweb.all$Abs.Month,sep='_')
+oweb.all$uq.wc.tid = paste(oweb.all$Grantee,oweb.all$Abs.Month,sep='_')
+oweb.all$uq.swcd.tid = paste(oweb.all$Grantee,oweb.all$Abs.Month,sep='_')
 
-temp =  oweb.all %>% filter(which.group=='WC') %>% dplyr::group_by(uq.grantee.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount)
+temp =  oweb.all %>% filter(which.group=='WC') %>% dplyr::group_by(uq.wc.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount)
 wc.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all$Project.Type,sep='_')))] = NA
 for (i in 1:nrow(temp))
-{wc.year.month[match(temp$uq.grantee.tid[i],wc.year.month$uq.grantee.tid),
+{wc.year.month[match(temp$uq.wc.tid[i],wc.year.month$uq.wc.tid),
                which(colnames(wc.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
   temp$Project.Amount[i]}
 
@@ -629,10 +860,10 @@ wc.year.month[,grep('OWEB',colnames(wc.year.month))][is.na(wc.year.month[,grep('
 
 ################# COMPILE OWEB GRANTS BY SWCD #############
 
-temp =  oweb.all %>% filter(which.group=='SWCD') %>% dplyr::group_by(uq.grantee.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount)
+temp =  oweb.all %>% filter(which.group=='SWCD') %>% dplyr::group_by(uq.swcd.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount)
 swcd.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all$Project.Type,sep='_')))] = NA
 for (i in 1:nrow(temp))
-{swcd.year.month[match(temp$uq.grantee.tid[i],swcd.year.month$uq.grantee.tid),
+{swcd.year.month[match(temp$uq.swcd.tid[i],swcd.year.month$uq.swcd.tid),
                  which(colnames(swcd.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
   temp$Project.Amount[i]}
 
@@ -704,203 +935,14 @@ swcd.year.month[,grep('OWEB',colnames(swcd.year.month))][is.na(swcd.year.month[,
 # 
 
 
-
-######### MAKE OBS STATION DATAFRAME ##########
-
-
-wq.dat = read.csv('Input/Scott_OWQI_1980_2013.csv',header=T,skip=1)
-station.locs = read.csv('Input/oregon_wq_stations.csv')
-
-wq.dat = join(wq.dat,station.locs)
-
-wq.dat = wq.dat[!is.na(wq.dat$Decimal_Lat),]
-
-all.params.spdf = SpatialPointsDataFrame(coords = matrix(cbind(wq.dat$Decimal_long,
-                                                               wq.dat$Decimal_Lat),ncol=2),
-                                         data=wq.dat,proj4string=CRS("+datum=NAD83 +proj=longlat"))
-
-foo <- function(x, year=1968){
-  m <- year(x) %% 100
-  year(x) <- ifelse(m > year %% 100, 1900+m, 2000+m)
-  x
-}
-
-all.params.spdf@data$DATE = mdy(all.params.spdf$Date)
-all.params.spdf@data$Month.Num = month(all.params.spdf$DATE)
-all.params.spdf@data$YEAR = year(foo(all.params.spdf$DATE))
-all.params.spdf@data$DATE = foo(all.params.spdf$DATE)
-
-
-all.params.spdf = all.params.spdf[all.params.spdf@data$YEAR>=1992,]
-
-
-uq = all.params.spdf[!duplicated(all.params.spdf@data$Station),]
-
-uq.coords = as.matrix(cbind(uq$Decimal_long,uq$Decimal_Lat))
-
-######ADD County location
-# oregon.eco = readOGR(dsn="SpatialData/ecoregion", layer="ecoregion")
-# oregon.eco@data$id = rownames(oregon.eco@data)
-# oregon.eco = spTransform(x = oregon.eco,CRSobj = CRS(proj4string(all.params.spdf)),)
-# oregon.eco.points = fortify(oregon.eco, region="id")
-# oregon.eco.df = join(oregon.eco.points, oregon.eco@data, by="id")
-# 
-# which.eco = over(all.params.spdf,oregon.eco)
-# all.params.spdf@data$ECOREG3 = which.eco$LEV3_NAME
-#oregon.prec.aug = readOGR(dsn="H:/quinalt/climate/precipitation", layer="precip1981_2010aug_a_or")
-#oregon.prec.aug@data$id = rownames(oregon.prec.aug@data)
-
-m = data.frame(lon = uq$Decimal_long,lat = uq$Decimal_Lat)
-us.alt = getData('alt',country='US')
-elevation.df = cbind(m, alt = raster::extract(us.alt[[1]], m, method = "bilinear"))
-uq@data$elevation = elevation.df$alt
-
-rm(elevation.df)
-rm(us.alt)
-
-
-#load oregon boundary shapefile
-oregon = readOGR(dsn="SpatialData/government_units", layer="state_nrcs_a_or")
-oregon@data$id = rownames(oregon@data)
-oregon.points = fortify(oregon, region="id")
-oregon.df = join(oregon.points, oregon@data, by="id")
-
-#load oregon huc8 shapefile
-oregon.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")
-oregon.huc8@data$id = rownames(oregon.huc8@data)
-#join into one polygon
-reg <- unionSpatialPolygons(oregon.huc8, rep(1,91),100)
-oregon.huc8.points = fortify(reg, region="id")
-oregon.huc8.df = join(oregon.huc8.points, oregon.huc8@data, by="id")
-#create oregon coastline dataframe
-oregon.coast.df = subset(oregon.huc8.df,long<(-124)&lat>=min(oregon.df[,2]))
-
-mat.dists <- spDists(uq.coords, as.matrix(oregon.coast.df[,1:2]), longlat=TRUE)
-uq@data$seaDist <-  apply(mat.dists, 1, min)
-
-rm(mat.dists)
-rm(oregon.coast.df)
-
-rm(oregon.df)
-rm(oregon)
-
-
-R1.ag = raster('SpatialData/tf_rasters/tf_ag_1992')
-R1.dev = raster('SpatialData/tf_rasters/tf_dev_1992')
-R1.wet = raster('SpatialData/tf_rasters/tf_wetl_1992')
-R1.forst = raster('SpatialData/tf_rasters/tf_forst_1992')
-R2.crop = raster('SpatialData/tf_rasters/tf_crop_2001')
-R2.past = raster('SpatialData/tf_rasters/tf_past_2001')
-R2.dev = raster('SpatialData/tf_rasters/tf_dev_2001')
-R2.wet = raster('SpatialData/tf_rasters/tf_wetl_2001')
-R2.forst = raster('SpatialData/tf_rasters/tf_forst_2001')
-R3.crop = raster('SpatialData/tf_rasters/tf_crop_2006')
-R3.past = raster('SpatialData/tf_rasters/tf_past_2006')
-R3.dev = raster('SpatialData/tf_rasters/tf_dev_2006')
-R3.wet = raster('SpatialData/tf_rasters/tf_wetl_2006')
-R3.forst = raster('SpatialData/tf_rasters/tf_forst_2006')
-R4.crop = raster('SpatialData/tf_rasters/tf_crop_2011')
-R4.past = raster('SpatialData/tf_rasters/tf_past_2011')
-R4.dev = raster('SpatialData/tf_rasters/tf_dev_2011')
-R4.wet = raster('SpatialData/tf_rasters/tf_wetl_2011')
-R4.forst = raster('SpatialData/tf_rasters/tf_forst_2011')
-
-uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
-
-R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R1.dev.v = raster::extract(R1.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R1.wet.v = raster::extract(R1.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R1.forst.v = raster::extract(R1.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-
-R2.crop.v = raster::extract(R2.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.past.v = raster::extract(R2.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.dev.v = raster::extract(R2.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.wet.v = raster::extract(R2.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.forst.v = raster::extract(R2.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.ag.v = data.frame(ID = R2.crop.v$ID,tf_ag_2001 = R2.crop.v$tf_crop_2001+R2.past.v$tf_past_2001)
-
-R3.crop.v = raster::extract(R3.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.past.v = raster::extract(R3.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.dev.v = raster::extract(R3.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.wet.v = raster::extract(R3.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.forst.v = raster::extract(R3.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.ag.v = data.frame(ID = R3.crop.v$ID,tf_ag_2006 = R3.crop.v$tf_crop_2006+R3.past.v$tf_past_2006)
-
-R4.crop.v = raster::extract(R4.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.past.v = raster::extract(R4.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.dev.v = raster::extract(R4.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.wet.v = raster::extract(R4.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.forst.v = raster::extract(R4.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.ag.v = data.frame(ID = R4.crop.v$ID,tf_ag_2011 = R4.crop.v$tf_crop_2011+R4.past.v$tf_past_2011)
-
-
-R1 = join_all(list(R1.ag.v,R1.dev.v,R1.wet.v,R1.forst.v))
-R2 = join_all(list(R2.ag.v,R2.dev.v,R2.wet.v,R2.forst.v))
-R3 = join_all(list(R3.ag.v,R3.dev.v,R3.wet.v,R3.forst.v))
-R4 = join_all(list(R4.ag.v,R4.dev.v,R4.wet.v,R4.forst.v))
-
-
-cov1992 = rbind(R1,R1,R1,R1,R1,R1,R1,R1,R1);colnames(cov1992) = c('ID','Ag','Dev','Wetl','Forst')
-cov1992$YEAR = rep(1992:2000,each=dim(uq)[1])
-cov1992$Station = uq$Station
-
-cov2001 = rbind(R2,R2,R2,R2,R2);colnames(cov2001) = c('ID','Ag','Dev','Wetl','Forst')
-cov2001$YEAR = rep(2001:2005,each=dim(uq)[1])
-cov2001$Station = uq$Station
-
-cov2006 = rbind(R3,R3,R3,R3,R3);colnames(cov2006) = c('ID','Ag','Dev','Wetl','Forst')
-cov2006$YEAR = rep(2006:2010,each=dim(uq)[1])
-cov2006$Station = uq$Station
-
-cov2011 = rbind(R4,R4,R4);colnames(cov2011) = c('ID','Ag','Dev','Wetl','Forst')
-cov2011$YEAR = rep(2011:2013,each=dim(uq)[1])
-cov2011$Station = uq$Station
-
-cov = rbind(cov1992,cov2001,cov2006,cov2011)
-
-all.params.spdf@data = join(all.params.spdf@data,uq@data[,c('Station','elevation','seaDist')])
-
-all.params.spdf@data = join(all.params.spdf@data,cov)
-
-
-which.huc8 = over(spTransform(all.params.spdf,CRS(proj4string(oregon.huc8))),oregon.huc8)
-
-all.params.spdf@data$HUC8 = which.huc8$HUC8
-
-all.params.spdf@data = join(all.params.spdf@data,Year.Month)
-
-
-all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@data$Abs.Month,sep='_')
-
-
-
-#write.csv(all.params.spdf@data,'Input/site_obs_data.csv')
-
-
 ######### COMPUTE RESTORATION AND GRANT COVARIATES #########
 
-###compute owri restoration and oweb grant covariates
+obs.data = all.params.spdf@data
 
-
-
-
-
-tempAll = oweb.all %>% filter(which.group=='WC') %>%
-  dplyr::group_by(Grantee) %>% dplyr::arrange(Grantee,Abs.Month) %>%
-  dplyr::mutate(Cum.Amount.All = cumsum(Project.Amount))
-   
-temp12 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
-dplyr::mutate(Cum.Amount.All = cumsum(Project.Amount))
-
-
-names(temp12)[grep('OWEB',names(temp12))] = paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_')
-
-
+#HUC8 Covariates#
 tempAll = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(cumsum),contains('OWEB'))
 names(tempAll)[grep('OWEB',names(tempAll))] = paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_')
-
 
 temp12 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
@@ -910,7 +952,6 @@ temp24 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) 
   dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
 names(temp24)[grep('OWEB',names(temp24))] = paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_')
 
-
 temp36 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
 names(temp36)[grep('OWEB',names(temp36))] = paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_')
@@ -918,7 +959,6 @@ names(temp36)[grep('OWEB',names(temp36))] = paste(names(temp36)[grep('OWEB',name
 temp48 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
 names(temp48)[grep('OWEB',names(temp48))] = paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_')
-
 
 temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
   dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
@@ -931,6 +971,79 @@ temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(
 obs.data = join(obs.data,temp)
 
 all.params.spdf@data = obs.data
+
+
+#WC covariates##
+obs.data = all.params.spdf@data
+tempAll = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+  dplyr::mutate_each(funs(cumsum),contains('OWEB'))
+names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'WC',sep='_')
+
+temp12 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
+names(temp12)[grep('OWEB',names(temp12))] = paste(paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_'),'WC',sep='_')
+
+temp24 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
+names(temp24)[grep('OWEB',names(temp24))] = paste(paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_'),'WC',sep='_')
+
+temp36 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
+names(temp36)[grep('OWEB',names(temp36))] = paste(paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_'),'WC',sep='_')
+
+temp48 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
+names(temp48)[grep('OWEB',names(temp48))] = paste(paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_'),'WC',sep='_')
+
+temp60 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
+names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_'),'WC',sep='_')
+
+temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
+                     as.data.frame(temp36),as.data.frame(temp48),
+                     as.data.frame(temp60)))
+
+obs.data = join(obs.data,temp)
+
+
+
+all.params.spdf@data = obs.data
+
+obs.data = all.params.spdf@data
+#SWCD Covariates#
+
+tempAll = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+  dplyr::mutate_each(funs(cumsum),contains('OWEB'))
+names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'SWCD',sep='_')
+
+temp12 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
+names(temp12)[grep('OWEB',names(temp12))] = paste(paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_'),'SWCD',sep='_')
+
+temp24 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
+names(temp24)[grep('OWEB',names(temp24))] = paste(paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_'),'SWCD',sep='_')
+
+temp36 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
+names(temp36)[grep('OWEB',names(temp36))] = paste(paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_'),'SWCD',sep='_')
+
+temp48 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
+names(temp48)[grep('OWEB',names(temp48))] = paste(paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_'),'SWCD',sep='_')
+
+temp60 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+  dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
+names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_'),'SWCD',sep='_')
+
+temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
+                     as.data.frame(temp36),as.data.frame(temp48),
+                     as.data.frame(temp60)))
+
+obs.data = join(obs.data,temp)
+
+all.params.spdf@data = obs.data
+
 
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10407] = 'MALHEUR'
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 12261] = 'MALHEUR'
@@ -1258,7 +1371,6 @@ cpop = melt(county.pop,id.vars = 'County')
 cpop = cpop[grep('Year_',cpop$variable,invert=T),]
 cpop$YEAR = as.numeric(gsub('G','',cpop$variable))
 
-
 all.params.spdf@data$county.pop.growthrate = NA
 
 for (i in 1:nrow(all.params.spdf@data))
@@ -1267,11 +1379,7 @@ for (i in 1:nrow(all.params.spdf@data))
   all.params.spdf@data$county.pop.growthrate[i] = t1$value[t1$YEAR == min(t1$YEAR)]
 }
 
-
 #all.params.spdf@data$monthly.precip = huc8_data$monthly.precip[match(all.params.spdf@data$uq.tid,huc8_data$uq.tid)]
-
-
-
 
 
 ###### REMOVE AND SAVE ########

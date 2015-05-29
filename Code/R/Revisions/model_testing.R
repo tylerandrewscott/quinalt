@@ -1,16 +1,12 @@
 rm(list=ls())
+
+setwd('win/user/quinalt')
 load("temp_workspace_noprecip.RData")
 
 
-#install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
-
 library(INLA)
-
 require(xtable)
-library(INLA)
-#library(rgdal);library(rgeos);
 library(maptools)
-
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
 
@@ -26,41 +22,43 @@ mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
 mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
 mod.data = filter(mod.data,YEAR>=1995)
 mod.data$HUC8 = as.character(mod.data$HUC8)
+mod.data$under.wc = ifelse(is.na(mod.data$which.wc),0,1)
+mod.data$under.swcd = ifelse(is.na(mod.data$which.swcd),0,1)
+
+
 
 covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
                     'ag.huc8','dev.huc8','wet.huc8','forst.huc8','l.owqi',
-                    'county.pop.growthrate','owqi',
+                    'county.pop.growthrate','owqi','under.wc','under.swcd',
                  'seasonal','Ag','Dev','Wetl','Forst',
                  grep('OWEB',names(mod.data),value=T))]
 
 covars$OWEB.wq.TotalCash_Prior12 = (covars$OWEB.wq.TotalCash_All - covars$OWEB.wq.TotalCash_12)
 covars$OWEB_Grant_Capacity.WC_Prior12 = (covars$OWEB_Grant_Capacity.WC_All - covars$OWEB_Grant_Capacity.WC_12)
 covars$OWEB_Grant_Capacity.WC_Prior36 = (covars$OWEB_Grant_Capacity.WC_All - covars$OWEB_Grant_Capacity.WC_36)
+covars[is.na(covars)] = 0
 covars = covars[covars$YEAR>=1995,]
 k = 100000
-covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]+0.01/k
-covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))])
+covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
+#covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))])
+
 
 # non-oweb restoration funding to date
 # oweb restoration funding prior to number
 #
 
+
 form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elevation + seaDist + 
-  NOT_OWEB.wq.TotalCash_All+
-  OWEB_Grant_Outreach.WC_36+
- # OWEB_Grant_Education.WC_36+
-  OWEB_Grant_Restoration.WC_36+
-  OWEB_Grant_Capacity.WC_36+
-  OWEB_Grant_Outreach.WC_36:OWEB_Grant_Education.WC_36:OWEB_Grant_Restoration.WC_36:OWEB_Grant_Capacity.WC_36+
-  OWEB_Grant_Restoration.SWCD_36+
-  OWEB_Grant_Capacity.SWCD_36+
-  OWEB_Grant_Outreach.SWCD_36+
-#  OWEB_Grant_Education.SWCD_36+
-  OWEB_Grant_Outreach.SWCD_36:OWEB_Grant_Education.SWCD_36:OWEB_Grant_Restoration.SWCD_36:OWEB_Grant_Capacity.SWCD_36+
-  f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=36)
+  
+  OWEB_Grant_Restoration_12_WC+
+  OWEB_Grant_Capacity_12_WC +
+  OWEB_Grant_Outreach_12_WC +
+  OWEB_Grant_Education_12_WC +
+  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Education_12_WC:OWEB_Grant_Restoration_12_WC:OWEB_Grant_Capacity_12_WC+
+ f(HUC8,model='iid')+
+  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
 mod0 <- inla(form0, family='gaussian', 
              data=data.frame(y=covars$l.owqi, covars,b0=1), 
@@ -68,10 +66,38 @@ mod0 <- inla(form0, family='gaussian',
              #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
              control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
 
-round(exp(mod0$summary.fixed)[-c(1:5),1:2],2)
+covars2 = covars
+covars2[,grep('OWEB',names(covars2))] = log(covars[,grep('OWEB',names(covars2))])
+
+form1 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + 
+  OWEB_Grant_Restoration_12_WC+
+  OWEB_Grant_Capacity_12_WC +
+  OWEB_Grant_Outreach_12_WC +
+  OWEB_Grant_Education_12_WC +
+  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Education_12_WC:OWEB_Grant_Restoration_12_WC:OWEB_Grant_Capacity_12_WC+
+  f(HUC8,model='iid')+
+  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
+
+mod1 <- inla(form0, family='gaussian', 
+             data=data.frame(y=covars2$l.owqi, covars2,b0=1), 
+             control.predictor=list(compute=TRUE),
+             #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
+             control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
 
 
 
+
+mod1$summary.fixed
+
+round(exp(mod0$summary.fixed)[,1:2],2)
+round(exp(mod1$summary.fixed)[,1:2],2)
+
+
+ggplot(mod.data) + geom_point(aes(x=Decimal_long,y=Decimal_Lat,colour=as.factor(under.wc)))
+
+dim(mod.data)
 
 mod0 = lmer(l.owqi~ elevation + seaDist+Ag + Dev + Wetl + Forst+OWEB_Grant_Capacity.WC_Prior12+
               forst.huc8 + wet.huc8 + dev.huc8+
