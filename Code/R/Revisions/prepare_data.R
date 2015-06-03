@@ -455,7 +455,7 @@ proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
 
 
 #binary true/false: OWEB project?
-proj.info$OWEB.Grant = ifelse(proj.info$drvdOwebNum=='','NOT_OWEB','OWEB')
+proj.info$OWRI.OWEB.Grant = ifelse(proj.info$drvdOwebNum=='','NOT_OWEB_OWRI','OWEB_OWRI')
 
 #proj.info$activity_t = tolower(proj.info$activity_t)
 proj.info$drvdProjDesc = tolower(proj.info$drvdProjDesc)
@@ -492,11 +492,12 @@ proj.info$about_wq[
 
 
 temp.huc8 = oregon.huc8.df
-temp = proj.info %>% dplyr::group_by(uq.tid,about_wq,OWEB.Grant) %>% 
+temp = proj.info %>% dplyr::group_by(uq.tid,about_wq,OWRI.OWEB.Grant) %>% 
   dplyr::summarise_each(funs(sum),TotalCash)
-tt = melt(temp,id.vars=c('uq.tid','about_wq','OWEB.Grant'))
-tt$var.id = paste(tt$OWEB.Grant,tt$about_wq,tt$variable,sep='.')
+tt = melt(temp,id.vars=c('uq.tid','about_wq','OWRI.OWEB.Grant'))
+tt$var.id = paste(tt$OWRI.OWEB.Grant,tt$about_wq,tt$variable,sep='.')
 temp.huc8[,unique(tt$var.id)] = NA
+
 
 #place subset values into proper column
 for (i in 1:ncol(temp.huc8))
@@ -511,7 +512,7 @@ for (i in 1:ncol(temp.huc8))
 temp.huc8[,grep('Total',colnames(temp.huc8))][is.na(temp.huc8[,grep('Total',colnames(temp.huc8))])] = 0
 
 huc8_data = temp.huc8
-
+all.params.spdf@data = join(all.params.spdf@data,huc8_data)
 
 ########### CLEAN OWEB WC GRANTS ############
 
@@ -544,11 +545,7 @@ oweb.all[oweb.all==''] = NA
 oweb.all = oweb.all %>% filter(!is.na(Grantee)) %>% filter(Region!='SW') %>% filter(Project.Status!='Cancelled') %>%
   filter(Project.Status!='Withdrawn') %>% filter(Project.Status != 'Ineligible') %>% filter(Project.Status !='Not Awarded')
 
-
 oweb.all =  join(oweb.all,grant.gis)
-
-
-
 
 # 
 # not.mapped = read.csv('Input/Grants_not_Mapped_August_2014.csv')
@@ -803,24 +800,27 @@ oweb.all.projbymonth = oweb.all[rep(rownames(oweb.all),ifelse(oweb.all$abs.lengt
 oweb.all.projbymonth$Abs.Month = oweb.all$sabs +unlist(sapply(ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length), function(x) 1:x))
 oweb.all.projbymonth$uq.tid = paste(oweb.all.projbymonth$HUC8,oweb.all.projbymonth$Abs.Month,sep='_')
 
+
+
 ################# COMPILE OWEB WC GRANTS BY  HUC8 #############
 
 temp =  oweb.all.projbymonth %>% dplyr::group_by(uq.tid,Project.Type,which.group) %>% dplyr::summarise_each(funs(sum),Project.Amount)
 
-huc8_data[,as.vector(outer(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')), 
+
+huc8_data[,as.vector(outer(unique(paste('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,sep='_')), 
                            unique(oweb.all.projbymonth$which.group), paste, sep="."))] = NA
 
 for (i in 1:nrow(temp))
 {
   huc8_data[match(temp$uq.tid[i],huc8_data$uq.tid),
-            which(colnames(huc8_data)==paste(paste('OWEB_Grant',temp$Project.Type[i],sep='_'),
+            which(colnames(huc8_data)==paste(paste('OWEB_HUC8_Grant',temp$Project.Type[i],sep='_'),
                                              temp$which.group[i],sep='.'))] = 
     temp$Project.Amount[i]
 }
 
 
-huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
-  is.na(huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
+huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
+  is.na(huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
 
 
 huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnames(huc8_data))])] = 0
@@ -828,9 +828,9 @@ huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnam
 
 ################# COMPILE OWEB GRANTS BY WC #############
 
-
 site.in.wc = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.wc))),oregon.wc)
 site.in.swcd = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.swcd))),oregon.swcd)
+
 all.params.spdf@data$which.wc = site.in.wc$altName
 all.params.spdf@data$which.swcd = site.in.swcd$SWCD_Name
 all.params.spdf@data$uq.wc.tid = paste(all.params.spdf@data$which.wc,all.params.spdf@data$Abs.Month,sep='_')
@@ -964,9 +964,6 @@ temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) 
   dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
 names(temp60)[grep('OWEB',names(temp60))] = paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_')
 
-temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
-                     as.data.frame(temp36),as.data.frame(temp48),
-                     as.data.frame(temp60)))
 
 obs.data = join(obs.data,temp)
 
@@ -1002,6 +999,7 @@ names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB
 temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
                      as.data.frame(temp36),as.data.frame(temp48),
                      as.data.frame(temp60)))
+temp[is.na(temp)] = 0
 
 obs.data = join(obs.data,temp)
 
@@ -1039,6 +1037,7 @@ names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB
 temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
                      as.data.frame(temp36),as.data.frame(temp48),
                      as.data.frame(temp60)))
+temp[is.na(temp)] = 0
 
 obs.data = join(obs.data,temp)
 
@@ -1048,6 +1047,8 @@ all.params.spdf@data = obs.data
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10407] = 'MALHEUR'
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 12261] = 'MALHEUR'
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10616] = 'MULTNOMAH'
+
+
 
 
 ######## ADD PRECIP VARIABLE ###########
@@ -1381,6 +1382,9 @@ for (i in 1:nrow(all.params.spdf@data))
 
 #all.params.spdf@data$monthly.precip = huc8_data$monthly.precip[match(all.params.spdf@data$uq.tid,huc8_data$uq.tid)]
 
+all.params.spdf@data = join(all.params.spdf@data,
+                            dplyr::select(huc8_data,uq.tid,ag.huc8,forst.huc8,wet.huc8,dev.huc8))
+
 
 ###### REMOVE AND SAVE ########
 if(remote)
@@ -1392,6 +1396,6 @@ if(!remote)
 
 save.image('temp_workspace_noprecip.RData')
 library(mail)
-mail::sendmail('tyler.andrew.scott@gmail.com','quinalt data prep done','nori has finished quinalt project data prep (no precip)')
+mail::sendmail('tyler.andrew.scott@gmail.com','prepare_data.R finished','nori has finished quinalt project data prep (no precip)')
 
 
