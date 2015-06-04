@@ -284,10 +284,10 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     'Forest in HUC8',
     'Elevation (10m)',
     'Dist. from coast (10km)',
-    'Total Non-OWEB Restoration ($100k)',
-    'OWEB grants to WC ($100k)',
-    'OWEB grants SWCD ($100k)',
-    'OWEB grants to WC * OWEB grants to SWCD ($100k)')
+    'Total Non-OWEB Restoration (\\$100kk)',
+    'OWEB grants to WC (\\$100kk)',
+    'OWEB grants SWCD (\\$100kk)',
+    'OWEB grants to WC * OWEB grants to SWCD (\\$100kk)')
 
 
 mod.all.12m = texreg::createTexreg(
@@ -405,7 +405,7 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     'Forest in HUC8',
     'Elevation (10m)',
     'Dist. from coast (10km)',
-    'Total Non-OWEB Restoration ($100k)',
+    'Total Non-OWEB Restoration (\\$100kk)',
     "WC Outreach",
     'WC Tech',
     'WC Capacity',
@@ -531,7 +531,7 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     'Forest in HUC8',
     'Elevation (10m)',
     'Dist. from coast (10km)',
-    'Total Non-OWEB Restoration ($100k)',
+    'Total Non-OWEB Restoration (\\$100kk)',
     "WC Outreach",
     'WC Tech',
     'WC Restoration',
