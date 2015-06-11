@@ -1,0 +1,41 @@
+\begin{table}
+\caption{Comparing base model with and without spatial correlated errors}
+\begin{center}
+\begin{tabular}{l c c }
+\hline
+                            & w/ spatial correlation & w/out spatial correlation \\
+\hline
+Ag                          & $0.76^{*}$      & $0.76^{*}$      \\
+                            & $[0.75;\ 0.78]$ & $[0.90;\ 0.95]$ \\
+Forst                       & $0.91^{*}$      & $0.91$          \\
+                            & $[0.89;\ 0.93]$ & $[0.97;\ 1.02]$ \\
+Dev                         & $0.85^{*}$      & $0.85^{*}$      \\
+                            & $[0.83;\ 0.86]$ & $[0.90;\ 0.95]$ \\
+dev.huc8                    & $0.99$          & $0.99^{*}$      \\
+                            & $[0.76;\ 1.29]$ & $[0.48;\ 0.79]$ \\
+ag.huc8                     & $0.53^{*}$      & $0.53^{*}$      \\
+                            & $[0.38;\ 0.72]$ & $[0.25;\ 0.48]$ \\
+forst.huc8                  & $0.99$          & $0.99^{*}$      \\
+                            & $[0.89;\ 1.10]$ & $[0.78;\ 0.96]$ \\
+elevation                   & $1.00^{*}$      & $1.00$          \\
+                            & $[1.00;\ 1.00]$ & $[1.00;\ 1.00]$ \\
+seaDist                     & $1.00^{*}$      & $1.00^{*}$      \\
+                            & $[1.00;\ 1.00]$ & $[1.00;\ 1.00]$ \\
+NOT\_OWEB.wq.TotalCash\_All & $1.00^{*}$      & $1.00$          \\
+                            & $[1.00;\ 1.00]$ & $[1.00;\ 1.00]$ \\
+\hline
+AIC                         & 7066.26         & 7066.26         \\
+BIC                         & 7157.34         & 7157.34         \\
+Log Likelihood              & -3522.13        & -3522.13        \\
+Num. obs.                   & 29142           & 29142           \\
+Num. groups: HUC8           & 69              & 69              \\
+Variance: HUC8.(Intercept)  & 21.20           & 21.20           \\
+Variance: Residual          & 0.07            & 0.07            \\
+\hline
+\multicolumn{3}{l}{\scriptsize{$^*$ 1 outside the confidence interval}}
+\end{tabular}
+\label{table:coefficients}
+\end{center}
+\end{table}
+\efloatseparator
+ 

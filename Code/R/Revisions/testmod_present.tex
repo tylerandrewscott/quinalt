@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper,titlepage]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\listfiles
+\usepackage[T1]{fontenc,url}
+\usepackage{natbib}
+%\usepackage[firstinits=false,url=false,isbn=false,style=authoryear,backend=biber,sorting=nyt,maxcitenames=2,uniquelist=false,maxbibnames=12,uniquename=false,texencoding=utf8,bibencoding=utf8]{biblatex}
+
+%\renewcommand*{\finalnamedelim}{\addspace\&\space}
+%\addbibresource{ScottRef.bib}
+
+
+\newif\iflatextortf
+\iflatextortf
+\providecommand{\bysame}{\_\_\_\_\_}
+\fi
+
+
+\usepackage{etoolbox}
+\usepackage{keyval}
+\usepackage{import}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%if biber broken, run <rm -rf `biber --cache`> in terminal
+
+\usepackage{csquotes}
+\usepackage[english]{babel}
+%\usepackage{babel}
+\usepackage{verbatim}
+\makeatletter
+\patchcmd{\Ginclude@eps}{"#1"}{#1}{}{}
+\makeatother
+\usepackage[margin=1in]{geometry}
+\usepackage{array,booktabs}
+\usepackage{ifdraft}
+\geometry{a4paper}
+\usepackage{graphicx}
+\usepackage{import}
+\usepackage{latexsym}
+\usepackage{dcolumn}
+\usepackage{grffile}
+\usepackage[nolists]{endfloat}
+\usepackage{multirow}
+\usepackage{tabularx}
+%\usepackage{figcaps}
+%\usepackage{dontdistribute}
+%\usepackage{draftdatetime}
+\usepackage[hang,flushmargin]{footmisc}
+\renewcommand{\thesection}{\arabic{section}}
+
+
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+
+\usepackage{setspace}
+
+\let\oldtabular\tabular
+\renewcommand{\tabular}{\footnotesize\oldtabular}
+\DeclareUnicodeCharacter{00A0}{ }
+\DeclareUnicodeCharacter{202D}{}
+\DeclareUnicodeCharacter{202C}{}
+
+
+\title{Test Models}
+%\author{Tyler Scott\\ Evans School of Public Affairs, University of Washington}
+%\date{June 2014}
+
+
+
+\begin{document}
+
+\begin{table}
+\caption{Comparing base model with and without spatial correlated errors}
+\begin{center}
+\begin{tabular}{l c c }
+\hline
+                            & w/ spatial correlation & w/out spatial correlation \\
+\hline
+Ag                          & $0.76^{*}$      & $0.76^{*}$      \\
+                            & $[0.75;\ 0.78]$ & $[0.90;\ 0.95]$ \\
+Forst                       & $0.91^{*}$      & $0.91$          \\
+                            & $[0.89;\ 0.93]$ & $[0.97;\ 1.02]$ \\
+Dev                         & $0.85^{*}$      & $0.85^{*}$      \\
+                            & $[0.83;\ 0.86]$ & $[0.90;\ 0.95]$ \\
+dev.huc8                    & $0.99$          & $0.99^{*}$      \\
+                            & $[0.76;\ 1.29]$ & $[0.48;\ 0.79]$ \\
+ag.huc8                     & $0.53^{*}$      & $0.53^{*}$      \\
+                            & $[0.38;\ 0.72]$ & $[0.25;\ 0.48]$ \\
+forst.huc8                  & $0.99$          & $0.99^{*}$      \\
+                            & $[0.89;\ 1.10]$ & $[0.78;\ 0.96]$ \\
+elevation                   & $1.00^{*}$      & $1.00$          \\
+                            & $[1.00;\ 1.00]$ & $[1.00;\ 1.00]$ \\
+seaDist                     & $1.00^{*}$      & $1.00^{*}$      \\
+                            & $[1.00;\ 1.00]$ & $[1.00;\ 1.00]$ \\
+NOT\_OWEB.wq.TotalCash\_All & $1.00^{*}$      & $1.00$          \\
+                            & $[1.00;\ 1.00]$ & $[1.00;\ 1.00]$ \\
+\hline
+AIC                         & 7066.26         & 7066.26         \\
+BIC                         & 7157.34         & 7157.34         \\
+Log Likelihood              & -3522.13        & -3522.13        \\
+Num. obs.                   & 29142           & 29142           \\
+Num. groups: HUC8           & 69              & 69              \\
+Variance: HUC8.(Intercept)  & 21.20           & 21.20           \\
+Variance: Residual          & 0.07            & 0.07            \\
+\hline
+\multicolumn{3}{l}{\scriptsize{$^*$ 1 outside the confidence interval}}
+\end{tabular}
+\label{table:coefficients}
+\end{center}
+\end{table}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
