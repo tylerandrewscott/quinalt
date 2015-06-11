@@ -41,7 +41,9 @@ library(shapefiles)
 library(raster)
 library(rasterVis)  # raster visualisation
 library(rWBclimate)
-
+library(stargazer)
+library(texreg)
+library(xtable)
 oregon.outline = readOGR(dsn='SpatialData/government_units',
                          layer = 'state_nrcs_a_or')
 #source("http://www.math.ntnu.no/inla/givemeINLA.R")
@@ -271,8 +273,6 @@ uq.coords = as.matrix(cbind(uq$Decimal_long,uq$Decimal_Lat))
 # 
 # which.eco = over(all.params.spdf,oregon.eco)
 # all.params.spdf@data$ECOREG3 = which.eco$LEV3_NAME
-#oregon.prec.aug = readOGR(dsn="H:/quinalt/climate/precipitation", layer="precip1981_2010aug_a_or")
-#oregon.prec.aug@data$id = rownames(oregon.prec.aug@data)
 
 m = data.frame(lon = uq$Decimal_long,lat = uq$Decimal_Lat)
 us.alt = getData('alt',country='US')
@@ -578,9 +578,28 @@ oweb.all$which.group[oweb.all$Grantee.Type %in%  public.values] = 'Public'
 oweb.all$which.group[is.na(oweb.all$which.group)] = 'Other'
 
 oweb.restoration = oweb.all[oweb.all$Project.Type=='Restoration',]
+oweb.all$Project.Type = as.character(oweb.all$Project.Type)
 
 oweb.all$Project.Type[oweb.all$Project.Type=='SWCD'] = 'Capacity'
 oweb.all$Project.Type[oweb.all$Project.Type=='Education'] = 'Outreach'
+oweb.all$Project.Type[oweb.all$Project.Type=='Assessment'] = 'Tech'
+oweb.all$Project.Type[oweb.all$Project.Type=='Monitoring'] = 'Tech'
+oweb.all$Project.Type[oweb.all$Project.Type=='Technical Assistance'] = 'Tech'
+
+
+oweb.all$sabs = Year.Month$Abs.Month[match(paste(oweb.all$START.YEAR,oweb.all$START.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
+oweb.all$eabs = Year.Month$Abs.Month[match(paste(oweb.all$END.YEAR,oweb.all$END.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
+oweb.all$abs.length = abs(oweb.all$eabs-oweb.all$sabs)+1
+oweb.all$abs.length = ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length)
+
+temp = (oweb.all %>% filter(which.group == 'WC' |which.group=='SWCD') %>% group_by(Project.Type,which.group) %>%
+          summarise_each(funs(nobs,mean),Project.Amount,abs.length))[,-3]
+temp[,1] = ifelse(duplicated(data.frame(temp)[,1]),'',data.frame(temp)[,1])
+names(temp) = c('Project','Grantee','N','Average cost','Average length (months)')
+stargazer(data.frame(temp),summary=F,rownames = F,no.space = T,digits=0,type='latex',
+          out='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/grantsummarytable.tex',
+          title = 'OWEB grant summary statistics (1997-2013)',
+          label='table:grantsummary')
 
 # nm = is.mapped[is.na(test$HUC8),]
 # mapped  = is.mapped[!is.na(test$HUC8),]
@@ -778,21 +797,13 @@ oweb.all$uq.tid= paste(oweb.all$HUC8,oweb.all$Abs.Month,sep='_')
 oweb.all = filter(oweb.all,!is.na(oweb.all$HUC8))
 
 
-
-
-levels(oweb.all$Project.Type) = c("Acquisition"    ,      "Tech"         ,  "Capacity"   ,   "Data Development"   ,  "Education"   ,        
-                                  "Holding"        ,      "Law_Enforcement"  ,    "Tech" ,          "Outreach"    ,         "OWEB_Administration" ,
-                                  "Research"        ,     "Restoration"       ,   "SWCD"      ,           "Tech" ,"NA" )
-
 oweb.all = filter(oweb.all,Project.Type != 'Acquisition',Project.Type!='Data Development',Project.Type !='Law Enforcement',
+                  Project.Type !='Education',Project.Type !='SWCD',
                   Project.Type !='Holding',Project.Type != 'OWEB Administration')
 oweb.all$Project.Type = as.character(oweb.all$Project.Type)
 
 
-oweb.all$sabs = Year.Month$Abs.Month[match(paste(oweb.all$START.YEAR,oweb.all$START.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
-oweb.all$eabs = Year.Month$Abs.Month[match(paste(oweb.all$END.YEAR,oweb.all$END.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
-oweb.all$abs.length = abs(oweb.all$eabs-oweb.all$sabs)+1
-oweb.all$abs.length = ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length)
+
 oweb.all$Project.Amount.Monthly = oweb.all$Project.Amount / ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length)
 
 
@@ -1051,303 +1062,303 @@ all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10616] = 'MULTNO
 
 
 
-######## ADD PRECIP VARIABLE ###########
-# 
-# oregon.outline = readOGR(dsn='SpatialData/government_units',
-#                          layer = 'state_nrcs_a_or')
-# 
-# #setwd('/homes/tscott1/win/user/quinalt/')
-# # create a list of .bil files that exist in the wd
-# files <- list.files('SpatialData/precip_rasters/',pattern='\\.bil$')
-# files = files[nchar(files) != min(nchar(files))]
-# 
-# 
-# # for each of vars, create raster object for each tile and merge
-# # (this is a bit messy, but all I could think of for now...)
-# # grids will be a list of rasters, each of which is the merged tiles for a BC var.
-# 
-# if(remote)
-#   {setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')}
-# if(!remote)
-# {setwd('//Users/TScott/Google Drive/quinalt/SpatialData/precip_rasters/')}
-# 
-# 
-# huc8_data$pull_raster = paste0(huc8_data$YEAR,ifelse(nchar(huc8_data$Month.Num)==2,huc8_data$Month.Num,paste0(0,huc8_data$Month.Num)))
-# which.file = unlist(sapply(huc8_data$pull_raster,FUN = grep,x=files))
-# 
-# huc8_data$monthly.precip = NA
-# 
-# huc8_data = huc8_data[huc8_data$HUC8!='17070106',]
-# 
-# for (i in 1:nrow(huc8_data))
-# {
-#   if (!is.na(which.file[i]))
-#   {
-#      huc8_data$monthly.precip[i] = extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
-#              oregon.huc8[as.character(oregon.huc8@data$HUC8)==
-#                            as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)
-#   }
-#   print(i)
-# }
+####### ADD PRECIP VARIABLE ###########
 
-# 
-# select1990 = files[grep('1990',files)]
-# grids1990<- sapply(select1990 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1990
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1991 = files[grep('1991',files)]
-# grids1991<- sapply(select1991 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1991
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1992 = files[grep('1992',files)]
-# grids1992<- sapply(select1992 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1992
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1993 = files[grep('1993',files)]
-# grids1993<- sapply(select1993 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1993
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1994 = files[grep('1994',files)]
-# grids1994<- sapply(select1994 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1994
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1995 = files[grep('1995',files)]
-# grids1995<- sapply(select1995 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1995
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1996 = files[grep('1996',files)]
-# grids1996<- sapply(select1996 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1996
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1997 = files[grep('1997',files)]
-# grids1997<- sapply(select1997 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1997
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1998 = files[grep('1998',files)]
-# grids1998<- sapply(select1998 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1998
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1999 = files[grep('1999',files)]
-# grids1999<- sapply(select1999 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1999
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2000 = files[grep('2000',files)]
-# grids2000<- sapply(select2000 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2000
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2001 = files[grep('2001',files)]
-# grids2001<- sapply(select2001 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2001
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2002 = files[grep('2002',files)]
-# grids2002<- sapply(select2002 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2002
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2003 = files[grep('2003',files)]
-# grids2003<- sapply(select2003 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2003
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2004 = files[grep('2004',files)]
-# grids2004<- sapply(select2004 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2004
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2005 = files[grep('2005',files)]
-# grids2005<- sapply(select2005 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2005
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2006 = files[grep('2006',files)]
-# grids2006<- sapply(select2006 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2006
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2007 = files[grep('2007',files)]
-# grids2007<- sapply(select2007 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2007
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2008 = files[grep('2008',files)]
-# grids2008<- sapply(select2008 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2008
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# select2009 = files[grep('2009',files)]
-# grids2009<- sapply(select2009 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2009
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2010 = files[grep('2010',files)]
-# grids2010<- sapply(select2010 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2010
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# select2011 = files[grep('2011',files)]
-# grids2011<- sapply(select2011 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2011
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2012 = files[grep('2012',files)]
-# grids2012<- sapply(select2012 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2012
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# select2013 = files[grep('2013',files)]
-# grids2013<- sapply(select2013 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2013
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2014 = files[grep('2014',files)]
-# grids2014<- sapply(select2014 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2014
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# all.grids = c(grids1990,grids1991,grids1992,grids1993,grids1994,grids1995,grids1996,grids1997,grids1998,grids1999,
-#   grids2000,grids2001,grids2002,grids2003,grids2004,grids2005,grids2006,grids2007,grids2008,grids2009,
-#   grids2010,grids2011,grids2012,grids2013,grids2014)
-# 
-# 
-# # give the list elements names
-# which.month = gsub('_bil','',
-#                    gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_[0123456789]{4}','',files)))
-# 
-# which.year = gsub('[0123456789]{2}$','',gsub('_bil','',
-#                                              gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_','',files))))
-# 
-# which.year.month = paste(which.year,which.month,sep='_')
-# names(all.grids) = which.year.month
+oregon.outline = readOGR(dsn='SpatialData/government_units',
+                         layer = 'state_nrcs_a_or')
 
-# combine all list elements into a stack
-# s <- stack(all.grids)
-# s.crop <- crop(s, oregon.outline)
+#setwd('/homes/tscott1/win/user/quinalt/')
+# create a list of .bil files that exist in the wd
+files <- list.files('SpatialData/precip_rasters/',pattern='\\.bil$')
+files = files[nchar(files) != min(nchar(files))]
 
-# all.params.spdf@data$monthly.precip = NA
-# precip.data = data.frame(NULL)
-# empty = list(NULL)
-# for (i in 1:dim(s.crop)[3])
-# {
-#   empty[[i]] = extract(s.crop[[i]],all.params.spdf,method='bilinear',buffer)
-# }
-# precip.list = as.data.frame(empty)
-# names(precip.list) = names(s.crop)
-# 
-# empty = list(NULL)
-# for (i in 1:dim(s.crop)[3])
-# {
-#   empty[[i]] = raster::extract(s.crop[[i]],oregon.huc8,fun=median,na.rm=T)
-# }
-# 
-# names(empty) = names(s.crop)
-# 
 
-# 
-# 
-# which.grab =  match(paste0('X',all.params.spdf@data$YEAR,'_',
-#                           ifelse(all.params.spdf@data$Month.Num<10,paste0(0,all.params.spdf@data$Month.Num),
-#                                  all.params.spdf@data$Month.Num)),names(precip.list))
-# 
-# all.params.spdf@data$monthly.precip = NA
-# 
-# for (i in 1:nrow(all.params.spdf@data))
-# {
-#   all.params.spdf@data$monthly.precip[i] = 
-#     precip.list[i,match(paste0('X',all.params.spdf@data$YEAR[i],'_',
-#                               ifelse(all.params.spdf@data$Month.Num[i]<10,paste0(0,all.params.spdf@data$Month.Num[i]),
-#                                      all.params.spdf@data$Month.Num[i])),names(precip.list))]
-# }
+# for each of vars, create raster object for each tile and merge
+# (this is a bit messy, but all I could think of for now...)
+# grids will be a list of rasters, each of which is the merged tiles for a BC var.
+
+if(remote)
+  {setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')}
+if(!remote)
+{setwd('//Users/TScott/Google Drive/quinalt/SpatialData/precip_rasters/')}
+
+
+huc8_data$pull_raster = paste0(huc8_data$YEAR,ifelse(nchar(huc8_data$Month.Num)==2,huc8_data$Month.Num,paste0(0,huc8_data$Month.Num)))
+which.file = unlist(sapply(huc8_data$pull_raster,FUN = grep,x=files))
+
+huc8_data$monthly.precip = NA
+
+huc8_data = huc8_data[huc8_data$HUC8!='17070106',]
+
+for (i in 1:nrow(huc8_data))
+{
+  if (!is.na(which.file[i]))
+  {
+     huc8_data$monthly.precip[i] = extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
+             oregon.huc8[as.character(oregon.huc8@data$HUC8)==
+                           as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)
+  }
+  print(i)
+}
+
+
+select1990 = files[grep('1990',files)]
+grids1990<- sapply(select1990 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1990
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1991 = files[grep('1991',files)]
+grids1991<- sapply(select1991 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1991
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1992 = files[grep('1992',files)]
+grids1992<- sapply(select1992 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1992
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1993 = files[grep('1993',files)]
+grids1993<- sapply(select1993 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1993
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1994 = files[grep('1994',files)]
+grids1994<- sapply(select1994 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1994
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1995 = files[grep('1995',files)]
+grids1995<- sapply(select1995 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1995
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1996 = files[grep('1996',files)]
+grids1996<- sapply(select1996 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1996
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1997 = files[grep('1997',files)]
+grids1997<- sapply(select1997 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1997
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1998 = files[grep('1998',files)]
+grids1998<- sapply(select1998 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1998
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select1999 = files[grep('1999',files)]
+grids1999<- sapply(select1999 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select1999
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2000 = files[grep('2000',files)]
+grids2000<- sapply(select2000 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2000
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2001 = files[grep('2001',files)]
+grids2001<- sapply(select2001 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2001
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2002 = files[grep('2002',files)]
+grids2002<- sapply(select2002 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2002
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2003 = files[grep('2003',files)]
+grids2003<- sapply(select2003 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2003
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2004 = files[grep('2004',files)]
+grids2004<- sapply(select2004 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2004
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2005 = files[grep('2005',files)]
+grids2005<- sapply(select2005 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2005
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2006 = files[grep('2006',files)]
+grids2006<- sapply(select2006 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2006
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2007 = files[grep('2007',files)]
+grids2007<- sapply(select2007 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2007
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2008 = files[grep('2008',files)]
+grids2008<- sapply(select2008 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2008
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+
+select2009 = files[grep('2009',files)]
+grids2009<- sapply(select2009 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2009
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2010 = files[grep('2010',files)]
+grids2010<- sapply(select2010 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2010
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+
+select2011 = files[grep('2011',files)]
+grids2011<- sapply(select2011 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2011
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2012 = files[grep('2012',files)]
+grids2012<- sapply(select2012 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2012
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+
+select2013 = files[grep('2013',files)]
+grids2013<- sapply(select2013 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2013
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+select2014 = files[grep('2014',files)]
+grids2014<- sapply(select2014 , function(x) {
+  #patt <- paste('precip', x, '_', sep='')
+  tiles <- select2014
+  merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
+                                                           sep='"')), ')', sep='')))
+})
+
+
+all.grids = c(grids1990,grids1991,grids1992,grids1993,grids1994,grids1995,grids1996,grids1997,grids1998,grids1999,
+  grids2000,grids2001,grids2002,grids2003,grids2004,grids2005,grids2006,grids2007,grids2008,grids2009,
+  grids2010,grids2011,grids2012,grids2013,grids2014)
+
+
+# give the list elements names
+which.month = gsub('_bil','',
+                   gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_[0123456789]{4}','',files)))
+
+which.year = gsub('[0123456789]{2}$','',gsub('_bil','',
+                                             gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_','',files))))
+
+which.year.month = paste(which.year,which.month,sep='_')
+names(all.grids) = which.year.month
+
+combine all list elements into a stack
+s <- stack(all.grids)
+s.crop <- crop(s, oregon.outline)
+
+all.params.spdf@data$monthly.precip = NA
+precip.data = data.frame(NULL)
+empty = list(NULL)
+for (i in 1:dim(s.crop)[3])
+{
+  empty[[i]] = extract(s.crop[[i]],all.params.spdf,method='bilinear',buffer)
+}
+precip.list = as.data.frame(empty)
+names(precip.list) = names(s.crop)
+
+empty = list(NULL)
+for (i in 1:dim(s.crop)[3])
+{
+  empty[[i]] = raster::extract(s.crop[[i]],oregon.huc8,fun=median,na.rm=T)
+}
+
+names(empty) = names(s.crop)
+
+
+
+
+which.grab =  match(paste0('X',all.params.spdf@data$YEAR,'_',
+                          ifelse(all.params.spdf@data$Month.Num<10,paste0(0,all.params.spdf@data$Month.Num),
+                                 all.params.spdf@data$Month.Num)),names(precip.list))
+
+all.params.spdf@data$monthly.precip = NA
+
+for (i in 1:nrow(all.params.spdf@data))
+{
+  all.params.spdf@data$monthly.precip[i] = 
+    precip.list[i,match(paste0('X',all.params.spdf@data$YEAR[i],'_',
+                              ifelse(all.params.spdf@data$Month.Num[i]<10,paste0(0,all.params.spdf@data$Month.Num[i]),
+                                     all.params.spdf@data$Month.Num[i])),names(precip.list))]
+}
 
 
 ######### ADD COUNTY POP ##########
@@ -1380,7 +1391,7 @@ for (i in 1:nrow(all.params.spdf@data))
   all.params.spdf@data$county.pop.growthrate[i] = t1$value[t1$YEAR == min(t1$YEAR)]
 }
 
-#all.params.spdf@data$monthly.precip = huc8_data$monthly.precip[match(all.params.spdf@data$uq.tid,huc8_data$uq.tid)]
+all.params.spdf@data$monthly.precip = huc8_data$monthly.precip[match(all.params.spdf@data$uq.tid,huc8_data$uq.tid)]
 
 all.params.spdf@data = join(all.params.spdf@data,
                             dplyr::select(huc8_data,uq.tid,ag.huc8,forst.huc8,wet.huc8,dev.huc8))
@@ -1394,8 +1405,8 @@ if(!remote)
 
 #rm(list=ls()[ls()%in%c('all.params.spdf','huc8_data')==FALSE])
 
-save.image('temp_workspace_noprecip.RData')
+save.image('temp_workspace_precip.RData')
 library(mail)
-mail::sendmail('tyler.andrew.scott@gmail.com','prepare_data.R finished','nori has finished quinalt project data prep (no precip)')
+mail::sendmail('tyler.andrew.scott@gmail.com','prepare_data.R finished','nori has finished quinalt project data prep (with precip)')
 
 
