@@ -2198,4 +2198,51 @@
     <bcf:citekey order="104">gelman2013</bcf:citekey>
     <bcf:citekey order="105">lindgren2011</bcf:citekey>
     <bcf:citekey order="106">cosandey-godin2014</bcf:citekey>
-    <bcf:citekey
+    <bcf:citekey order="107">lindgren2013</bcf:citekey>
+    <bcf:citekey order="108">cosandey-godin2014</bcf:citekey>
+    <bcf:citekey order="109">ward2008</bcf:citekey>
+    <bcf:citekey order="109">spiegelhalter2002</bcf:citekey>
+    <bcf:citekey order="110">lubell2009</bcf:citekey>
+    <bcf:citekey order="111">lubell2009</bcf:citekey>
+    <bcf:citekey order="112">leach2002</bcf:citekey>
+    <bcf:citekey order="112">leach2006</bcf:citekey>
+    <bcf:citekey order="113">gelman2013</bcf:citekey>
+    <bcf:citekey order="114">hodges2014</bcf:citekey>
+    <bcf:citekey order="115">hodges2014</bcf:citekey>
+    <bcf:citekey order="116">hodges2014</bcf:citekey>
+    <bcf:citekey order="117">gelman2007</bcf:citekey>
+    <bcf:citekey order="118">hodges2014</bcf:citekey>
+    <bcf:citekey order="119">cude2001</bcf:citekey>
+    <bcf:citekey order="120">sabatier2005</bcf:citekey>
+  </bcf:section>
+  <bcf:sortlist section="0" type="entry" label="nyt">
+  <bcf:sorting>
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2" final="1">
+      <bcf:sortitem order="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="6">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1" pad_side="left" pad_width="4" pad_char="0">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  </bcf:sortlist>
+</bcf:controlfile>
