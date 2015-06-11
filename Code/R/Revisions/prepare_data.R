@@ -1094,11 +1094,10 @@ for (i in 1:nrow(huc8_data))
 {
   if (!is.na(which.file[i]))
   {
-     huc8_data$monthly.precip[i] = extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
+     huc8_data$monthly.precip[i] = raster::extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
              oregon.huc8[as.character(oregon.huc8@data$HUC8)==
-                           as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)
+                           as.character(huc8_data$HUC8[i]),],method='bilinear',na.rm=TRUE)
   }
-  print(i)
 }
 
 
@@ -1321,7 +1320,7 @@ which.year = gsub('[0123456789]{2}$','',gsub('_bil','',
 which.year.month = paste(which.year,which.month,sep='_')
 names(all.grids) = which.year.month
 
-combine all list elements into a stack
+#combine all list elements into a stack
 s <- stack(all.grids)
 s.crop <- crop(s, oregon.outline)
 
@@ -1330,7 +1329,7 @@ precip.data = data.frame(NULL)
 empty = list(NULL)
 for (i in 1:dim(s.crop)[3])
 {
-  empty[[i]] = extract(s.crop[[i]],all.params.spdf,method='bilinear',buffer)
+  empty[[i]] = raster::extract(s.crop[[i]],all.params.spdf,method='bilinear')
 }
 precip.list = as.data.frame(empty)
 names(precip.list) = names(s.crop)
