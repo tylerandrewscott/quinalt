@@ -57,20 +57,34 @@ covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
                      'seasonal','Ag','Dev','Wetl','Forst',
                      grep('OWEB',names(mod.data),value=T))]
 
-k = 1000000
-covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
+#k = 100000
+#covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
 
 covars[is.na(covars)] = 0
 
-covars$elev100m = covars$elevation/100
-covars$seaDist10km = covars$seaDist/10
-covars$ag.huc8 = 100 * covars$ag.huc8
-covars$dev.huc8 = 100 * covars$dev.huc8
-covars$forst.huc8 = 100 * covars$forst.huc8
-covars$Ag = 100 * covars$Ag
-covars$Forst = 100 * covars$Forst
-covars$Dev = 100 * covars$Dev
-covars$monthly.precip.median = covars$monthly.precip.median/100
+
+for (i in 1:ncol(covars))
+{
+ if (class(covars[,i]) =='numeric')
+ {
+   covars[,i] = as.numeric(base::scale(covars[,i],center = TRUE,scale=TRUE))
+ }
+}
+
+# 
+# 
+# covars$elev100m = covars$elevation/100
+# covars$seaDist10km = covars$seaDist/10
+# covars$ag.huc8 = 100 * covars$ag.huc8
+# covars$dev.huc8 = 100 * covars$dev.huc8
+# covars$forst.huc8 = 100 * covars$forst.huc8
+# covars$Ag = 100 * covars$Ag
+# covars$Forst = 100 * covars$Forst
+# covars$Dev = 100 * covars$Dev
+# covars$monthly.precip.median = covars$monthly.precip.median/100
+
+
+
 
 covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
                   OWEB_Grant_Capacity_12_WC +
@@ -120,13 +134,13 @@ stk.1 <- inla.stack(data=list(y=covars$l.owqi), A=list(A.1,1),
 
 form_nonspatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + monthly.precip.median + 
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
 form_spatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + monthly.precip.median + 
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
   f(s, model=spde.a,replicate=s.repl)
@@ -196,7 +210,7 @@ texreg(l = list(modbase.nonspatial.present,modbase.spatial.present),
 
 form_all_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_12_WC + 
@@ -214,7 +228,7 @@ mod.all.12m <- inla(form_all_12m, family='gaussian', data=inla.stack.data(stk.1)
 
 form_all_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_36_WC + 
@@ -231,7 +245,7 @@ mod.all.36m <- inla(form_all_36m, family='gaussian', data=inla.stack.data(stk.1)
 
 form_all_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_60_WC + 
@@ -304,7 +318,7 @@ texreg(l = list(mod.all.12m,mod.all.36m,mod.all.60m),
 ##########Project type funding###############
 form_ind_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_12_WC + 
@@ -322,7 +336,7 @@ form_ind_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 
 form_ind_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_36_WC + 
@@ -340,7 +354,7 @@ form_ind_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 
 form_ind_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_60_WC + 
@@ -428,7 +442,7 @@ mod.ind.60m = texreg::createTexreg(
 texreg(l = list(mod.ind.12m,mod.ind.36m,mod.ind.60m),
        stars=numeric(0),ci.test = 1,digits = 3,
        custom.model.names = c('Past 12 months','Past 36 months','Past 60 months'),
-       caption.above=T,omit.coef = "(100m)|(HUC8)|(10m)|(10km)|Total",
+       caption.above=T,omit.coef = "(100m)|(HUC8)|(10m)|(10km)|Total|precip",
        label = c('table:typefunding'),
        caption = 'Predicted water quality impact by grant type',
        custom.note = "$^* 1$ outside the credible interval",
@@ -440,7 +454,7 @@ texreg(l = list(mod.ind.12m,mod.ind.36m,mod.ind.60m),
 
 form_cap_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_12_WC + 
@@ -457,7 +471,7 @@ form_cap_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 
 form_cap_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_36_WC + 
@@ -473,7 +487,7 @@ form_cap_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 
 form_cap_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_60_WC + 
@@ -557,7 +571,7 @@ mod.cap.60m = texreg::createTexreg(
 texreg(l = list(mod.cap.12m,mod.cap.36m,mod.cap.60m),
        stars=numeric(0),ci.test = 1,digits = 3,
        custom.model.names = c('Past 12 months','Past 36 months','Past 60 months'),
-       caption.above=T,omit.coef = "(100m)|(HUC8)|(10m)|(10km)|Total",
+       caption.above=T,omit.coef = "(100m)|(HUC8)|(10m)|(10km)|Total|precip",
        label = c('table:capacityfunding'),
        caption = 'Predicted water quality impact conditional on past capacity building',
        custom.note = "$^* 1$ outside the credible interval",
