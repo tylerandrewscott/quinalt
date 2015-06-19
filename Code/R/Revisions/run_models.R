@@ -34,7 +34,7 @@ library(maptools)
 
 
 
-load("/homes/tscott1/win/user/quinalt/temp_workspace_noprecip.RData")
+load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
 
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
@@ -50,19 +50,27 @@ mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
 mod.data = filter(mod.data,YEAR>=1992)
 mod.data$HUC8 = as.character(mod.data$HUC8)
 
+
 covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
                      'ag.huc8','dev.huc8','wet.huc8','forst.huc8','l.owqi',
-                     'county.pop.growthrate','owqi',
+                     'owqi','monthly.precip.median',
                      'seasonal','Ag','Dev','Wetl','Forst',
                      grep('OWEB',names(mod.data),value=T))]
 
-k = 100000
+k = 1000000
 covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
 
 covars[is.na(covars)] = 0
 
 covars$elev100m = covars$elevation/100
 covars$seaDist10km = covars$seaDist/10
+covars$ag.huc8 = 100 * covars$ag.huc8
+covars$dev.huc8 = 100 * covars$dev.huc8
+covars$forst.huc8 = 100 * covars$forst.huc8
+covars$Ag = 100 * covars$Ag
+covars$Forst = 100 * covars$Forst
+covars$Dev = 100 * covars$Dev
+covars$monthly.precip.median = covars$monthly.precip.median/100
 
 covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
                   OWEB_Grant_Capacity_12_WC +
@@ -96,6 +104,7 @@ covars$OWEB_Grant_Capacity_PriorTo36 = covars$OWEB_Grant_Capacity_All_WC - covar
 covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_60_WC
 
 
+
 #or.bond = inla.nonconvex.hull(cbind(mod.data$DECIMAL_LONG,mod.data$DECIMAL_LAT),2,2)
 (mesh.a <- inla.mesh.2d(cbind(mod.data$Decimal_long,mod.data$Decimal_Lat),max.edge=c(5, 40),cut=.05))$n
 
@@ -111,13 +120,13 @@ stk.1 <- inla.stack(data=list(y=covars$l.owqi), A=list(A.1,1),
 
 form_nonspatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elev100m + seaDist10km + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
 form_spatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
-  forst.huc8 + elev100m + seaDist10km + 
+  forst.huc8 + elev100m + seaDist10km + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
   f(s, model=spde.a,replicate=s.repl)
@@ -151,6 +160,7 @@ rowname.vector = c(
   '$\\%$  Forest in HUC8',
   'Elevation (10m)',
   'Dist. from coast (10km)',
+  'Monthly precip.',
   'Total Non-OWEB Restoration')
 
 
@@ -187,6 +197,7 @@ texreg(l = list(modbase.nonspatial.present,modbase.spatial.present),
 form_all_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_12_WC + 
   OWEB_Grant_All_12_SWCD + 
@@ -204,6 +215,7 @@ mod.all.12m <- inla(form_all_12m, family='gaussian', data=inla.stack.data(stk.1)
 form_all_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_36_WC + 
   OWEB_Grant_All_36_SWCD + 
@@ -220,6 +232,7 @@ mod.all.36m <- inla(form_all_36m, family='gaussian', data=inla.stack.data(stk.1)
 form_all_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_60_WC + 
   OWEB_Grant_All_60_SWCD + 
@@ -238,7 +251,7 @@ tempcoef1 = data.frame(exp(mod.all.12m$summary.fixed[-1,c(1,3,5)]))
 tempcoef2 = data.frame(exp(mod.all.36m$summary.fixed[-1,c(1,3,5)]))
 tempcoef3 = data.frame(exp(mod.all.60m$summary.fixed[-1,c(1,3,5)]))
 
-rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =  
+rowname.vector = 
   c(
     "$\\%$  Agric. (100m buffer)",
     '$\\%$  Forest (100m buffer)',
@@ -248,14 +261,15 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     '$\\%$  Forest in HUC8',
     'Elevation (10m)',
     'Dist. from coast (10km)',
+    'Monthly precip.',
     'Total Non-OWEB Restoration',
-    'OWEB grants to WC ($100k)',
-    'OWEB grants SWCD ($100k)',
-    'OWEB grants to WC * OWEB grants to SWCD ($100k)')
+    'OWEB to WC (\\$100k)',
+    'OWEB to SWCD (\\$100k)',
+    'OWEB to WC * to OWEB (\\$100k)')
 
 
 mod.all.12m = texreg::createTexreg(
-  coef.names = rownames(tempcoef1),
+  coef.names = rowname.vector,
   coef = tempcoef1[,1],
   ci.low = tempcoef1[,2],
   ci.up = tempcoef1[,3],
@@ -263,7 +277,7 @@ mod.all.12m = texreg::createTexreg(
   gof = mod.all.12m$dic$dic)
 
 mod.all.36m = texreg::createTexreg(
-  coef.names = rownames(tempcoef2),
+  coef.names = rowname.vector,
   coef = tempcoef2[,1],
   ci.low = tempcoef2[,2],
   ci.up = tempcoef2[,3],
@@ -271,7 +285,7 @@ mod.all.36m = texreg::createTexreg(
   gof = mod.all.36m$dic$dic)
 
 mod.all.60m = texreg::createTexreg(
-  coef.names = rownames(tempcoef3),
+  coef.names = rowname.vector,
   coef = tempcoef3[,1],
   ci.low = tempcoef3[,2],
   ci.up = tempcoef3[,3],
@@ -291,6 +305,7 @@ texreg(l = list(mod.all.12m,mod.all.36m,mod.all.60m),
 form_ind_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_12_WC + 
   OWEB_Grant_Tech_12_WC + 
@@ -308,6 +323,7 @@ form_ind_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 form_ind_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_36_WC + 
   OWEB_Grant_Tech_36_WC + 
@@ -325,6 +341,7 @@ form_ind_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 form_ind_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_60_WC + 
   OWEB_Grant_Tech_60_WC + 
@@ -369,6 +386,7 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     '$\\%$  Forest in HUC8',
     'Elevation (10m)',
     'Dist. from coast (10km)',
+    'Monthly precip.',
     'Total Non-OWEB Restoration',
     "WC Outreach",
     'WC Tech',
@@ -378,8 +396,8 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     'SWCD Tech',
     'SWCD Capacity',
     'SWCD Restoration',
-    'WC Outreach * Tech * Capacity * Restoration',
-    'SWCD Outreach * Tech * Capacity * Restoration')
+    'WC 4-Way Interaction',
+    'SWCD 4-Way Interaction')
 
 
 mod.ind.12m = texreg::createTexreg(
@@ -423,6 +441,7 @@ texreg(l = list(mod.ind.12m,mod.ind.36m,mod.ind.60m),
 form_cap_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_12_WC + 
   OWEB_Grant_Tech_12_WC + 
@@ -439,6 +458,7 @@ form_cap_12m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 form_cap_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_36_WC + 
   OWEB_Grant_Tech_36_WC + 
@@ -454,6 +474,7 @@ form_cap_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 form_cap_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_Outreach_60_WC + 
   OWEB_Grant_Tech_60_WC + 
@@ -496,6 +517,7 @@ rownames(tempcoef1) = rownames(tempcoef2) = rownames(tempcoef3) =
     '$\\%$  Forest in HUC8',
     'Elevation (10m)',
     'Dist. from coast (10km)',
+    'Monthly precip.',
     'Total Non-OWEB Restoration',
     "WC Outreach",
     'WC Tech',
@@ -541,4 +563,4 @@ texreg(l = list(mod.cap.12m,mod.cap.36m,mod.cap.60m),
        custom.note = "$^* 1$ outside the credible interval",
        file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacitybuilding.tex')
 
-mail::sendmail('tyler.andrew.scott@gmail.com','run_models.R finished','nori has finished quinalt project data prep (no precip)')
+mail::sendmail('tyler.andrew.scott@gmail.com','run_models.R finished','nori has finished quinalt project data prep (with precip)')

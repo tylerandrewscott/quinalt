@@ -33,8 +33,8 @@ require(xtable)
 library(maptools)
 
 
-
-#load("temp_workspace_noprecip.RData")
+#setwd('/homes/tscott1/win/user/quinalt')
+load("temp_workspace_precip.RData")
 
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
@@ -42,7 +42,7 @@ library(maptools)
 INLA::inla.setOption(num.threads=16) 
 
 mod.data = all.params.spdf@data
-
+names(mod.data)
 mod.data$seasonal = mod.data$Abs.Month
 mod.data$total.period = mod.data$Abs.Month
 mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
@@ -52,7 +52,7 @@ mod.data$HUC8 = as.character(mod.data$HUC8)
 
 covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
                      'ag.huc8','dev.huc8','wet.huc8','forst.huc8','l.owqi',
-                     'county.pop.growthrate','owqi','monthly.precip',
+                     'county.pop.growthrate','owqi','monthly.precip.median',
                      'seasonal','Ag','Dev','Wetl','Forst',
                      grep('OWEB',names(mod.data),value=T))]
 
@@ -101,7 +101,7 @@ covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covar
 
 spde.a <- inla.spde2.matern(mesh.a) 
 
-
+monthly.precip.median + 
 # Model 1: constant spatial effect
 A.1 <- inla.spde.make.A(mesh.a, loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
@@ -112,12 +112,14 @@ stk.1 <- inla.stack(data=list(y=covars$l.owqi), A=list(A.1,1),
 form_nonspatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
 
 form_spatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m + seaDist10km + 
+  monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
   f(s, model=spde.a,replicate=s.repl)
