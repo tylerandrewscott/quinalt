@@ -15,7 +15,7 @@ library(RCurl)
 library(gdata)
 require(proj4)
 library(lubridate)
-require(RODBC)
+
 require(gridExtra)
 require(lattice)
 require(splancs)
@@ -34,8 +34,8 @@ library(maptools)
 
 
 
-load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
-
+#load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
+load('H:/quinalt/temp_workspace_precip.RData')
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
 
@@ -61,6 +61,9 @@ covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
 #covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
 
 covars[is.na(covars)] = 0
+covars$OWEB_Grant_Capacity_PriorTo12 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_12_WC
+covars$OWEB_Grant_Capacity_PriorTo36 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_36_WC
+covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_60_WC
 
 
 for (i in 1:ncol(covars))
@@ -113,24 +116,54 @@ covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
 )
 
 
-covars$OWEB_Grant_Capacity_PriorTo12 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_12_WC
-covars$OWEB_Grant_Capacity_PriorTo36 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_36_WC
-covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_60_WC
-
-
 
 #or.bond = inla.nonconvex.hull(cbind(mod.data$DECIMAL_LONG,mod.data$DECIMAL_LAT),2,2)
 (mesh.a <- inla.mesh.2d(cbind(mod.data$Decimal_long,mod.data$Decimal_Lat),max.edge=c(5, 40),cut=.05))$n
-
-spde.a <- inla.spde2.matern(mesh.a) 
-
-
 # Model 1: constant spatial effect
 A.1 <- inla.spde.make.A(mesh.a, loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
 
+
+
 stk.1 <- inla.stack(data=list(y=covars$l.owqi), A=list(A.1,1),
                     effects=list(ind.1, list(data.frame(b0=1,covars))))
+
+spde.a <- inla.spde2.matern(mesh.a)
+
+
+Q <- inla.spde.precision(spde.a, theta=c(log(3), 0))
+x <- inla.qsample(n = 2, Q)
+x <- inla.qsample(n = 2, Q, constr = spde.a$f$extraconstr)
+
+##  identifiability constraints: 
+
+[h is a vector containing the elevation in each mesh node]
+
+A.constr = rbind(1, h) # zero mean, non-linear 
+e.constr = matrix(0, nrow = 2, ncol = 1)
+
+## spde specification:
+
+## stationary:
+spde.s = inla.spde2.matern(mesh, constr = FALSE, 
+                           extraconstr.int = list(A = A.constr, e = e.constr),
+                           theta.prior.mean = prior.s$theta.s$mean, 
+                           theta.prior.prec = 1/prior.s$theta.s$var)
+
+ 
+
+## non-stationary:
+spde.ns = inla.spde2.matern(mesh, constr = FALSE, 
+                            extraconstr.int = list(A = A.constr, e = e.constr),
+                            B.tau   = cbind(0, 1, h, 0, 0), # log linear model for tau
+                            B.kappa = cbind(0, 0, 0, 1, h), # log linear model for kappa
+                            theta.prior.mean = prior.ns$theta.ns$mean, 
+                            theta.prior.prec = 1/prior.ns$theta.ns$var) 
+
+
+
+
+
 
 form_nonspatial <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
