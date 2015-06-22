@@ -148,13 +148,16 @@ form_spatial <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 mod.base.nonspatial <- inla(form_nonspatial, 
                             data=data.frame(y=covars$l.owqi, covars,b0=1), 
                             control.predictor=list(compute=TRUE),
-                            control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                            control.compute=list(dic=TRUE, cpo=TRUE),verbose=T,
+                            control.inla = list(
+                              correct = TRUE,
+                              correct.factor = 10))
 
 
 mod.base.spatial<- inla(form_spatial, family='gaussian', data=inla.stack.data(stk.1),
                         control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                         #  control.inla=list(strategy='laplace'), 
-                        control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                        control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 tempcoef = data.frame(exp(mod.base.nonspatial$summary.fixed[-1,c(1,3,5)]))
 tempcoef.justcoef = data.frame(tempcoef[,'mean'])
@@ -241,7 +244,7 @@ form_all_36m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 mod.all.36m <- inla(form_all_36m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 form_all_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
@@ -258,7 +261,7 @@ form_all_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 mod.all.60m <- inla(form_all_60m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 
 tempcoef1 = data.frame(exp(mod.all.12m$summary.fixed[-1,c(1,3,5)]))
@@ -374,17 +377,17 @@ form_ind_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 mod.ind.12m <- inla(form_ind_12m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 mod.ind.36m <- inla(form_ind_36m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 mod.ind.60m <- inla(form_ind_60m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 tempcoef1 = data.frame(exp(mod.ind.12m$summary.fixed[-1,c(1,3,5)]))
 tempcoef2 = data.frame(exp(mod.ind.36m$summary.fixed[-1,c(1,3,5)]))
@@ -505,17 +508,17 @@ form_cap_60m <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 mod.cap.12m <- inla(form_cap_12m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 mod.cap.36m <- inla(form_cap_36m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 mod.cap.60m <- inla(form_cap_60m, family='gaussian', data=inla.stack.data(stk.1),
                     control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
                     #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
+                    control.compute=list(dic=TRUE, cpo=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 tempcoef1 = data.frame(exp(mod.cap.12m$summary.fixed[-1,c(1,3,5)]))
 tempcoef2 = data.frame(exp(mod.cap.36m$summary.fixed[-1,c(1,3,5)]))
