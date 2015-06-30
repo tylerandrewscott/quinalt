@@ -45,47 +45,22 @@ INLA::inla.setOption(num.threads=16)
 
 mod.data$seasonal = mod.data$Abs.Month
 mod.data$total.period = mod.data$Abs.Month
-mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
-mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
-mod.data = filter(mod.data,YEAR>=1992)
+#mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
+#mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
+mod.data = filter(mod.data,YEAR>=1995)
 mod.data$HUC8 = as.character(mod.data$HUC8)
 
 covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
-                     'ag.huc8','dev.huc8','wet.huc8','forst.huc8','l.owqi',
+                     'ag.huc8','dev.huc8','wet.huc8','forst.huc8','owqi',
                      'owqi','monthly.precip.median',
                      'seasonal','Ag','Dev','Wetl','Forst',
                      grep('OWEB',names(mod.data),value=T))]
-
-#k = 100000
-#covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
 
 covars[is.na(covars)] = 0
 
 covars$OWEB_Grant_Capacity_PriorTo12 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_12_WC
 covars$OWEB_Grant_Capacity_PriorTo36 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_36_WC
 covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_60_WC
-
-for (i in 1:ncol(covars))
-{
- if (class(covars[,i]) =='numeric')
- {
-   covars[,i] = as.numeric(base::scale(covars[,i],center = TRUE,scale=TRUE))
- }
-}
-
-# 
-# 
-# covars$elev100m = covars$elevation/100
-# covars$seaDist10km = covars$seaDist/10
-# covars$ag.huc8 = 100 * covars$ag.huc8
-# covars$dev.huc8 = 100 * covars$dev.huc8
-# covars$forst.huc8 = 100 * covars$forst.huc8
-# covars$Ag = 100 * covars$Ag
-# covars$Forst = 100 * covars$Forst
-# covars$Dev = 100 * covars$Dev
-# covars$monthly.precip.median = covars$monthly.precip.median/100
-
-
 
 
 covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
@@ -134,8 +109,37 @@ covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
                   OWEB_Grant_Outreach_All_SWCD
 )
 
+
+
+# for (i in 1:ncol(covars))
+# {
+#  if (class(covars[,i]) =='numeric'|class(covars[,i]) =='integer')
+#  {
+#    covars[,i] = as.numeric(base::scale(covars[,i],center = TRUE,scale=TRUE))
+#  }
+# }
+
+
+# 
+# 
+covars$elev100m = covars$elevation/100
+covars$seaDist10km = covars$seaDist/10
+covars$ag.huc8 = 100 * covars$ag.huc8
+covars$dev.huc8 = 100 * covars$dev.huc8
+covars$forst.huc8 = 100 * covars$forst.huc8
+covars$Ag = 100 * covars$Ag
+covars$Forst = 100 * covars$Forst
+covars$Dev = 100 * covars$Dev
+covars$monthly.precip.median = covars$monthly.precip.median/100
+
+k = 100000
+covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
+
+  
+  
+
 # some book keeping
-n.data = length(covars$l.owqi)
+n.data = length(covars$owqi)
 
 #or.bond = inla.nonconvex.hull(cbind(covars$DECIMAL_LONG,covars$DECIMAL_LAT),2,2)
 (mesh.a <- inla.mesh.2d(
@@ -147,7 +151,7 @@ spde.a <- inla.spde2.matern(mesh.a)
 A.1 <- inla.spde.make.A(mesh.a, 
                         loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
-stk.1 <- inla.stack(data=list(y=covars$l.owqi), A=list(A.1,1),
+stk.1 <- inla.stack(data=list(y=covars$owqi), A=list(A.1,1),
                     effects=list(ind.1, list(data.frame(b0=1,covars))))
 
 #######12 months##########
@@ -162,7 +166,6 @@ form_base_nonspatial.12 <-  y ~ 0 + b0 + Ag + Forst + Dev  +
 form_base_spatial_unrestricted.12 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elevation + seaDist + monthly.precip.median + 
-  NOT_OWEB_OWRI.wq.TotalCash + 
   NOT_OWEB_OWRI.wq.TotalCash + 
   OWEB_Grant_All_12_WC + 
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
@@ -218,6 +221,9 @@ mod.base.spatial.restricted.12 <- inla(form_base_spatial_restricted.12, family='
                         control.inla = list(
                           correct = TRUE,
                           correct.factor = 10))
+
+round(mod.base.spatial.restricted.12$summary.fixed,3)
+
 
 ##### 24 months ###########
 
