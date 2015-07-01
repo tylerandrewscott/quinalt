@@ -2032,7 +2032,7 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">margerum2011</bcf:citekey>
-    <bcf:citekey order="2">thomas2012</bcf:citekey>
+    <bcf:citekey order="2">thomas2011</bcf:citekey>
     <bcf:citekey order="3">carr2012</bcf:citekey>
     <bcf:citekey order="3">koontz2006</bcf:citekey>
     <bcf:citekey order="4">rue2009</bcf:citekey>
@@ -2044,7 +2044,7 @@
     <bcf:citekey order="8">margerum2011</bcf:citekey>
     <bcf:citekey order="8">hardy2008</bcf:citekey>
     <bcf:citekey order="9">margerum2011</bcf:citekey>
-    <bcf:citekey order="10">thomas2012</bcf:citekey>
+    <bcf:citekey order="10">thomas2011</bcf:citekey>
     <bcf:citekey order="11">nikolic2008</bcf:citekey>
     <bcf:citekey order="11">lubell2008</bcf:citekey>
     <bcf:citekey order="11">ansell2008</bcf:citekey>
@@ -2200,20 +2200,27 @@
     <bcf:citekey order="106">cosandey-godin2014</bcf:citekey>
     <bcf:citekey order="107">lindgren2013</bcf:citekey>
     <bcf:citekey order="108">cosandey-godin2014</bcf:citekey>
-    <bcf:citekey order="109">ward2008</bcf:citekey>
-    <bcf:citekey order="109">spiegelhalter2002</bcf:citekey>
-    <bcf:citekey order="110">lubell2009</bcf:citekey>
-    <bcf:citekey order="111">lubell2009</bcf:citekey>
-    <bcf:citekey order="112">leach2002</bcf:citekey>
-    <bcf:citekey order="112">leach2006</bcf:citekey>
-    <bcf:citekey order="113">gelman2013</bcf:citekey>
+    <bcf:citekey order="109">ingebrigtsen2015</bcf:citekey>
+    <bcf:citekey order="110">hodges2014</bcf:citekey>
+    <bcf:citekey order="111">hughes2014</bcf:citekey>
+    <bcf:citekey order="112">reich2006</bcf:citekey>
+    <bcf:citekey order="113">hughes2014</bcf:citekey>
+    <bcf:citekey order="114">hodges2010</bcf:citekey>
     <bcf:citekey order="114">hodges2014</bcf:citekey>
-    <bcf:citekey order="115">hodges2014</bcf:citekey>
-    <bcf:citekey order="116">hodges2014</bcf:citekey>
-    <bcf:citekey order="117">gelman2007</bcf:citekey>
-    <bcf:citekey order="118">hodges2014</bcf:citekey>
-    <bcf:citekey order="119">cude2001</bcf:citekey>
-    <bcf:citekey order="120">sabatier2005</bcf:citekey>
+    <bcf:citekey order="115">ingebrigtsen2015</bcf:citekey>
+    <bcf:citekey order="116">ward2008</bcf:citekey>
+    <bcf:citekey order="116">spiegelhalter2002</bcf:citekey>
+    <bcf:citekey order="117">lubell2009</bcf:citekey>
+    <bcf:citekey order="118">lubell2009</bcf:citekey>
+    <bcf:citekey order="119">leach2002</bcf:citekey>
+    <bcf:citekey order="119">leach2006</bcf:citekey>
+    <bcf:citekey order="120">gelman2013</bcf:citekey>
+    <bcf:citekey order="121">hodges2014</bcf:citekey>
+    <bcf:citekey order="122">hodges2014</bcf:citekey>
+    <bcf:citekey order="123">hodges2014</bcf:citekey>
+    <bcf:citekey order="124">gelman2007</bcf:citekey>
+    <bcf:citekey order="125">cude2001</bcf:citekey>
+    <bcf:citekey order="126">sabatier2005</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" type="entry" label="nyt">
   <bcf:sorting>

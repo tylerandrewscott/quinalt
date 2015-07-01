@@ -414,34 +414,6 @@
       \field{title}{Hierarchical Modelling for the Environmental Sciences: Statistical methods and applications: Statistical methods and applications}
       \field{year}{2006}
     \endentry
-    \entry{coglianese2003}{incollection}{}
-      \name{labelname}{1}{}{%
-        {{hash=9904d247e4e1ef6c405b261db2d5f22a}{Coglianese}{C\bibinitperiod}{Cary}{C\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=9904d247e4e1ef6c405b261db2d5f22a}{Coglianese}{C\bibinitperiod}{Cary}{C\bibinitperiod}{}{}{}{}}%
-      }
-      \name{editor}{2}{}{%
-        {{hash=67663eba8c0ed79330644a6a844b143a}{{O'Leary}}{O\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
-        {{hash=d3c152159f37e885f01d73c512ea963c}{Bingham}{B\bibinitperiod}{L.\bibnamedelimi B.}{L\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
-      }
-      \list{location}{1}{%
-        {Washington, {D.C.}}%
-      }
-      \list{publisher}{1}{%
-        {{RFF} Press}%
-      }
-      \strng{namehash}{9904d247e4e1ef6c405b261db2d5f22a}
-      \strng{fullhash}{9904d247e4e1ef6c405b261db2d5f22a}
-      \field{sortinit}{C}
-      \field{labelyear}{2003}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Is satisfaction success? Evaluating public participation in regulatory policymaking}
-      \field{booktitle}{The Promise and Performance of Environmental Conflict Resolution}
-      \field{title}{Is satisfaction success? Evaluating public participation in regulatory policymaking}
-      \field{year}{2003}
-      \field{pages}{69\bibrangedash 89}
-    \endentry
     \entry{cosandey-godin2014}{article}{}
       \name{labelname}{4}{}{%
         {{hash=d86485213b2dfa34590a98b2e849cec4}{{Cosandey-Godin}}{C\bibinitperiod}{Aurelie}{A\bibinitperiod}{}{}{}{}}%
@@ -690,6 +662,28 @@
       \field{title}{Bayesian data analysis}
       \field{year}{2013}
     \endentry
+    \entry{gerlak2011}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=ea8a63481bb5f345be7e01479371c7af}{Gerlak}{G\bibinitperiod}{Andrea\bibnamedelima K.}{A\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+        {{hash=dcbc2bf0115a6c90ac65e52e6ccb531f}{Heikkila}{H\bibinitperiod}{Tanya}{T\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=ea8a63481bb5f345be7e01479371c7af}{Gerlak}{G\bibinitperiod}{Andrea\bibnamedelima K.}{A\bibinitperiod\bibinitdelim K\bibinitperiod}{}{}{}{}}%
+        {{hash=dcbc2bf0115a6c90ac65e52e6ccb531f}{Heikkila}{H\bibinitperiod}{Tanya}{T\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{b67a1f28c7d3b1fd9af8a56b6b6c7d07}
+      \strng{fullhash}{b67a1f28c7d3b1fd9af8a56b6b6c7d07}
+      \field{sortinit}{G}
+      \field{labelyear}{2011}
+      \field{datelabelsource}{}
+      \field{labeltitle}{Building a theory of learning in collaboratives: Evidence from the Everglades Restoration Program}
+      \field{journaltitle}{Journal of Public Administration Research and Theory}
+      \field{number}{4}
+      \field{title}{Building a theory of learning in collaboratives: Evidence from the Everglades Restoration Program}
+      \field{volume}{21}
+      \field{year}{2011}
+      \field{pages}{619\bibrangedash 644}
+    \endentry
     \entry{gomez-rubio2014}{incollection}{}
       \name{labelname}{3}{}{%
         {{hash=84b1554567e01a66ea1967198aa62c43}{{Gomez-Rubio}}{G\bibinitperiod}{Virgilio}{V\bibinitperiod}{}{}{}{}}%
@@ -735,25 +729,6 @@
       \field{volume}{35}
       \field{year}{1999}
       \field{pages}{505\bibrangedash 518}
-    \endentry
-    \entry{gunton2003}{article}{}
-      \name{labelname}{1}{}{%
-        {{hash=119781f5e80761c3377dfe03a849749b}{Gunton}{G\bibinitperiod}{Thomas\bibnamedelima I.}{T\bibinitperiod\bibinitdelim I\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=119781f5e80761c3377dfe03a849749b}{Gunton}{G\bibinitperiod}{Thomas\bibnamedelima I.}{T\bibinitperiod\bibinitdelim I\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{119781f5e80761c3377dfe03a849749b}
-      \strng{fullhash}{119781f5e80761c3377dfe03a849749b}
-      \field{sortinit}{G}
-      \field{labelyear}{2003}
-      \field{datelabelsource}{}
-      \field{labeltitle}{The theory and practice of collaborative planning in resource and environmental management}
-      \field{journaltitle}{Environments: a journal of interdisciplinary studies}
-      \field{number}{2}
-      \field{title}{The theory and practice of collaborative planning in resource and environmental management}
-      \field{volume}{31}
-      \field{year}{2003}
     \endentry
     \entry{habron2003}{article}{}
       \name{labelname}{1}{}{%
@@ -808,26 +783,6 @@
       \endverb
       \keyw{Clean Water Act,Collaborative watershed management,Environmental policy,Nonpoint source pollution,Section 319}
     \endentry
-    \entry{heimlich2010}{article}{}
-      \name{labelname}{1}{}{%
-        {{hash=e29f809dd4ac6d282551d99ebc023680}{Heimlich}{H\bibinitperiod}{Joe\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=e29f809dd4ac6d282551d99ebc023680}{Heimlich}{H\bibinitperiod}{Joe\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{e29f809dd4ac6d282551d99ebc023680}
-      \strng{fullhash}{e29f809dd4ac6d282551d99ebc023680}
-      \field{sortinit}{H}
-      \field{labelyear}{2010}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Environmental education evaluation: Reinterpreting education as a strategy for meeting mission}
-      \field{journaltitle}{Evaluation and Program planning}
-      \field{number}{2}
-      \field{title}{Environmental education evaluation: Reinterpreting education as a strategy for meeting mission}
-      \field{volume}{33}
-      \field{year}{2010}
-      \field{pages}{180\bibrangedash 185}
-    \endentry
     \entry{hibbard2006}{article}{}
       \name{labelname}{2}{}{%
         {{hash=823f6774f691adbbc3d07aeda545e4ea}{Hibbard}{H\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
@@ -869,30 +824,6 @@
       \verb{url}
       \verb http://CRAN.R-project.org/package=raster
       \endverb
-    \endentry
-    \entry{hines1987}{article}{}
-      \name{labelname}{3}{}{%
-        {{hash=d1acface5c25ca9b450d2874ea44f63d}{Hines}{H\bibinitperiod}{Jody\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
-        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{hash=f692c27e868bd4c64413350ce30f57d9}{Tomera}{T\bibinitperiod}{Audrey\bibnamedelima N.}{A\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{3}{}{%
-        {{hash=d1acface5c25ca9b450d2874ea44f63d}{Hines}{H\bibinitperiod}{Jody\bibnamedelima M.}{J\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
-        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{hash=f692c27e868bd4c64413350ce30f57d9}{Tomera}{T\bibinitperiod}{Audrey\bibnamedelima N.}{A\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{0b656f65b3a1c3a7e29bd1aeb663295b}
-      \strng{fullhash}{0a8fcf282e8941425807777b2697bb6e}
-      \field{sortinit}{H}
-      \field{labelyear}{1987}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Analysis and synthesis of research on responsible environmental behavior: A meta-analysis}
-      \field{journaltitle}{The Journal of environmental education}
-      \field{number}{2}
-      \field{title}{Analysis and synthesis of research on responsible environmental behavior: A meta-analysis}
-      \field{volume}{18}
-      \field{year}{1987}
-      \field{pages}{1\bibrangedash 8}
     \endentry
     \entry{hodges2014}{book}{}
       \name{labelname}{1}{}{%
@@ -940,68 +871,6 @@
       \field{volume}{26}
       \field{year}{2012}
       \field{pages}{420\bibrangedash 436}
-    \endentry
-    \entry{hungerford1990}{article}{}
-      \name{labelname}{2}{}{%
-        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{hash=9961f986b50e2e7e81c51d38bc398a67}{Volk}{V\bibinitperiod}{Trudi\bibnamedelima L.}{T\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{2}{}{%
-        {{hash=4f309c522102f50d19d731abd08aba87}{Hungerford}{H\bibinitperiod}{Harold\bibnamedelima R.}{H\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{hash=9961f986b50e2e7e81c51d38bc398a67}{Volk}{V\bibinitperiod}{Trudi\bibnamedelima L.}{T\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{b332803e5105dd6bcb52f54b9df497bf}
-      \strng{fullhash}{b332803e5105dd6bcb52f54b9df497bf}
-      \field{sortinit}{H}
-      \field{labelyear}{1990}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Changing learner behavior through environmental education}
-      \field{journaltitle}{The journal of environmental education}
-      \field{number}{3}
-      \field{title}{Changing learner behavior through environmental education}
-      \field{volume}{21}
-      \field{year}{1990}
-      \field{pages}{8\bibrangedash 21}
-    \endentry
-    \entry{huntington2000}{article}{}
-      \name{labelname}{1}{}{%
-        {{hash=8f9549d665cdfd25e0f149920af98a9d}{Huntington}{H\bibinitperiod}{H.\bibnamedelimi P}{H\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=8f9549d665cdfd25e0f149920af98a9d}{Huntington}{H\bibinitperiod}{H.\bibnamedelimi P}{H\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{8f9549d665cdfd25e0f149920af98a9d}
-      \strng{fullhash}{8f9549d665cdfd25e0f149920af98a9d}
-      \field{sortinit}{H}
-      \field{labelyear}{2000}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Using traditional ecological knowledge in science: methods and applications}
-      \field{journaltitle}{Ecological applications}
-      \field{number}{5}
-      \field{title}{Using traditional ecological knowledge in science: methods and applications}
-      \field{volume}{10}
-      \field{year}{2000}
-      \field{pages}{1270\bibrangedash 1274}
-    \endentry
-    \entry{imperial2005}{article}{}
-      \name{labelname}{1}{}{%
-        {{hash=794b0b5d61b7801d378b9c71256e2fea}{Imperial}{I\bibinitperiod}{M.\bibnamedelimi T}{M\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=794b0b5d61b7801d378b9c71256e2fea}{Imperial}{I\bibinitperiod}{M.\bibnamedelimi T}{M\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{794b0b5d61b7801d378b9c71256e2fea}
-      \strng{fullhash}{794b0b5d61b7801d378b9c71256e2fea}
-      \field{sortinit}{I}
-      \field{labelyear}{2005}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Using collaboration as a governance strategy lessons from six watershed management programs}
-      \field{journaltitle}{Administration \& Society}
-      \field{number}{3}
-      \field{title}{Using collaboration as a governance strategy lessons from six watershed management programs}
-      \field{volume}{37}
-      \field{year}{2005}
-      \field{pages}{281\bibrangedash 320}
     \endentry
     \entry{innes1999}{article}{}
       \name{labelname}{2}{}{%
@@ -2179,40 +2048,13 @@
       \field{year}{2007}
       \field{pages}{567\bibrangedash 588}
     \endentry
-    \entry{yaffee1996}{book}{}
-      \name{labelname}{6}{}{%
-        {{hash=1456cd129ee33c95c72654e048f3ec5b}{Yaffee}{Y\bibinitperiod}{S.\bibnamedelimi L}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-        {{hash=63299c34e333ccd830e806877189a3ab}{Phillips}{P\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-        {{hash=a5c204b6d1fd273a49ce4a7bd79c2fad}{Frentz}{F\bibinitperiod}{I.\bibnamedelimi C}{I\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
-        {{hash=a0835ee114baa93ff683be34e76b572f}{Hardy}{H\bibinitperiod}{P.\bibnamedelimi W}{P\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-        {{hash=37e94f68a197db1ec5b0836e1c593fd0}{Maleki}{M\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
-        {{hash=8bad6f96ea5309dc1fb57499c26a8a00}{Thorpe}{T\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{6}{}{%
-        {{hash=1456cd129ee33c95c72654e048f3ec5b}{Yaffee}{Y\bibinitperiod}{S.\bibnamedelimi L}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-        {{hash=63299c34e333ccd830e806877189a3ab}{Phillips}{P\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-        {{hash=a5c204b6d1fd273a49ce4a7bd79c2fad}{Frentz}{F\bibinitperiod}{I.\bibnamedelimi C}{I\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
-        {{hash=a0835ee114baa93ff683be34e76b572f}{Hardy}{H\bibinitperiod}{P.\bibnamedelimi W}{P\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-        {{hash=37e94f68a197db1ec5b0836e1c593fd0}{Maleki}{M\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
-        {{hash=8bad6f96ea5309dc1fb57499c26a8a00}{Thorpe}{T\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
-      }
-      \list{location}{1}{%
-        {Washington, {D.C.}}%
-      }
-      \list{publisher}{1}{%
-        {Island Press}%
-      }
-      \strng{namehash}{92862b52d76b4145b3dc955c4e22d78f}
-      \strng{fullhash}{f3b698c9294406c924c46c439b10e06d}
-      \field{sortinit}{Y}
-      \field{labelyear}{1996}
-      \field{datelabelsource}{}
-      \field{labeltitle}{Ecosystem Management in the United States: An assessment of current experience}
-      \field{isbn}{1559635029}
-      \field{title}{Ecosystem Management in the United States: An assessment of current experience}
-      \field{year}{1996}
-    \endentry
   \endsortlist
+  \missing{reich2006}
+  \missing{ingebrigtsen2015}
+  \missing{gelman2007}
+  \missing{hughes2014}
+  \missing{calanni2014}
+  \missing{hodges2010}
 \endrefsection
 \endinput
 
