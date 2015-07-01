@@ -142,7 +142,7 @@ OWQI scores are observed on an intermittent monthly basis from 1990 to 2013 at 1
 
 \subsection*{Independent Variables}
 
-The independent variables of interest are obtained from the Oregon Watershed Enhancement Board (OWEB). The grant database received from OWEB contains record of all grant projects funded by OWEB, including location (watershed), project start and end dates, project type, and funding amount; this analysis specifically considers 3401 grants given to watershed councils and 2329 grants given to SWCDs throughout the state between 1997 and 2013. Table~\ref{table:grantsummary} summarizes the nature of these grants:
+The independent variables of interest are obtained from the Oregon Watershed Enhancement Board (OWEB). The grant database received from OWEB contains record of all grant projects funded by OWEB, including location (watershed), project start and end dates, project type, and funding amount; this analysis specifically considers 3197 grants given to watershed councils and 2329 grants given to SWCDs throughout the state between 1997 and 2013. Table~\ref{table:grantsummary} summarizes the nature of these grants:
 
 \input{grantsummarytable.tex}
 
@@ -175,7 +175,7 @@ Water quality sampling stations can be used, but do not need to be, as triangle 
 
 There are several possible methods by which to model spatio-temporal correlation, including modeling spatial correlation as constant over time versus fitting a separate spatial correlation structure for each year or month. The concept of spatio-temporal correlation refers to the potential for changes in the degree of spatial correlation over time (e.g., the location and distribution of fish stocks \parencite{cosandey-godin2014}). For water quality observations, however, one might expect that spatial relationships are relatively much more static given that measurement sites are fixed and the distance between sites does not change. Thus, I fit a model with spatial correlation being held constant over time. This makes intuitive sense since the spatially correlated error term seeks to account for the underlying spatial process assumed to present; while conditions at different sites might vary considerably, the role that spatial distance--or proximity--plays in these conditions likely remains relatively constant.
 
-Since my analysis is specifically interested in the ``fixed effect'' coefficients estimating the association between support for collaborative groups and water quality, I impose a linear orthogonality constraint on the spatial field so as to separate the linear effects from the spatial random effect \parencite{ingebrigtsen2015}. The reason for doing so is that including a spatial random effect in the model introduces confounding between the spatial effect and observed covariates that are themselves spatially distributed (e.g., elevation or precipitation) \parencite{hodges2014}. This can cause bias or variance inflation in the estimation of regression coefficients \parencite{hughes2014}. In other words, while it is easy to think of a spatial random effect as controlling for spatial location, the spatial random effect does not serve to actively model the effect of space but rather simply smooths observations across space. For many spatial modeling applications, the primary goal is prediction, in which case ``spatial confounding’’ \parencite{reich2006} is not of issue \parencite{hughes2014}. However, when--as is the case in this paper--model parameters are of primary interest, it is necessary to restrict the spatial effect to the orthogonal complement of the model covariates (i.e., fixed effects) \parencite{hodges2010,hodges2014}. Colloquially, this means that the spatial field represents the spatial effect after the linear effects of all covariates have been accounted for \parencite{ingebrigtsen2015}. 
+Since my analysis is specifically interested in the ``fixed effect'' coefficients estimating the association between support for collaborative groups and water quality, I impose a linear orthogonality constraint on the spatial field so as to separate the linear effects from the spatial random effect \parencite{ingebrigtsen2015}. The reason for doing so is that including a spatial random effect in the model introduces confounding between the spatial effect and observed covariates that are themselves spatially distributed (e.g., elevation or precipitation) \parencite{hodges2014}. This can cause bias or variance inflation in the estimation of regression coefficients \parencite{hughes2014}. In other words, while it is easy to think of a spatial random effect as controlling for spatial location, the spatial random effect does not serve to actively model the effect of space but rather simply smooths observations across space. For many spatial modeling applications, the primary goal is prediction, in which case ``spatial confounding’’ \parencite{reich2006} is not of issue \parencite{hughes2014}. However, when--as is the case in this paper--model parameters are of primary interest, it is necessary to restrict the spatial effect to the orthogonal complement of the model covariates (i.e., fixed effects) \parencite{hodges2010,hodges2014}. Colloquially, this means that the spatial field represents the spatial effect after the linear effects of all covariates have been accounted for \parencite{ingebrigtsen2015}.
 
 
 
@@ -244,6 +244,9 @@ An earlier version of this manuscript was presented at the 2014 Association for 
 \printbibliography
 
 \end{document}
+
+
+
 
 
 
