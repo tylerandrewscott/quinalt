@@ -1,370 +1,491 @@
-rm(list=ls())
 
-setwd('win/user/quinalt')
-load("temp_workspace_noprecip.RData")
+setwd('/homes/tscott1/win/user/quinalt')
+require(foreign)
+require(plyr)
+require(dplyr)
+require(rgdal)
+require(sp)
+require(rgeos)
+require(maptools)
+require(ggplot2)
+require(reshape2)
+library(RcppRoll)
+library(devtools)
+library(RCurl)
+library(gdata)
+require(proj4)
+library(lubridate)
 
-
+require(gridExtra)
+require(lattice)
+require(splancs)
+require(fields)
+library(raster)
+library(shapefiles)
+library(raster)
+library(rasterVis)  # raster visualisation
+library(rWBclimate)
+library(mail)
+library(stargazer)
+library(texreg)
 library(INLA)
 require(xtable)
 library(maptools)
 
+
+#load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
+mod.data = read.csv('Input/temp_modeldata_precip.csv')
+#load('temp_workspace_precip.RData')
+
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
 
-inla.setOption(num.threads=16) 
+INLA::inla.setOption(num.threads=16) 
 
+#mod.data = all.params.spdf@data
 
-mod.data = all.params.spdf@data
-mod.data = mod.data[,-grep('Total.Solids',colnames(mod.data))]
-mod.data = mod.data[,-grep('Total.Phos',colnames(mod.data))]
 mod.data$seasonal = mod.data$Abs.Month
 mod.data$total.period = mod.data$Abs.Month
-mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
-mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
+#mod.data$sq.owqi = ((as.numeric(as.character(mod.data$owqi)))^2)
+#mod.data$l.owqi = log(as.numeric(as.character(mod.data$owqi)))
 mod.data = filter(mod.data,YEAR>=1995)
 mod.data$HUC8 = as.character(mod.data$HUC8)
-mod.data$under.wc = ifelse(is.na(mod.data$which.wc),0,1)
-mod.data$under.swcd = ifelse(is.na(mod.data$which.swcd),0,1)
-
-
 
 covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
-                    'ag.huc8','dev.huc8','wet.huc8','forst.huc8','l.owqi',
-                    'county.pop.growthrate','owqi','under.wc','under.swcd',
-                 'seasonal','Ag','Dev','Wetl','Forst',
-                 grep('OWEB',names(mod.data),value=T))]
+                     'ag.huc8','dev.huc8','wet.huc8','forst.huc8','owqi',
+                     'owqi','monthly.precip.median',
+                     'seasonal','Ag','Dev','Wetl','Forst',
+                     grep('OWEB',names(mod.data),value=T))]
 
-covars$OWEB.wq.TotalCash_Prior12 = (covars$OWEB.wq.TotalCash_All - covars$OWEB.wq.TotalCash_12)
-covars$OWEB_Grant_Capacity.WC_Prior12 = (covars$OWEB_Grant_Capacity.WC_All - covars$OWEB_Grant_Capacity.WC_12)
-covars$OWEB_Grant_Capacity.WC_Prior36 = (covars$OWEB_Grant_Capacity.WC_All - covars$OWEB_Grant_Capacity.WC_36)
 covars[is.na(covars)] = 0
-covars = covars[covars$YEAR>=1995,]
+
+covars$OWEB_Grant_Capacity_PriorTo12 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_12_WC
+covars$OWEB_Grant_Capacity_PriorTo36 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_36_WC
+covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_60_WC
+
+
+covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
+                  OWEB_Grant_Capacity_12_WC +
+                  OWEB_Grant_Tech_12_WC +
+                  OWEB_Grant_Outreach_12_WC,
+                OWEB_Grant_All_24_WC = OWEB_Grant_Restoration_24_WC+
+                  OWEB_Grant_Capacity_24_WC +
+                  OWEB_Grant_Tech_24_WC +
+                  OWEB_Grant_Outreach_24_WC,
+                OWEB_Grant_All_36_WC = OWEB_Grant_Restoration_36_WC+
+                  OWEB_Grant_Capacity_36_WC +
+                  OWEB_Grant_Tech_36_WC +
+                  OWEB_Grant_Outreach_36_WC,
+                OWEB_Grant_All_48_WC = OWEB_Grant_Restoration_48_WC+
+                  OWEB_Grant_Capacity_48_WC +
+                  OWEB_Grant_Tech_48_WC +
+                  OWEB_Grant_Outreach_48_WC,
+                OWEB_Grant_All_60_WC = OWEB_Grant_Restoration_60_WC+
+                  OWEB_Grant_Capacity_60_WC +
+                  OWEB_Grant_Tech_60_WC +
+                  OWEB_Grant_Outreach_60_WC,
+                OWEB_Grant_All_All_WC = OWEB_Grant_Restoration_All_WC+
+                  OWEB_Grant_Capacity_All_WC +
+                  OWEB_Grant_Tech_All_WC +
+                  OWEB_Grant_Outreach_All_WC,
+                OWEB_Grant_All_12_SWCD = OWEB_Grant_Restoration_12_SWCD+
+                  OWEB_Grant_Capacity_12_SWCD +
+                  OWEB_Grant_Tech_12_SWCD +
+                  OWEB_Grant_Outreach_12_SWCD,
+                OWEB_Grant_All_36_SWCD = OWEB_Grant_Restoration_36_SWCD+
+                  OWEB_Grant_Capacity_36_SWCD +
+                  OWEB_Grant_Tech_36_SWCD +
+                  OWEB_Grant_Outreach_48_SWCD,
+                OWEB_Grant_All_48_SWCD = OWEB_Grant_Restoration_48_SWCD+
+                  OWEB_Grant_Capacity_48_SWCD +
+                  OWEB_Grant_Tech_48_SWCD +
+                  OWEB_Grant_Outreach_48_SWCD,
+                OWEB_Grant_All_60_SWCD = OWEB_Grant_Restoration_60_SWCD+
+                  OWEB_Grant_Capacity_60_SWCD +
+                  OWEB_Grant_Tech_60_SWCD +
+                  OWEB_Grant_Outreach_60_SWCD,
+                OWEB_Grant_All_All_SWCD = OWEB_Grant_Restoration_All_SWCD+
+                  OWEB_Grant_Capacity_All_SWCD +
+                  OWEB_Grant_Tech_All_SWCD +
+                  OWEB_Grant_Outreach_All_SWCD
+)
+
+
+
+# for (i in 1:ncol(covars))
+# {
+#  if (class(covars[,i]) =='numeric'|class(covars[,i]) =='integer')
+#  {
+#    covars[,i] = as.numeric(base::scale(covars[,i],center = TRUE,scale=TRUE))
+#  }
+# }
+
+
+# 
+# 
+covars$elev100m = covars$elevation/100
+covars$seaDist10km = covars$seaDist/10
+covars$ag.huc8 = 100 * covars$ag.huc8
+covars$dev.huc8 = 100 * covars$dev.huc8
+covars$forst.huc8 = 100 * covars$forst.huc8
+covars$Ag = 100 * covars$Ag
+covars$Forst = 100 * covars$Forst
+covars$Dev = 100 * covars$Dev
+covars$monthly.precip.median = covars$monthly.precip.median/100
+
 k = 100000
 covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
-#covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))])
 
+covars$OWEB_Grant_All_12_WC_log = log(covars$OWEB_Grant_All_12_WC+0.01)
+covars$NOT_OWEB_OWRI.wq.TotalCash_12_log = log(covars$NOT_OWEB_OWRI.wq.TotalCash_12+0.01)
 
-# non-oweb restoration funding to date
-# oweb restoration funding prior to number
-#
+# some book keeping
+n.data = length(covars$owqi)
 
+#or.bond = inla.nonconvex.hull(cbind(covars$DECIMAL_LONG,covars$DECIMAL_LAT),2,2)
+(mesh.a <- inla.mesh.2d(
+  cbind(mod.data$Decimal_long,mod.data$Decimal_Lat),
+  max.edge=c(5, 40),cut=.2))$n
 
-form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
-  dev.huc8 + ag.huc8+
-  forst.huc8 + elevation + seaDist + 
-  
-  OWEB_Grant_Restoration_12_WC+
-  OWEB_Grant_Capacity_12_WC +
-  OWEB_Grant_Outreach_12_WC +
-  OWEB_Grant_Education_12_WC +
-  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Education_12_WC:OWEB_Grant_Restoration_12_WC:OWEB_Grant_Capacity_12_WC+
- f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
-
-mod0 <- inla(form0, family='gaussian', 
-             data=data.frame(y=covars$l.owqi, covars,b0=1), 
-             control.predictor=list(compute=TRUE),
-             #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
-             control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
-
-covars2 = covars
-covars2[,grep('OWEB',names(covars2))] = log(covars[,grep('OWEB',names(covars2))])
-
-form1 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
-  dev.huc8 + ag.huc8+
-  forst.huc8 + elevation + seaDist + 
-  OWEB_Grant_Restoration_12_WC+
-  OWEB_Grant_Capacity_12_WC +
-  OWEB_Grant_Outreach_12_WC +
-  OWEB_Grant_Education_12_WC +
-  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Education_12_WC:OWEB_Grant_Restoration_12_WC:OWEB_Grant_Capacity_12_WC+
-  f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
-
-mod1 <- inla(form0, family='gaussian', 
-             data=data.frame(y=covars2$l.owqi, covars2,b0=1), 
-             control.predictor=list(compute=TRUE),
-             #     control.inla=list(strategy='laplace'), #note that we are here using laplace, default in R-INLA is the simplified laplace approximation (run faster)
-             control.compute=list(dic=TRUE, cpo=TRUE),verbose=T)
-
-
-
-
-mod1$summary.fixed
-
-round(exp(mod0$summary.fixed)[,1:2],2)
-round(exp(mod1$summary.fixed)[,1:2],2)
-
-
-ggplot(mod.data) + geom_point(aes(x=Decimal_long,y=Decimal_Lat,colour=as.factor(under.wc)))
-
-dim(mod.data)
-
-mod0 = lmer(l.owqi~ elevation + seaDist+Ag + Dev + Wetl + Forst+OWEB_Grant_Capacity.WC_Prior12+
-              forst.huc8 + wet.huc8 + dev.huc8+
-              (1|HUC8) + (1|YEAR),data=covars)
-
-summary(mod0)
-sum0 = summary(mod0)
-
-
-
-
-
-
-covars$Total_OWEB_All = rowSums(covars[,intersect(grep('All',names(covars),value=T), grep('OWEB',names(covars),value=T))])
-covars$Total_OWEB_12 = rowSums(covars[,intersect(grep('12',names(covars),value=T), grep('OWEB',names(covars),value=T))])
-covars$Total_OWEB_36 = rowSums(covars[,intersect(grep('36',names(covars),value=T), grep('OWEB',names(covars),value=T))])
-covars$Total_OWEB_60 = rowSums(covars[,intersect(grep('60',names(covars),value=T), grep('OWEB',names(covars),value=T))])
-
-covars$Total_Non_OWEB_36 = covars$Other.FALSE.TotalCash_36 + covars$Public.FALSE.TotalCash_36
-covars$Total_Non_OWEB_12 = covars$Other.FALSE.TotalCash_12 + covars$Public.FALSE.TotalCash_12
-covars$Total_Non_OWEB_60 = covars$Other.FALSE.TotalCash_60 + covars$Public.FALSE.TotalCash_60
-covars$Total_Non_OWEB_All = covars$Other.FALSE.TotalCash_All + covars$Public.FALSE.TotalCash_All
-
-##
-#plot(test,border='grey90',col='grey80',
- #    xlim = range(mesh.a$loc[, 1]),
-  #   ylim = range(mesh.a$loc[, 2]))
-#plot(mesh.a, asp=1,main=NULL,sub=NULL,add=T)
-#points(temp$DECIMAL_LONG[!duplicated(temp$DECIMAL_LONG)],
-#       temp$DECIMAL_LAT[!duplicated(temp$DECIMAL_LAT)],col='blue',pch=21)
-#legend(x=-116.5,y=41.75,legend='Station',pch=21,col='blue',pt.cex=1.5)
-
-covars$Total_Prior_To_12 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
-(covars$Total_Non_OWEB_12 + covars$Total_OWEB_12)
-
-covars$Total_Prior_To_36 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
-  (covars$Total_Non_OWEB_36 + covars$Total_OWEB_36)
-
-covars$Total_Prior_To_60 = (covars$Total_Non_OWEB_All + covars$Total_OWEB_All)-
-  (covars$Total_Non_OWEB_60 + covars$Total_OWEB_60)
-
-
-#Model 0: No spatial effect
-form0 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
-  dev.huc8 + 
-  forst.huc8 + elevation + seaDist + 
- # OWEB.wq.TotalCash_Prior12+
-  #OWEB_Grant_Capacity.WC_12+
-#  OWEB_Grant_Restoration.WC_12+
-  
-  OWEB_Grant_Outreach.WC_12+
-  OWEB_Grant_Education.WC_12+
-  OWEB_Grant_Restoration.WC_12+
-  OWEB_Grant_Capacity.WC_12+
-  OWEB_Grant_Outreach.WC_12:OWEB_Grant_Education.WC_12:OWEB_Grant_Restoration.WC_12:OWEB_Grant_Capacity.WC_12+
-  f(HUC8,model='iid')+
- f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)
-
-
-sum(is.na(covars$ag.huc8))
-
-modsum = summary(mod0)
-
-
-modsum
-
-
-modsum$fixed[10:nrow(modsum$fixed),]
-covars$TotalCash_36
-summary(mod0)$dic$dic
-6213.95
-library(INLA)
-install.packages('INLA')
-#cREATE MESH, SPDE
-mod.data$Decimal_long
-
-#note: mesh, spde object used for models 1-7
-(mesh.a <- inla.mesh.2d(cbind(mod.data$Decimal_long,mod.data$Decimal_Lat), max.edge=c(5,40),cut=.10))$n
-plot(mesh.a)
-spde.a <- inla.spde2.matern(mesh.a) 
-
-####make plot
-# plot(mesh.a,main=F,sub=F)
-# plot(test,,col='grey80',add=T)
-# plot(mesh.a,main=F,sub=F,add=T)
-# plot(params.spdf,add=T,col='blue',pch=1)
-# legend(x='bottomright',legend = 'Station',pch = 1,col='blue')
-#savePlot(type = 'png',filename = 'oregonmeshplot.png')
-#######
-
+spde.a <- inla.spde2.matern(mesh.a)
 
 # Model 1: constant spatial effect
-A.1 <- inla.spde.make.A(mesh.a, loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
+A.1 <- inla.spde.make.A(mesh.a, 
+                        loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
-
-stk.1 <- inla.stack(data=list(y=mod.data$l.owqi), A=list(A.1,1),
+stk.1 <- inla.stack(data=list(y=covars$owqi), A=list(A.1,1),
                     effects=list(ind.1, list(data.frame(b0=1,covars))))
 
-
-form1 <-   y ~ 0 + b0 + Ag + Forst + Dev  + ag.huc8 + dev.huc8 + forst.huc8 + elevation + seaDist + 
-  Total_Prior_To_12+
-  OWEB_Restoration.WC_12+
-  OWEB_Tech.WC_12+
-  OWEB_Ed.WC_12+
-  OWEB_Council.WC_12+
-  OWEB_Restoration.WC_12:OWEB_Tech.WC_12:OWEB_Ed.WC_12:OWEB_Council.WC_12+
-  OWEB_Restoration.Public_12+
-  OWEB_Tech.Public_12+
-  OWEB_Ed.Public_12+
-  OWEB_Restoration.Public_12:OWEB_Tech.Public_12:OWEB_Ed.Public_12+
-  f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+
-  f(s, model=spde.a)
-
-mod1 <- inla(form1, family='gaussian', data=inla.stack.data(stk.1),
-               control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
-             #  control.inla=list(strategy='laplace'), 
-               control.compute=list(dic=TRUE, cpo=TRUE))
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, covars$dev.huc8,
+          covars$ag.huc8, covars$forst.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12,
+          covars$OWEB_Grant_All_12_WC,
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12*covars$OWEB_Grant_All_12_WC,
+          covars$HUC8, covars$total.period,covars$seasonal)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
 
 
-
-#################
-
-#Model 2: random effect is replicated each year 
-table(repl.2 <- temp$YEAR-(min(temp$YEAR)-1))
-dim(A.2 <- inla.spde.make.A(mesh.a, repl=repl.2, loc=cbind(temp$DECIMAL_LONG,temp$DECIMAL_LAT)))
-ind.2 <- inla.spde.make.index(name='s', n.spde=mesh.a$n, n.repl=length(unique(temp$YEAR)))
-stk.2 <- inla.stack(data=list(y=temp$l.owqi), A=list(A.2,1),
-                     effects=list(ind.2, list(data.frame(b0=1,covars))))
-# formulae
-form2 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
-  elevation + seaDist  +  
+form_base_spatial_restricted.12 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_12 + 
+  OWEB_Grant_All_12_WC + 
+  NOT_OWEB_OWRI.wq.TotalCash_12:OWEB_Grant_All_12_WC+
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
-  f(s, model=spde.a,replicate=s.repl)
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
-mod2 <- inla(form2, family='gaussian', data=inla.stack.data(stk.2),
-              control.predictor=list(A=inla.stack.A(stk.2), compute=TRUE),
-            #  control.inla=list(strategy='laplace'), 
-              control.compute=list(dic=TRUE, cpo=TRUE))
+mod.base.spatial.restricted.12 <- inla(form_base_spatial_restricted.12, family='gaussian',
+                                       data=inla.stack.data(stk.1),
+                                       control.predictor=list(A=inla.stack.A(stk.1), 
+                                                              compute=TRUE),
+                                       #  control.inla=list(strategy='laplace'), 
+                                       control.compute=list(dic=TRUE, cpo=TRUE),
+                                       control.fixed= list(prec.intercept = 1),
+                                       verbose=T,
+                                       control.inla = list(
+                                         correct = TRUE,
+                                         correct.factor = 10))
 
 
 
-####MODELS 3-4: RANDOM EFFECT CORRELATED BETWEEN YEARS
-##MODELS 3-4 USE SAME STACK
-table(gr.3 <- temp$YEAR-(min(temp$YEAR)-1))
-dim(A.3 <- inla.spde.make.A(mesh.a, group=gr.3, loc=cbind(temp$DECIMAL_LONG, temp$DECIMAL_LAT)))
-ind.3 <- inla.spde.make.index(name='s', n.spde=mesh.a$n, n.group=length(unique(gr.3)))
-stk.3 <- inla.stack(data=list(y=temp$l.owqi), A=list(A.3,1),
-                    effects=list(ind.3, list(data.frame(b0=1,covars))))
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, covars$dev.huc8,
+          covars$ag.huc8, covars$forst.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_24,
+          covars$OWEB_Grant_All_24_WC,
+          covars$NOT_OWEB_OWRI.wq.TotalCash_24*covars$OWEB_Grant_All_24_WC,
+          covars$HUC8, covars$total.period,covars$seasonal)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
 
-#Model 3: random effect is correlated between years. autoregressive correlation ($m3a$) 
-form3 <-y ~ 0 + b0 +  Ag + Forst + Dev  + 
-  elevation + seaDist  +   f(HUC8,model='iid')+
+
+form_base_spatial_restricted.24 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_24 + 
+  OWEB_Grant_All_24_WC + 
+  NOT_OWEB_OWRI.wq.TotalCash_24:OWEB_Grant_All_24_WC+
   f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
-  f(s, model=spde.a, group=s.group, control.group=list(model='ar1'))
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
-mod3 <- inla(form3, family='gaussian', data=inla.stack.data(stk.3),
-                control.predictor=list(A=inla.stack.A(stk.3), compute=T),
-               # control.inla=list(strategy='laplace'), 
-             control.inla(list(h=1.0)),
-                control.compute=list(dic=TRUE, cpo=TRUE))
-
-#Model 4: random effect is correlated between years. exchangable correlation ($m3b$) 
-form4 <- y ~ 0 + b0 + Ag + Forst + Dev  + 
-  elevation + seaDist  +   f(HUC8,model='iid')+
-  f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+  
-  f(s, model=spde.a, group=s.group, control.group=list(model='exchangeable'))
-
-mod4 <- inla(form4, family='gaussian', data=inla.stack.data(stk.3),
-                control.predictor=list(A=inla.stack.A(stk.3), compute=T),
-                # control.inla=list(strategy='laplace'), 
-                control.compute=list(dic=TRUE, cpo=TRUE))
+mod.base.spatial.restricted.24 <- inla(form_base_spatial_restricted.24, family='gaussian',
+                                       data=inla.stack.data(stk.1),
+                                       control.predictor=list(A=inla.stack.A(stk.1), 
+                                                              compute=TRUE),
+                                       #  control.inla=list(strategy='laplace'), 
+                                       control.compute=list(dic=TRUE, cpo=TRUE),verbose=T,
+                                       control.fixed= list(prec.intercept = 1),
+                                       control.inla = list(
+                                         correct = TRUE,
+                                         correct.factor = 10))
 
 
-#Model 5: Replication each month
-table(repl.5 <- (temp$YEAR-min(temp$YEAR))*12 + as.integer(temp$MONTH.NUM))
-dim(A.5 <- inla.spde.make.A(mesh.a, repl=repl.5, loc=cbind(temp$DECIMAL_LONG, temp$DECIMAL_LAT)))
-ind.5 <- inla.spde.make.index(name='s', n.spde=mesh.a$n, n.repl=length(unique(repl.5))+1)
-stk.5 <- inla.stack(data=list(y=temp$l.owqi), A=list(A.5,1), tag='e',
-                     effects=list(ind.5, list(data.frame(b0=1,covars))))
-form5 <- y ~ 0 + b0 + Ag + Forst + Dev  + 
-  elevation + seaDist  +   f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+
-  f(s, model=spde.a, replicate=s.repl) 
-
-mod5 <- inla(form5, family='gaussian', data=inla.stack.data(stk.5),
-                control.predictor=list(A=inla.stack.A(stk.5), compute=TRUE),
-              #  control.inla=list(strategy='laplace'), 
-                control.compute=list(dic=TRUE, cpo=TRUE))
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, covars$dev.huc8,
+          covars$ag.huc8, covars$forst.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_36,
+          covars$OWEB_Grant_All_36_WC,
+          covars$NOT_OWEB_OWRI.wq.TotalCash_36*covars$OWEB_Grant_All_36_WC,
+          covars$HUC8, covars$total.period,covars$seasonal)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
 
 
+form_base_spatial_restricted.36 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_36 + 
+  OWEB_Grant_All_36_WC + 
+  NOT_OWEB_OWRI.wq.TotalCash_36:OWEB_Grant_All_36_WC+
+  f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
-####Models 6-7: REPLICATION BETWEEN YEARS
-##MODELS 6-7 USE SAME STACK
-table(repl.6 <- temp$YEAR-(min(temp$YEAR)-1))
-table(gr.6 <- as.integer(as.character(temp$MONTH.NUM)))
-dim(A.6 <- inla.spde.make.A(mesh.a, loc=cbind(temp$DECIMAL_LONG, temp$DECIMAL_LAT), 
-                            repl=repl.6, group=gr.6))
-ind.6 <- inla.spde.make.index(name='s', n.spde=mesh.a$n, n.repl=length(unique(temp$YEAR)),
-                              n.group=length(unique(temp$MONTH.NUM)))
-stk.6 <- inla.stack(data=list(y=temp$l.owqi), A=list(A.6,1),
-                    effects=list(ind.6, list(data.frame(b0=1,covars))))
-
-#Model 6: Replication between years. autoregressive correlation between months within year. 
-form6 <- y ~ 0 + b0 + Ag + Forst + Dev  + 
-  elevation + seaDist  +  f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+
-  f(s, model=spde.a, group=s.group, control.group=list(model='ar1'), replicate=s.repl)
-
-mod6 <- inla(form6, family='gaussian', data=inla.stack.data(stk.6),
-                 control.predictor=list(A=inla.stack.A(stk.6), compute=T),
-                # control.inla=list(strategy='laplace'), 
-                 control.compute=list(dic=TRUE, cpo=TRUE))
-
-#Model 7: Replication between years. exchangable correlation between months
-
-form7 <-y ~ 0 + b0 + Ag + Forst + Dev  + 
-  elevation + seaDist  +  f(HUC8,model='iid')+
-  f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+
-  f(s, model=spde.a, group=s.group, control.group=list(model='exchangeable'), replicate=s.repl) 
-
-mod7 <- inla(form7, family='gaussian', data=inla.stack.data(stk.6),
-          control.predictor=list(A=inla.stack.A(stk.6), compute=T),
-        #control.inla=list(strategy='laplace'), 
-          control.compute=list(dic=TRUE, cpo=TRUE))
-
-#models 3, 4 and 7 give the followin warning
-# *** WARNING *** Eigenvalue 3 of the Hessian is -41.3053 < 0
-# *** WARNING *** Set this eigenvalue to 1.94764
-# *** WARNING *** This have consequence for the accurancy of
-# *** WARNING *** the approximations; please check!!!
-# *** WARNING *** R-inla: Use option inla(..., control.inla = list(h = h.value), ...) 
-# *** WARNING *** R-inla: to chose a different  `h.value'.
-
-library(stargazer)
+mod.base.spatial.restricted.36 <- inla(form_base_spatial_restricted.36, family='gaussian',
+                                       data=inla.stack.data(stk.1),
+                                       control.predictor=list(A=inla.stack.A(stk.1), 
+                                                              compute=TRUE),
+                                       #  control.inla=list(strategy='laplace'), 
+                                       control.compute=list(dic=TRUE, cpo=TRUE),verbose=T,
+                                       control.fixed= list(prec.intercept = 1),
+                                       control.inla = list(
+                                         correct = TRUE,
+                                         correct.factor = 10))
 
 
-dic.scores = data.frame(
-mod0$dic$dic,
-mod1$dic$dic,
-mod2$dic$dic,
-NA,
-mod4$dic$dic,
-mod5$dic$dic,
-mod6$dic$dic,
-NA)
-colnames(dic.scores) = c(paste('M',0:7,sep=''))
-
-dic.scores[1,] = round(dic.scores[1,])
-rownames(dic.scores) = 'DIC score'
-
-stargazer(dic.scores,type='latex',summary=F,out='comparebasemodsdic.tex',label='table:dicscores',
-          title='Compare DIC scores for different SPDE models',table.placement='!hbtp')
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, covars$dev.huc8,
+          covars$ag.huc8, covars$forst.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_48,
+          covars$OWEB_Grant_All_48_WC,
+          covars$NOT_OWEB_OWRI.wq.TotalCash_48*covars$OWEB_Grant_All_48_WC,
+          covars$HUC8, covars$total.period,covars$seasonal)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
 
 
-dic.scores
+form_base_spatial_restricted.48 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_48 + 
+  OWEB_Grant_All_48_WC + 
+  NOT_OWEB_OWRI.wq.TotalCash_48:OWEB_Grant_All_48_WC+
+  f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
-save.image('spde.fit.results.RData')
+mod.base.spatial.restricted.48 <- inla(form_base_spatial_restricted.48, family='gaussian',
+                                       data=inla.stack.data(stk.1),
+                                       control.predictor=list(A=inla.stack.A(stk.1), 
+                                                              compute=TRUE),
+                                       #  control.inla=list(strategy='laplace'), 
+                                       control.compute=list(dic=TRUE, cpo=TRUE),verbose=T,
+                                       control.fixed= list(prec.intercept = 1),
+                                       control.inla = list(
+                                         correct = TRUE,
+                                         correct.factor = 10))
 
-rm(list=ls())
-setwd('H:/quinalt')
+
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, covars$dev.huc8,
+          covars$ag.huc8, covars$forst.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_60,
+          covars$OWEB_Grant_All_60_WC,
+          covars$NOT_OWEB_OWRI.wq.TotalCash_60*covars$OWEB_Grant_All_60_WC,
+          covars$HUC8, covars$total.period,covars$seasonal)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
+
+
+form_base_spatial_restricted.60 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_60 + 
+  OWEB_Grant_All_60_WC + 
+  NOT_OWEB_OWRI.wq.TotalCash_60:OWEB_Grant_All_60_WC+
+  f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
+
+mod.base.spatial.restricted.60 <- inla(form_base_spatial_restricted.60, family='gaussian',
+                                       data=inla.stack.data(stk.1),
+                                       control.predictor=list(A=inla.stack.A(stk.1), 
+                                                              compute=TRUE),
+                                       #  control.inla=list(strategy='laplace'), 
+                                       control.compute=list(dic=TRUE, cpo=TRUE),verbose=T,
+                                       control.fixed= list(prec.intercept = 1),
+                                       control.inla = list(
+                                         correct = TRUE,
+                                         correct.factor = 10))
 
 
 
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, covars$dev.huc8,
+          covars$ag.huc8, covars$forst.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_All,
+          covars$OWEB_Grant_All_All_WC,
+          covars$NOT_OWEB_OWRI.wq.TotalCash_All*covars$OWEB_Grant_All_All_WC,
+          covars$HUC8, covars$total.period,covars$seasonal)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
+
+
+form_base_spatial_restricted.All <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_All + 
+  OWEB_Grant_All_All_WC + 
+  NOT_OWEB_OWRI.wq.TotalCash_All:OWEB_Grant_All_All_WC+
+  f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
+
+mod.base.spatial.restricted.All <- inla(form_base_spatial_restricted.All, family='gaussian',
+                                       data=inla.stack.data(stk.1),
+                                       control.predictor=list(A=inla.stack.A(stk.1), 
+                                                              compute=TRUE),
+                                       #  control.inla=list(strategy='laplace'), 
+                                       control.compute=list(dic=TRUE, cpo=TRUE),verbose=T,
+                                       control.fixed= list(prec.intercept = 1),
+                                       control.inla = list(
+                                         correct = TRUE,
+                                         correct.factor = 10))
+
+save.image('temporary_testing.RData')
 
 
 
+tempcoefspatialrestricted12 = data.frame((mod.base.spatial.restricted.12$summary.fixed[-1,c(1,3,5)]))
+
+tempcoefspatialrestricted24 = data.frame((mod.base.spatial.restricted.24$summary.fixed[-1,c(1,3,5)]))
+
+tempcoefspatialrestricted36 = data.frame((mod.base.spatial.restricted.36$summary.fixed[-1,c(1,3,5)]))
+
+tempcoefspatialrestricted48 = data.frame((mod.base.spatial.restricted.48$summary.fixed[-1,c(1,3,5)]))
+
+tempcoefspatialrestricted60 = data.frame((mod.base.spatial.restricted.60$summary.fixed[-1,c(1,3,5)]))
+
+tempcoefspatialrestrictedAll = data.frame((mod.base.spatial.restricted.All$summary.fixed[-1,c(1,3,5)]))
+
+tempcoefspatialrestricted12$ID = rownames(tempcoefspatialrestricted12)
+tempcoefspatialrestricted12$Model = 'tempcoefspatialrestricted12'
+tempcoefspatialrestricted24$ID = rownames(tempcoefspatialrestricted24)
+tempcoefspatialrestricted24$Model = 'tempcoefspatialrestricted24'
+tempcoefspatialrestricted36$ID = rownames(tempcoefspatialrestricted36)
+tempcoefspatialrestricted36$Model = 'tempcoefspatialrestricted36'
+tempcoefspatialrestricted48$ID = rownames(tempcoefspatialrestricted48)
+tempcoefspatialrestricted48$Model = 'tempcoefspatialrestricted48'
+tempcoefspatialrestricted60$ID = rownames(tempcoefspatialrestricted60)
+tempcoefspatialrestricted60$Model = 'tempcoefspatialrestricted60'
+tempcoefspatialrestrictedAll$ID = rownames(tempcoefspatialrestrictedAll)
+tempcoefspatialrestrictedAll$Model = 'tempcoefspatialrestrictedAll'
+
+
+rowname.vector = c(
+  "$\\%$  Agric. (100m buffer)",
+  '$\\%$  Forest (100m buffer)',
+  '$\\%$  Devel. (100m buffer)',
+  '$\\%$  Devel. in HUC8',
+  "$\\%$  Agric. in HUC8",
+  '$\\%$  Forest in HUC8',
+  'Elevation (10m)',
+  'Dist. from coast (10km)',
+  'Monthly precip. (10cm)',
+  'Non-OWEB Restoration (\\$100k)',
+  'OWEB funds to WC (\\$100k)',
+  'OWEB funds * Non-OWEB Restoration')
+
+library(lme4)
+library(texreg)
+
+modbase.spatial.restricted.12 = texreg::createTexreg(
+  coef.names = rowname.vector,
+  coef = tempcoefspatialrestricted12[,1],
+  ci.low = tempcoefspatialrestricted12[,2],
+  ci.up = tempcoefspatialrestricted12[,3],
+  gof.names = 'DIC',
+  gof = mod.base.spatial.restricted.12$dic$dic)
+
+modbase.spatial.restricted.24 = texreg::createTexreg(
+  coef.names = rowname.vector,
+  coef = tempcoefspatialrestricted24[,1],
+  ci.low = tempcoefspatialrestricted24[,2],
+  ci.up = tempcoefspatialrestricted24[,3],
+  gof.names = 'DIC',
+  gof = mod.base.spatial.restricted.24$dic$dic)
+
+
+modbase.spatial.restricted.36 = texreg::createTexreg(
+  coef.names = rowname.vector,
+  coef = tempcoefspatialrestricted36[,1],
+  ci.low = tempcoefspatialrestricted36[,2],
+  ci.up = tempcoefspatialrestricted36[,3],
+  gof.names = 'DIC',
+  gof = mod.base.spatial.restricted.36$dic$dic)
+
+modbase.spatial.restricted.48 = texreg::createTexreg(
+  coef.names = rowname.vector,
+  coef = tempcoefspatialrestricted48[,1],
+  ci.low = tempcoefspatialrestricted48[,2],
+  ci.up = tempcoefspatialrestricted48[,3],
+  gof.names = 'DIC',
+  gof = mod.base.spatial.restricted.48$dic$dic)
+
+modbase.spatial.restricted.60 = texreg::createTexreg(
+  coef.names = rowname.vector,
+  coef = tempcoefspatialrestricted60[,1],
+  ci.low = tempcoefspatialrestricted60[,2],
+  ci.up = tempcoefspatialrestricted60[,3],
+  gof.names = 'DIC',
+  gof = mod.base.spatial.restricted.60$dic$dic)
+
+modbase.spatial.restricted.All = texreg::createTexreg(
+  coef.names = rowname.vector,
+  coef = tempcoefspatialrestrictedAll[,1],
+  ci.low = tempcoefspatialrestrictedAll[,2],
+  ci.up = tempcoefspatialrestrictedAll[,3],
+  gof.names = 'DIC',
+  gof = mod.base.spatial.restricted.All$dic$dic)
+
+texreg(l = list(modbase.spatial.restricted.12,
+                modbase.spatial.restricted.36,
+                modbase.spatial.restricted.60),
+       stars=numeric(0),ci.test = 1,digits = 3,
+       caption = "Baseline models with only OWEB funding to Watershed Councils", caption.above = TRUE, 
+       custom.model.names = c('Past 12 months','Past 36 months',
+                             'Past 60 months'),
+       label = c('table:basemods'),
+       custom.note = "$^* 1$ outside the credible interval",
+       custom.coef.names = rowname.vector,
+       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/basemods.tex')
 
 
 

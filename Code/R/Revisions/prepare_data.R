@@ -1287,7 +1287,7 @@ swcd.year.month[,grep('OWEB',colnames(swcd.year.month))][is.na(swcd.year.month[,
 # 
 
 
-######### COMPUTE RESTORATION AND GRANT COVARIATES #########
+######### COMPUTE RESTORATION GRANT COVARIATES #########
 
 obs.data = all.params.spdf@data
 
@@ -1317,10 +1317,17 @@ temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) 
 names(temp60)[grep('OWEB',names(temp60))] = paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_')
 
 
+temp = join_all(list(as.data.frame(tempAll[,c('HUC8','uq.tid',grep('OWEB',names(tempAll),value=T))]),
+                     as.data.frame(temp12[,c('HUC8','uq.tid',grep('OWEB',names(temp12),value=T))]),
+                     as.data.frame(temp24[,c('HUC8','uq.tid',grep('OWEB',names(temp24),value=T))]),
+                     as.data.frame(temp36[,c('HUC8','uq.tid',grep('OWEB',names(temp36),value=T))]),
+                     as.data.frame(temp48[,c('HUC8','uq.tid',grep('OWEB',names(temp48),value=T))]),
+                     as.data.frame(temp60[,c('HUC8','uq.tid',grep('OWEB',names(temp60),value=T))])))
+temp[is.na(temp)] = 0
+
 obs.data = join(obs.data,temp)
 
 all.params.spdf@data = obs.data
-
 
 #WC covariates##
 obs.data = all.params.spdf@data
@@ -1355,13 +1362,10 @@ temp[is.na(temp)] = 0
 
 obs.data = join(obs.data,temp)
 
-
-
 all.params.spdf@data = obs.data
 
-obs.data = all.params.spdf@data
 #SWCD Covariates#
-
+obs.data = all.params.spdf@data
 tempAll = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
   dplyr::mutate_each(funs(cumsum),contains('OWEB'))
 names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'SWCD',sep='_')
@@ -1395,14 +1399,14 @@ obs.data = join(obs.data,temp)
 
 all.params.spdf@data = obs.data
 
+#####rename counties for a few stations#####
 
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10407] = 'MALHEUR'
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 12261] = 'MALHEUR'
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10616] = 'MULTNOMAH'
 
-all.params.spdf@data = join(all.params.spdf@data,huc8_data)
-
-
+all.params.spdf@data = join(all.params.spdf@data,
+                     dplyr::select(huc8_data,-c(grep('OWEB_OWRI',names(huc8_data)),grep('OWEB_HUC8',names(huc8_data)))))
 
 ###### REMOVE AND SAVE ########
 if(remote)
@@ -1421,6 +1425,8 @@ rm(s)
 rm(s.crop)
 
 save.image('temp_workspace_precip.RData')
+write.csv(all.params.spdf@data,'Input/temp_modeldata_precip.csv')
+
 library(mail)
 mail::sendmail('tyler.andrew.scott@gmail.com','prepare_data.R finished','nori has finished quinalt project data prep (with precip)')
 
