@@ -370,8 +370,9 @@ library(ggplot2)
 library(ggthemes)
 projectcoefplot = ggplot(data=plottemp) + 
   geom_segment(aes(x=X0.025quant,xend=X0.975quant,y=as.factor(Order),yend=as.factor(Order)),
-               lwd=2,lineend='round') + 
-  facet_wrap(~Lag) + scale_x_continuous(name='Credible interval (0.025 to 0.975)',limits=c(-0.01,0.01))+ 
+               lwd=3,lineend='round') + 
+  facet_wrap(~Lag) + scale_x_continuous(name='Posterior credible interval (0.025 to 0.975)',
+                                        limits=c(-0.015,0.015),breaks=c(-0.01,0.00,0.01))+ 
   theme_bw() +
   scale_y_discrete(name='',labels= name.vec) + 
   theme(
@@ -383,6 +384,8 @@ projectcoefplot = ggplot(data=plottemp) +
     strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
 
+
+plot(projectcoefplot)
 ggsave('JPART_Submission/Version2/projectcoefplot.png',projectcoefplot)
 
 
@@ -449,9 +452,15 @@ texreg(l = list(mod.12tex,mod.24tex,mod.36tex),
        custom.model.names = c('Past 12 months','Past 36 months','Past 60 months'),
        caption.above=T,#omit.coef = "(100m)|(HUC8)|(10m)|(10km)|Total|precip",
        label = c('table:typefunding'),
-       caption = 'Predicted water quality impact by grant type',
+       caption = 'Association between prior funding by project type and water quality ',
        custom.note = "$^* 0$ outside the credible interval",
        file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/projectfunding.tex')
+
+rm(list=ls())
+setwd('~/win/user/quinalt/')
+list.files()
+load('results_projectfunding.RData')
+
 
 save.image('results_projectfunding.RData')
 mail::sendmail('tyler.andrew.scott@gmail.com','run_models_projectfunding.R finished','nori has finished running projectfunding comp models')

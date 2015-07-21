@@ -50,7 +50,7 @@ mod.data$total.period = mod.data$Abs.Month
 mod.data = filter(mod.data,YEAR>=1995)
 mod.data$HUC8 = as.character(mod.data$HUC8)
 
-covars = mod.data[,c('elevation','seaDist','HUC8','total.period','YEAR',
+covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR',
                      'ag.huc8','dev.huc8','wet.huc8','forst.huc8','owqi',
                      'owqi','monthly.precip.median',
                      'seasonal','Ag','Dev','Wetl','Forst',
@@ -137,12 +137,13 @@ covars$Forst = 100 * covars$Forst
 covars$Dev = 100 * covars$Dev
 covars$monthly.precip.median = covars$monthly.precip.median/100
 
+
 covars[,c('elev100m','seaDist10km','ag.huc8','dev.huc8',
           'forst.huc8','Ag','Dev','Forst','monthly.precip.median','owqi')] = 
   log(covars[,c('elev100m','seaDist10km','ag.huc8','dev.huc8',
             'forst.huc8','Ag','Dev','Forst','monthly.precip.median','owqi')] + 0.001)
 
-k = 100000
+k = 1000000
 covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
 covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))]+0.001)
 
@@ -167,6 +168,20 @@ stk.1 <- inla.stack(data=list(y=covars$owqi), A=list(A.1,1),
 
 #######Interaction#########
 # put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+# X = cbind(rep(1,n.data),
+#           covars$Ag,
+#           covars$Forst,
+#           covars$Dev,  covars$ag.huc8, covars$forst.huc8,
+#           covars$dev.huc8,
+#           covars$seaDist, covars$elevation,
+#           covars$monthly.precip.median, 
+#           covars$NOT_OWEB_OWRI.wq.TotalCash_12,
+#           covars$OWEB_Grant_All_12_WC,
+#           covars$OWEB_Grant_All_12_SWCD,
+#           covars$OWEB_Grant_All_12_WC*covars$OWEB_Grant_All_12_SWCD,
+#           covars$HUC8, 
+# covars$total.period,covars$seasonal,covars$Station)
+
 X = cbind(rep(1,n.data),
           covars$Ag,
           covars$Forst,
@@ -177,36 +192,163 @@ X = cbind(rep(1,n.data),
           covars$NOT_OWEB_OWRI.wq.TotalCash_12,
           covars$OWEB_Grant_All_12_WC,
           covars$OWEB_Grant_All_12_SWCD,
-          covars$OWEB_Grant_All_12_WC*covars$OWEB_Grant_All_12_SWCD,
-          covars$HUC8, 
-covars$total.period,covars$seasonal)
+          covars$OWEB_Grant_All_12_WC*covars$OWEB_Grant_All_12_SWCD)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
 
-form_base_spatial_restricted.12 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+form_base_12 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
   ag.huc8+
   forst.huc8 +dev.huc8 +  elevation + seaDist + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_12 + 
   OWEB_Grant_All_12_WC+
 OWEB_Grant_All_12_SWCD+
 OWEB_Grant_All_12_WC:OWEB_Grant_All_12_SWCD+
-  f(HUC8,model='iid')+ f(total.period,model='rw2') + f(seasonal,model='seasonal',season.length=12)+ 
+  f(HUC8,model='iid')+ 
+ # f(total.period,model='rw2') + 
+  f(seasonal,model='seasonal',season.length=12)+ 
+  f(Station,model='ar',order=1) + 
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
-mod.base.spatial.restricted.12 <- inla(form_base_spatial_restricted.12, family='gaussian',
+mod_base_12 <- inla(form_base_12, family='gaussian',
                                        data=inla.stack.data(stk.1),
                                        control.predictor=list(A=inla.stack.A(stk.1), 
                                                               compute=TRUE),
                                        #  control.inla=list(strategy='laplace'), 
-                                       control.compute=list(dic=TRUE, cpo=TRUE),
+                                       control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),
                                        control.fixed= list(prec.intercept = 1),
                                        verbose=T,
                                        control.inla = list(
                                          correct = TRUE,
                                          correct.factor = 10))
 
+
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, 
+          covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12,
+          
+          covars$OWEB_Grant_Outreach_12_WC, 
+          covars$OWEB_Grant_Outreach_12_SWCD,
+          covars$OWEB_Grant_Outreach_12_WC*covars$OWEB_Grant_Outreach_12_SWCD,
+          
+          covars$OWEB_Grant_Tech_12_WC, 
+          covars$OWEB_Grant_Tech_12_SWCD,
+          covars$OWEB_Grant_Tech_12_WC*covars$OWEB_Grant_Tech_12_SWCD, 
+          
+          covars$OWEB_Grant_Restoration_12_WC, 
+          covars$OWEB_Grant_Restoration_12_SWCD, 
+          covars$OWEB_Grant_Restoration_12_WC*covars$OWEB_Grant_Restoration_12_SWCD, 
+          
+          covars$OWEB_Grant_Outreach_12_WC*covars$OWEB_Grant_Tech_12_WC*covars$OWEB_Grant_Restoration_12_WC*
+            covars$OWEB_Grant_Outreach_12_SWCD*covars$OWEB_Grant_Tech_12_SWCD*covars$OWEB_Grant_Restoration_12_SWCD
+)
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
+
+form_project_12 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  ag.huc8+
+  forst.huc8 + dev.huc8 + elevation + seaDist + 
+  monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_12 + 
+  
+  OWEB_Grant_Outreach_12_WC+
+  OWEB_Grant_Outreach_12_SWCD + 
+  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Outreach_12_SWCD + 
+  OWEB_Grant_Tech_12_WC+
+  OWEB_Grant_Tech_12_SWCD + 
+  OWEB_Grant_Tech_12_WC:OWEB_Grant_Tech_12_SWCD + 
+  OWEB_Grant_Restoration_12_WC +
+  OWEB_Grant_Restoration_12_SWCD + 
+  OWEB_Grant_Restoration_12_WC:OWEB_Grant_Restoration_12_SWCD + 
+  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Tech_12_WC:OWEB_Grant_Restoration_12_WC:
+  OWEB_Grant_Outreach_12_SWCD:OWEB_Grant_Tech_12_SWCD:OWEB_Grant_Restoration_12_SWCD + 
+  f(HUC8,model='iid')+ 
+  # f(total.period,model='rw2') + 
+  f(seasonal,model='seasonal',season.length=12)+ 
+  f(Station,model='ar',order=1) + 
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
+
+
+mod_project_12 <- inla(form_project_12, family='gaussian', data=inla.stack.data(stk.1),
+                    control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
+                    #  control.inla=list(strategy='laplace'), 
+                    control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),
+                    control.fixed= list(prec.intercept = 1),
+                    verbose=T,
+                    control.inla = list(
+                      correct = TRUE,
+                      correct.factor = 10))
+
+
+
+# put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
+X = cbind(rep(1,n.data),
+          covars$Ag, covars$Forst,
+          covars$Dev, 
+          covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
+          covars$seaDist, covars$elevation,
+          covars$monthly.precip.median, 
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12,
+          covars$OWEB_Grant_Outreach_12_WC, 
+          covars$OWEB_Grant_Tech_12_WC,
+          covars$OWEB_Grant_Restoration_12_WC,
+          covars$OWEB_Grant_Capacity_12_WC
+          
+          
+          
+          
+          )
+n.covariates = ncol(X)
+Q = qr.Q(qr(X))
+
+form_capacity_12 <-  y ~ 0 + b0 + Ag + Forst + Dev  + 
+  dev.huc8 + ag.huc8+
+  forst.huc8 + elevation + seaDist + 
+  monthly.precip.median + 
+  NOT_OWEB_OWRI.wq.TotalCash_12+
+  OWEB_Grant_Outreach_12_WC+
+  OWEB_Grant_Tech_12_WC+
+  OWEB_Grant_Restoration_12_WC+
+  OWEB_Grant_Capacity_12_WC + 
+  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Capacity_12_WC+
+  OWEB_Grant_Tech_12_WC:OWEB_Grant_Capacity_12_WC+
+  OWEB_Grant_Restoration_12_WC:OWEB_Grant_Capacity_12_WC+
+  OWEB_Grant_Capacity_12_WC:OWEB_Grant_Outreach_12_WC:OWEB_Grant_Tech_12_WC:OWEB_Grant_Capacity_12_WC:OWEB_Grant_Restoration_12_WC+
+  f(HUC8,model='iid')+ 
+  # f(total.period,model='rw2') + 
+  f(seasonal,model='seasonal',season.length=12)+ 
+  f(Station,model='ar',order=1) + 
+  f(s, model=spde.a,
+    extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
+
+
+mod_capacity_12 <- inla(form_capacity_12, family='gaussian', data=inla.stack.data(stk.1),
+                    control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
+                    #  control.inla=list(strategy='laplace'), 
+                    control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
+
+
+mod_project_12
+
+dim(round(mod_capacity_12$summary.fixed,3))
+mod_capacity_12$waic$waic
+round(mod_capacity_12$summary.fixed,3)[-19,c(1,3,5)]
+nrow(mod_capacity_12$summary.fixed)
+mod_project_12$waic$waic
+mod.base.spatial.restricted.12$dic$dic
+mod_base_12$dic$dic
+mod_project_12$dic$dic
+mod_project_12$waic$waic
+round(mod_project_12$summary.fixed,3)[-21,c(1,3,5)]
+dim(mod_project_12$summary.fixed)
+round(mod.base.spatial.restricted.12$summary.fixed,3)
+mod.base.spatial.restricted.12$summary.random$Station
 # put all the covariates (and the intercept) in a ``design matrix'' and make the matrix for the regression problem.  Using a QR factorisation for stability (don't worry!) the regression coefficients would be t(Q)%*%(spde)
 X = cbind(rep(1,n.data),
           covars$Ag, covars$Forst,
@@ -319,8 +461,8 @@ library(ggplot2)
 library(ggthemes)
 basecoefplot = ggplot(data=plottemp) + 
   geom_segment(aes(x=X0.025quant,xend=X0.975quant,y=as.factor(Order),yend=as.factor(Order)),
-               lwd=2,lineend='round') + 
-  facet_wrap(~Lag) + scale_x_continuous(name='Credible interval (0.025 to 0.975)',
+               lwd=3,lineend='round') + 
+  facet_wrap(~Lag) + scale_x_continuous(name='Posterior credible interval (0.025 to 0.975)',
                                         limits=c(-0.05,0.11))+ 
   theme_bw() +
   scale_y_discrete(name='',labels= name.vec) + 
@@ -332,7 +474,6 @@ basecoefplot = ggplot(data=plottemp) +
     axis.text = element_text(size=12),
      strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
-
 ggsave('JPART_Submission/Version2/basecoefplot.png',basecoefplot)
 
 
@@ -382,7 +523,7 @@ modbase.spatial.restricted.12 = texreg::createTexreg(
   ci.up = tempcoefspatialrestricted12[,3],
   gof.names = 'DIC',
   gof = mod.base.spatial.restricted.12$dic$dic)
-
+modbase.spatial.restricted.12
 modbase.spatial.restricted.24 = texreg::createTexreg(
   coef.names = rev(name.vec),
   coef = tempcoefspatialrestricted24[,1],
@@ -431,7 +572,7 @@ texreg(l = list(modbase.spatial.restricted.12,
        caption = "Baseline models with only OWEB funding to Watershed Councils", caption.above = TRUE, 
        custom.model.names = c('Past 12 months\' funding','Past 24 months\' funding','Past 36 months\' funding'),
        label = c('table:basemods'),
-       custom.note = "$^* 0$ outside the credible interval\\
+       custom.note = "$^* 0$ outside the credible interval\\\
        OWRI: Spending on non-OWEB Restoration projects as reported in Oregon Watershed Restoration Inventory database",
        custom.coef.names = rev(name.vec),
        file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/basemods.tex')

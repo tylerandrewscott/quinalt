@@ -235,6 +235,8 @@ oregon.huc8.df = join(oregon.huc8.df,land.cover.huc8,type='left')
 
 
 wq.dat = read.csv('Input/Scott_OWQI_1980_2013.csv',header=T,skip=1)
+wq.dat = wq.dat[!duplicated(wq.dat),]
+
 station.locs = read.csv('Input/oregon_wq_stations.csv')
 
 wq.dat = join(wq.dat,station.locs)
@@ -879,7 +881,7 @@ oweb.all = join_all(list(oweb.completed,oweb.cancelled,oweb.notawarded,oweb.moni
 
 oweb.all[oweb.all==''] = NA
 
-oweb.all = oweb.all %>% filter(!is.na(Grantee)) %>% filter(Region!='SW') %>% filter(Project.Status!='Cancelled') %>%
+oweb.all = oweb.all %>% filter(!is.na(Grantee)) %>% filter(Project.Amount!=0) %>% filter(Region!='SW') %>% filter(Project.Status!='Cancelled') %>%
   filter(Project.Status!='Withdrawn') %>% filter(Project.Status != 'Ineligible') %>% filter(Project.Status !='Not Awarded')
 
 oweb.all =  join(oweb.all,grant.gis)
@@ -1144,8 +1146,6 @@ oweb.all = filter(oweb.all,!is.na(oweb.all$HUC8))
 
 
 
-
-
 oweb.all$Project.Amount.Monthly = oweb.all$Project.Amount / ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length)
 
 
@@ -1156,7 +1156,7 @@ oweb.all.projbymonth$uq.tid = paste(oweb.all.projbymonth$HUC8,oweb.all.projbymon
 
 
 ################# COMPILE OWEB WC GRANTS BY  HUC8 #############
-temp =  oweb.all.projbymonth %>% dplyr::group_by(uq.tid,Project.Type,which.group) %>% dplyr::summarise_each(funs(sum),Project.Amount)
+temp =  oweb.all.projbymonth %>% dplyr::group_by(uq.tid,Project.Type,which.group) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
 
 
 huc8_data[,as.vector(outer(unique(paste('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,sep='_')), 
@@ -1167,7 +1167,7 @@ for (i in 1:nrow(temp))
   huc8_data[match(temp$uq.tid[i],huc8_data$uq.tid),
             which(colnames(huc8_data)==paste(paste('OWEB_HUC8_Grant',temp$Project.Type[i],sep='_'),
                                              temp$which.group[i],sep='.'))] = 
-    temp$Project.Amount[i]
+    temp$Project.Amount.Monthly[i]
 }
 
 
@@ -1199,12 +1199,12 @@ swcd.year.month$uq.swcd.tid = paste(swcd.year.month$SWCD_Name,swcd.year.month$Ab
 oweb.all.projbymonth$uq.wc.tid = paste(oweb.all.projbymonth$Grantee,oweb.all.projbymonth$Abs.Month,sep='_')
 oweb.all.projbymonth$uq.swcd.tid = paste(oweb.all.projbymonth$Grantee,oweb.all.projbymonth$Abs.Month,sep='_')
 
-temp =  oweb.all.projbymonth %>% filter(which.group=='WC') %>% dplyr::group_by(uq.wc.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount)
+temp =  oweb.all.projbymonth %>% filter(which.group=='WC') %>% dplyr::group_by(uq.wc.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
 wc.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')))] = NA
 for (i in 1:nrow(temp))
 {wc.year.month[match(temp$uq.wc.tid[i],wc.year.month$uq.wc.tid),
                which(colnames(wc.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
-  temp$Project.Amount[i]}
+  temp$Project.Amount.Monthly[i]}
 
 wc.year.month[,colnames(wc.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
   is.na(wc.year.month[,colnames(wc.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
@@ -1212,12 +1212,12 @@ wc.year.month[,grep('OWEB',colnames(wc.year.month))][is.na(wc.year.month[,grep('
 
 ################# COMPILE OWEB GRANTS BY SWCD #############
 
-temp =  oweb.all.projbymonth %>% filter(which.group=='SWCD') %>% dplyr::group_by(uq.swcd.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount)
+temp =  oweb.all.projbymonth %>% filter(which.group=='SWCD') %>% dplyr::group_by(uq.swcd.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
 swcd.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')))] = NA
 for (i in 1:nrow(temp))
 {swcd.year.month[match(temp$uq.swcd.tid[i],swcd.year.month$uq.swcd.tid),
                  which(colnames(swcd.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
-  temp$Project.Amount[i]}
+  temp$Project.Amount.Monthly[i]}
 
 swcd.year.month[,colnames(swcd.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
   is.na(swcd.year.month[,colnames(swcd.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
@@ -1424,8 +1424,8 @@ rm(list=ls()[grep('R4',ls())])
 rm(s)
 rm(s.crop)
 
-save.image('temp_workspace_precip.RData')
-write.csv(all.params.spdf@data,'Input/temp_modeldata_precip.csv')
+save.image('temp_workspace_data.RData')
+write.csv(all.params.spdf@data,'Input/temp_data.csv')
 
 library(mail)
 mail::sendmail('tyler.andrew.scott@gmail.com','prepare_data.R finished','nori has finished quinalt project data prep (with precip)')

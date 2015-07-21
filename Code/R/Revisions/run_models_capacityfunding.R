@@ -313,15 +313,29 @@ tempcoefcapacity36$Covar = rownames(tempcoefcapacity36)
 tempcoefcapacity12$Lag = 'Past 12 months\' funding'
 tempcoefcapacity24$Lag = 'Past 24 months\' funding'
 tempcoefcapacity36$Lag = 'Past 36 months\' funding'
-tempcoefcapacity12$Order = nrow(tempcoefcapacity12):1
-tempcoefcapacity24$Order = nrow(tempcoefcapacity24):1
-tempcoefcapacity36$Order = nrow(tempcoefcapacity36):1
+tempcoefcapacity12$Order = -(1:nrow(tempcoefcapacity12))
+tempcoefcapacity24$Order = -(1:nrow(tempcoefcapacity24))
+tempcoefcapacity36$Order = -(1:nrow(tempcoefcapacity36))
 
-
-# 
-plottemp = rbind(tempcoefcapacity12,tempcoefcapacity24,tempcoefcapacity36)
-# 
-name.vec = c( 
+tempcoefcapacity12$Name = c( 
+  'Outreach',
+  'Tech.',
+  'Restoration',
+  'Outreach * Capacity',
+  'Tech. * Capacity',
+  'Restoration * Capacity.',
+  'Full interaction'
+)
+tempcoefcapacity24$Name = c( 
+  'Outreach',
+  'Tech.',
+  'Restoration',
+  'Outreach * Capacity',
+  'Tech. * Capacity',
+  'Restoration * Capacity.',
+  'Full interaction'
+)
+tempcoefcapacity36$Name = c( 
   'Outreach',
   'Tech.',
   'Restoration',
@@ -331,14 +345,29 @@ name.vec = c(
   'Full interaction'
 )
 
+plottemp = rbind(tempcoefcapacity12,tempcoefcapacity24,tempcoefcapacity36)
+
+name.vec = c( 
+  'Outreach',
+  'Tech.',
+  'Restoration',
+  'Outreach * Capacity',
+  'Tech. * Capacity',
+  'Restoration * Capacity.',
+  'Full interaction')
+
 library(ggplot2)
 library(ggthemes)
+
 capacitycoefplot = ggplot(data=plottemp) + 
-  geom_segment(aes(x=X0.025quant,xend=X0.975quant,y=as.factor(Order),yend=as.factor(Order)),
+  geom_segment(aes(x=X0.025quant,xend=X0.975quant,y=Order,yend=Order),
                lwd=2,lineend='round') + 
-  facet_wrap(~Lag) + scale_x_continuous(name='Credible interval (0.025 to 0.975)',limits=c(-0.01,0.01))+ 
+  facet_wrap(~Lag) + 
+  #scale_x_continuous(name='Credible interval (0.025 to 0.975)',
+   #                  limits=c(-0.006,0.006))+
+  scale_x_continuous(name='Credible interval (0.025 to 0.975)')+
   theme_bw() +
-  scale_y_discrete(name='',labels= name.vec) + 
+  scale_y_discrete(name='',labels= name.vec)+
   theme(
     axis.ticks = element_blank(),
     panel.grid.major = element_blank(),
@@ -348,6 +377,10 @@ capacitycoefplot = ggplot(data=plottemp) +
     strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
 
+plot(capacitycoefplot)
+c(min(plottemp$Order),max(plottemp$Order))
+plottemp
+head(plottemp$Covar)
 ggsave('JPART_Submission/Version2/capacitycoefplot.png',capacitycoefplot)
 
 
@@ -358,6 +391,11 @@ mod.12tex = texreg::createTexreg(
   ci.up = tempcoefcapacity12[,3],
   gof.names = 'DIC',
   gof = mod.cap.12m$dic$dic)
+
+
+mod.cap.12m$names.fixed
+mod.cap.12m$summary.fixed[c(12:17),]
+
 
 mod.24tex = texreg::createTexreg(
   coef.names = rev(name.vec),
@@ -380,12 +418,15 @@ texreg(l = list(mod.12tex,mod.24tex,mod.36tex),
        stars=numeric(0),ci.test = 0,digits = 3,
        custom.model.names = c('Past 12 months','Past 36 months','Past 60 months'),
        caption.above=T,#omit.coef = "(100m)|(HUC8)|(10m)|(10km)|Total|precip",
-       label = c('table:typefunding'),
+       label = c('table:capacityfunding'),
        caption = 'Predicted water quality impact by grant type',
        custom.note = "$^* 0$ outside the credible interval",
        file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacityfunding.tex')
 
-save.image('results_capacityfunding.RData')
+rm(list=ls())
+load('results_capacityfunding.RData')
+
+#save.image('results_capacityfunding.RData')
 mail::sendmail('tyler.andrew.scott@gmail.com','run_models_capacityfunding.R finished','nori has finished running capacityfunding comp models')
 # 
 
