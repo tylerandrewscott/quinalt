@@ -65,9 +65,9 @@ covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR
 
 covars[is.na(covars)] = 0
 
-covars$OWEB_Grant_Capacity_PriorTo12 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_12_WC
-covars$OWEB_Grant_Capacity_PriorTo36 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_36_WC
-covars$OWEB_Grant_Capacity_PriorTo60 = covars$OWEB_Grant_Capacity_All_WC - covars$OWEB_Grant_Capacity_60_WC
+#covars$OWEB_Grant_Capacity_PriorTo12 = #covars$OWEB_Grant_Capacity_All_WC - #covars$OWEB_Grant_Capacity_12_WC
+#covars$OWEB_Grant_Capacity_PriorTo36 = #covars$OWEB_Grant_Capacity_All_WC - #covars$OWEB_Grant_Capacity_36_WC
+#covars$OWEB_Grant_Capacity_PriorTo60 = #covars$OWEB_Grant_Capacity_All_WC - #covars$OWEB_Grant_Capacity_60_WC
 
 
 covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
@@ -178,16 +178,16 @@ X = cbind(rep(1,n.data),
           covars$seaDist, 
           covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_12,
-          covars$OWEB_Grant_All_12_WC,
-          covars$OWEB_Grant_All_12_SWCD,
-          covars$OWEB_Grant_All_12_WC*covars$OWEB_Grant_All_12_SWCD)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12)
+#covars$OWEB_Grant_All_12_WC,
+#covars$OWEB_Grant_All_12_SWCD,
+#covars$OWEB_Grant_All_12_WC*#covars$OWEB_Grant_All_12_SWCD)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
 
 form_base_12 <-  y ~ 0 + b0 + 
- # Ag + Forst + Dev  + 
+  # Ag + Forst + Dev  + 
   ag.huc8+ forst.huc8 +dev.huc8 + 
   elevation + 
   seaDist + 
@@ -206,16 +206,16 @@ form_base_12 <-  y ~ 0 + b0 +
 
 
 mod_base_12 <- inla(form_base_12, family='gaussian',
-                      data=inla.stack.data(stk.1),
-                      control.predictor=list(A=inla.stack.A(stk.1), 
-                                             compute=TRUE),
-                      #  control.inla=list(strategy='laplace'), 
-                      control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),
-                      control.fixed= list(prec.intercept = 1),
-                      verbose=T,
-                      control.inla = list(
-                        correct = TRUE,
-                        correct.factor = 10))
+                    data=inla.stack.data(stk.1),
+                    control.predictor=list(A=inla.stack.A(stk.1), 
+                                           compute=TRUE),
+                    #  control.inla=list(strategy='laplace'), 
+                    control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),
+                    control.fixed= list(prec.intercept = 1),
+                    verbose=T,
+                    control.inla = list(
+                      correct = TRUE,
+                      correct.factor = 10))
 
 
 X = cbind(rep(1,n.data),
@@ -224,23 +224,23 @@ X = cbind(rep(1,n.data),
           covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_12,
-          
-          covars$OWEB_Grant_Outreach_12_WC, 
-          covars$OWEB_Grant_Outreach_12_SWCD,
-          covars$OWEB_Grant_Outreach_12_WC*covars$OWEB_Grant_Outreach_12_SWCD,
-          
-          covars$OWEB_Grant_Tech_12_WC, 
-          covars$OWEB_Grant_Tech_12_SWCD,
-          covars$OWEB_Grant_Tech_12_WC*covars$OWEB_Grant_Tech_12_SWCD, 
-          
-          covars$OWEB_Grant_Restoration_12_WC, 
-          covars$OWEB_Grant_Restoration_12_SWCD, 
-          covars$OWEB_Grant_Restoration_12_WC*covars$OWEB_Grant_Restoration_12_SWCD, 
-          
-          covars$OWEB_Grant_Outreach_12_WC*covars$OWEB_Grant_Tech_12_WC*covars$OWEB_Grant_Restoration_12_WC*
-            covars$OWEB_Grant_Outreach_12_SWCD*covars$OWEB_Grant_Tech_12_SWCD*covars$OWEB_Grant_Restoration_12_SWCD
-)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12)
+
+#covars$OWEB_Grant_Outreach_12_WC, 
+#covars$OWEB_Grant_Outreach_12_SWCD,
+#covars$OWEB_Grant_Outreach_12_WC*#covars$OWEB_Grant_Outreach_12_SWCD,
+
+#covars$OWEB_Grant_Tech_12_WC, 
+#covars$OWEB_Grant_Tech_12_SWCD,
+#covars$OWEB_Grant_Tech_12_WC*#covars$OWEB_Grant_Tech_12_SWCD, 
+
+#covars$OWEB_Grant_Restoration_12_WC, 
+#covars$OWEB_Grant_Restoration_12_SWCD, 
+#covars$OWEB_Grant_Restoration_12_WC*#covars$OWEB_Grant_Restoration_12_SWCD, 
+
+#covars$OWEB_Grant_Outreach_12_WC*#covars$OWEB_Grant_Tech_12_WC*#covars$OWEB_Grant_Restoration_12_WC*
+#covars$OWEB_Grant_Outreach_12_SWCD*#covars$OWEB_Grant_Tech_12_SWCD*#covars$OWEB_Grant_Restoration_12_SWCD
+
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -271,14 +271,14 @@ form_project_12 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
 
 
 mod_project_12 <- inla(form_project_12, family='gaussian', data=inla.stack.data(stk.1),
-                    control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
-                    #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),
-                    control.fixed= list(prec.intercept = 1),
-                    verbose=T,
-                    control.inla = list(
-                      correct = TRUE,
-                      correct.factor = 10))
+                       control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
+                       #  control.inla=list(strategy='laplace'), 
+                       control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),
+                       control.fixed= list(prec.intercept = 1),
+                       verbose=T,
+                       control.inla = list(
+                         correct = TRUE,
+                         correct.factor = 10))
 
 
 
@@ -289,11 +289,11 @@ X = cbind(rep(1,n.data),
           covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_12,
-          covars$OWEB_Grant_Outreach_12_WC, 
-          covars$OWEB_Grant_Tech_12_WC,
-          covars$OWEB_Grant_Restoration_12_WC,
-          covars$OWEB_Grant_Capacity_12_WC)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_12)
+#covars$OWEB_Grant_Outreach_12_WC, 
+#covars$OWEB_Grant_Tech_12_WC,
+#covars$OWEB_Grant_Restoration_12_WC,
+#covars$OWEB_Grant_Capacity_12_WC)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -319,9 +319,9 @@ form_capacity_12 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
 
 
 mod_capacity_12 <- inla(form_capacity_12, family='gaussian', data=inla.stack.data(stk.1),
-                    control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
-                    #  control.inla=list(strategy='laplace'), 
-                    control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
+                        control.predictor=list(A=inla.stack.A(stk.1), compute=TRUE),
+                        #  control.inla=list(strategy='laplace'), 
+                        control.compute=list(dic=TRUE, cpo=TRUE,waic=TRUE),verbose=T, control.inla = list(correct = TRUE, correct.factor = 10))
 
 
 sendmail('tyler.andrew.scott@gmail.com','12 models done',' 12 mods')
@@ -337,10 +337,10 @@ X = cbind(rep(1,n.data),
           covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_24,
-          covars$OWEB_Grant_All_24_WC,
-          covars$OWEB_Grant_All_24_SWCD,
-          covars$OWEB_Grant_All_24_WC*covars$OWEB_Grant_All_24_SWCD)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_24)
+#covars$OWEB_Grant_All_24_WC,
+#covars$OWEB_Grant_All_24_SWCD,
+#covars$OWEB_Grant_All_24_WC*#covars$OWEB_Grant_All_24_SWCD)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -379,23 +379,23 @@ X = cbind(rep(1,n.data),
           covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_24,
-          
-          covars$OWEB_Grant_Outreach_24_WC, 
-          covars$OWEB_Grant_Outreach_24_SWCD,
-          covars$OWEB_Grant_Outreach_24_WC*covars$OWEB_Grant_Outreach_24_SWCD,
-          
-          covars$OWEB_Grant_Tech_24_WC, 
-          covars$OWEB_Grant_Tech_24_SWCD,
-          covars$OWEB_Grant_Tech_24_WC*covars$OWEB_Grant_Tech_24_SWCD, 
-          
-          covars$OWEB_Grant_Restoration_24_WC, 
-          covars$OWEB_Grant_Restoration_24_SWCD, 
-          covars$OWEB_Grant_Restoration_24_WC*covars$OWEB_Grant_Restoration_24_SWCD, 
-          
-          covars$OWEB_Grant_Outreach_24_WC*covars$OWEB_Grant_Tech_24_WC*covars$OWEB_Grant_Restoration_24_WC*
-            covars$OWEB_Grant_Outreach_24_SWCD*covars$OWEB_Grant_Tech_24_SWCD*covars$OWEB_Grant_Restoration_24_SWCD
-)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_24)
+
+#covars$OWEB_Grant_Outreach_24_WC, 
+#covars$OWEB_Grant_Outreach_24_SWCD,
+#covars$OWEB_Grant_Outreach_24_WC*#covars$OWEB_Grant_Outreach_24_SWCD,
+
+#covars$OWEB_Grant_Tech_24_WC, 
+#covars$OWEB_Grant_Tech_24_SWCD,
+#covars$OWEB_Grant_Tech_24_WC*#covars$OWEB_Grant_Tech_24_SWCD, 
+
+#covars$OWEB_Grant_Restoration_24_WC, 
+#covars$OWEB_Grant_Restoration_24_SWCD, 
+#covars$OWEB_Grant_Restoration_24_WC*#covars$OWEB_Grant_Restoration_24_SWCD, 
+
+#covars$OWEB_Grant_Outreach_24_WC*#covars$OWEB_Grant_Tech_24_WC*#covars$OWEB_Grant_Restoration_24_WC*
+#covars$OWEB_Grant_Outreach_24_SWCD*#covars$OWEB_Grant_Tech_24_SWCD*#covars$OWEB_Grant_Restoration_24_SWCD
+
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -443,11 +443,11 @@ X = cbind(rep(1,n.data),
           covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_24,
-          covars$OWEB_Grant_Outreach_24_WC, 
-          covars$OWEB_Grant_Tech_24_WC,
-          covars$OWEB_Grant_Restoration_24_WC,
-          covars$OWEB_Grant_Capacity_24_WC)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_24)
+#covars$OWEB_Grant_Outreach_24_WC, 
+#covars$OWEB_Grant_Tech_24_WC,
+#covars$OWEB_Grant_Restoration_24_WC,
+#covars$OWEB_Grant_Capacity_24_WC)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -489,10 +489,10 @@ X = cbind(rep(1,n.data),
           covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_36,
-          covars$OWEB_Grant_All_36_WC,
-          covars$OWEB_Grant_All_36_SWCD,
-          covars$OWEB_Grant_All_36_WC*covars$OWEB_Grant_All_36_SWCD)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_36)
+#covars$OWEB_Grant_All_36_WC,
+#covars$OWEB_Grant_All_36_SWCD,
+#covars$OWEB_Grant_All_36_WC*#covars$OWEB_Grant_All_36_SWCD)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -530,23 +530,23 @@ X = cbind(rep(1,n.data),
           covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_36,
-          
-          covars$OWEB_Grant_Outreach_36_WC, 
-          covars$OWEB_Grant_Outreach_36_SWCD,
-          covars$OWEB_Grant_Outreach_36_WC*covars$OWEB_Grant_Outreach_36_SWCD,
-          
-          covars$OWEB_Grant_Tech_36_WC, 
-          covars$OWEB_Grant_Tech_36_SWCD,
-          covars$OWEB_Grant_Tech_36_WC*covars$OWEB_Grant_Tech_36_SWCD, 
-          
-          covars$OWEB_Grant_Restoration_36_WC, 
-          covars$OWEB_Grant_Restoration_36_SWCD, 
-          covars$OWEB_Grant_Restoration_36_WC*covars$OWEB_Grant_Restoration_36_SWCD, 
-          
-          covars$OWEB_Grant_Outreach_36_WC*covars$OWEB_Grant_Tech_36_WC*covars$OWEB_Grant_Restoration_36_WC*
-            covars$OWEB_Grant_Outreach_36_SWCD*covars$OWEB_Grant_Tech_36_SWCD*covars$OWEB_Grant_Restoration_36_SWCD
-)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_36)
+
+#covars$OWEB_Grant_Outreach_36_WC, 
+#covars$OWEB_Grant_Outreach_36_SWCD,
+#covars$OWEB_Grant_Outreach_36_WC*#covars$OWEB_Grant_Outreach_36_SWCD,
+
+#covars$OWEB_Grant_Tech_36_WC, 
+#covars$OWEB_Grant_Tech_36_SWCD,
+#covars$OWEB_Grant_Tech_36_WC*#covars$OWEB_Grant_Tech_36_SWCD, 
+
+#covars$OWEB_Grant_Restoration_36_WC, 
+#covars$OWEB_Grant_Restoration_36_SWCD, 
+#covars$OWEB_Grant_Restoration_36_WC*#covars$OWEB_Grant_Restoration_36_SWCD, 
+
+#covars$OWEB_Grant_Outreach_36_WC*#covars$OWEB_Grant_Tech_36_WC*#covars$OWEB_Grant_Restoration_36_WC*
+#covars$OWEB_Grant_Outreach_36_SWCD*#covars$OWEB_Grant_Tech_36_SWCD*#covars$OWEB_Grant_Restoration_36_SWCD
+
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -595,11 +595,11 @@ X = cbind(rep(1,n.data),
           covars$ag.huc8, covars$forst.huc8,covars$dev.huc8,
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
-          covars$NOT_OWEB_OWRI.wq.TotalCash_36,
-          covars$OWEB_Grant_Outreach_36_WC, 
-          covars$OWEB_Grant_Tech_36_WC,
-          covars$OWEB_Grant_Restoration_36_WC,
-          covars$OWEB_Grant_Capacity_36_WC)
+          covars$NOT_OWEB_OWRI.wq.TotalCash_36)
+#covars$OWEB_Grant_Outreach_36_WC, 
+#covars$OWEB_Grant_Tech_36_WC,
+#covars$OWEB_Grant_Restoration_36_WC,
+#covars$OWEB_Grant_Capacity_36_WC)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -668,7 +668,7 @@ name.vec = c( 'WC * SWCD',
               'Dev. in basin',
               'For. in basin',
               'Ag. in basin')
-              
+
 
 library(ggplot2)
 library(ggthemes)
@@ -677,7 +677,7 @@ basecoefplot = ggplot(data=plottemp) +
                lwd=3,lineend='round') + 
   facet_wrap(~Lag) + 
   scale_x_continuous(name='Posterior credible interval (0.025 to 0.975)')+
-   #                                     limits=c(-0.05,0.11))+ 
+  #                                     limits=c(-0.05,0.11))+ 
   theme_bw() +
   scale_y_discrete(name='',labels= name.vec) + 
   theme(
@@ -686,7 +686,7 @@ basecoefplot = ggplot(data=plottemp) +
     panel.grid.minor = element_blank(),
     axis.title = element_text(size=14),
     axis.text = element_text(size=12),
-     strip.text = element_text(size=14))  +
+    strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
 
 
@@ -709,9 +709,9 @@ tempcoef36$Model = 'tempcoef36'
 
 
 rowname.vector = c(
-  "$\\%$  Agric. (100m buffer)",
-  '$\\%$  Forest (100m buffer)',
-  '$\\%$  Devel. (100m buffer)',
+  #   "$\\%$  Agric. (100m buffer)",
+  #   '$\\%$  Forest (100m buffer)',
+  #   '$\\%$  Devel. (100m buffer)',
   '$\\%$  Devel. in HUC8',
   "$\\%$  Agric. in HUC8",
   '$\\%$  Forest in HUC8',
@@ -763,7 +763,7 @@ texreg(l = list(mod_base_tex_12,
        custom.note = "$^* 0$ outside the credible interval\\\
        OWRI: Spending on non-OWEB Restoration projects as reported in Oregon Watershed Restoration Inventory database",
        custom.coef.names = rev(name.vec),
-  file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/basemods2.tex')
+       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/basemods2.tex')
 
 
 library(mail)
@@ -790,7 +790,7 @@ tempcoef36$Order = nrow(tempcoef36):1
 
 plottemp = join_all(list(tempcoef12,tempcoef24,tempcoef36),type='full')
 
-               
+
 name.vec = c( 'WC * SWCD All',
               'WC * SWCD Rest.',
               'WC * SWCD Tech',
@@ -819,7 +819,7 @@ projectcoefplot = ggplot(data=plottemp) +
   scale_x_continuous(name='Posterior credible interval (0.025 to 0.975)')+
   #                                     limits=c(-0.05,0.11))+ 
   theme_bw() +
- scale_y_discrete(name='',labels= name.vec) + 
+  scale_y_discrete(name='',labels= name.vec) + 
   theme(
     axis.ticks = element_blank(),
     panel.grid.major = element_blank(),
@@ -828,8 +828,6 @@ projectcoefplot = ggplot(data=plottemp) +
     axis.text = element_text(size=12),
     strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
-
-
 
 ggsave('JPART_Submission/Version2/projectcoefplot2.png',projectcoefplot)
 
@@ -929,116 +927,116 @@ tempcoef12
 
 plottemp = join_all(list(tempcoef12,tempcoef24,tempcoef36),type='full')
 
-                    name.vec = c( 'All projects',
-                                  'Rest. * Capacity',
-                                  'Tech. * Capacity',
-                                  'Outreach * Capacity',
-                                  'WC Capacity',
-                                  'WC Rest.',
-                                  'WC Tech.',
-                                  'WC Outreach',
-                                  'OWRI capacitys',
-                                  'Month precip.',
-                                  'Dist. from coast',
-                                  'Elevation',
-                                  'Dev. in basin',
-                                  'For. in basin',
-                                  'Ag. in basin')
-                    
-                    
-                    library(ggplot2)
-                    library(ggthemes)
-                    
+name.vec = c( 'All projects',
+              'Rest. * Capacity',
+              'Tech. * Capacity',
+              'Outreach * Capacity',
+              'WC Capacity',
+              'WC Rest.',
+              'WC Tech.',
+              'WC Outreach',
+              'OWRI capacitys',
+              'Month precip.',
+              'Dist. from coast',
+              'Elevation',
+              'Dev. in basin',
+              'For. in basin',
+              'Ag. in basin')
+
+
+library(ggplot2)
+library(ggthemes)
+
 capacitycoefplot = ggplot(data=plottemp) + 
-      geom_segment(aes(x=X0.025quant,xend=X0.975quant,y=as.factor(Order),yend=as.factor(Order)),
+  geom_segment(aes(x=X0.025quant,xend=X0.975quant,y=as.factor(Order),yend=as.factor(Order)),
                lwd=3,lineend='round') + 
-      facet_wrap(~Lag) + 
-      scale_x_continuous(name='Posterior credible interval (0.025 to 0.975)')+
-                      #                                     limits=c(-0.05,0.11))+ 
-      theme_bw() +
-                    scale_y_discrete(name='',labels= name.vec) + 
-       theme(
-       axis.ticks = element_blank(),
-       panel.grid.major = element_blank(),
-       panel.grid.minor = element_blank(),
-       axis.title = element_text(size=14),
-       axis.text = element_text(size=12),
-       strip.text = element_text(size=14))  +
-       geom_vline(xintercept = 0,lty=2)
-                    
- plot(capacitycoefplot) 
-                    
-                    ggsave('JPART_Submission/Version2/capacitycoefplot2.png',capacitycoefplot)
-                    
-                    
-                    
-                    tempcoef12$ID = rownames(tempcoef12)
-                    tempcoef12$Model = 'tempcoef12'
-                    tempcoef24$ID = rownames(tempcoef24)
-                    tempcoef24$Model = 'tempcoef24'
-                    tempcoef36$ID = rownames(tempcoef36)
-                    tempcoef36$Model = 'tempcoef36'
-                    # tempcoef48$ID = rownames(tempcoef48)
-                    # tempcoef48$Model = 'tempcoef48'
-                    # tempcoef60$ID = rownames(tempcoef60)
-                    # tempcoef60$Model = 'tempcoef60'
-                    # tempcoefAll$ID = rownames(tempcoefAll)
-                    # tempcoefAll$Model = 'tempcoefAll'
-                    
-                    
-                    rowname.vector = c(
-          
-                      '$\\%$  Devel. in HUC8',
-                      "$\\%$  Agric. in HUC8",
-                      '$\\%$  Forest in HUC8',
-                      'Elevation (10m)',
-                      'Dist. from coast (10km)',
-                      'Monthly precip. (10cm)',
-                      'Non-OWEB Rest. (\\$100k)',
-                      'OWEB funds to WC (\\$100k)',
-                      'OWEB funds to SWCD (\\$100k)',
-                      'WC * SWCD')
-                    
-                    library(lme4)
-                    library(texreg)
-                    
-                    
-                    mod_capacity_tex_12 = texreg::createTexreg(
-                      coef.names = rev(name.vec),
-                      coef = tempcoef12[,1],
-                      ci.low = tempcoef12[,2],
-                      ci.up = tempcoef12[,3],
-                      gof.names = 'DIC',
-                      gof = mod_capacity_12$dic$dic)
-                    
-                    
-                    mod_capacity_tex_24 = texreg::createTexreg(
-                      coef.names = rev(name.vec),
-                      coef = tempcoef24[,1],
-                      ci.low = tempcoef24[,2],
-                      ci.up = tempcoef24[,3],
-                      gof.names = 'DIC',
-                      gof = mod_capacity_24$dic$dic)
-                    
-                    
-                    mod_capacity_tex_36 = texreg::createTexreg(
-                      coef.names = rev(name.vec),
-                      coef = tempcoef36[,1],
-                      ci.low = tempcoef36[,2],
-                      ci.up = tempcoef36[,3],
-                      gof.names = 'DIC',
-                      gof = mod_capacity_36$dic$dic)
-                    
-                    texreg(l = list(mod_capacity_tex_12,
-                                    mod_capacity_tex_24,
-                                    mod_capacity_tex_36),
-                           stars=numeric(0),ci.test = 0,digits = 3,
-                           caption = "capacityline models with only OWEB funding to Watershed Councils", caption.above = TRUE, 
-                           custom.model.names = c('Past 12 months\' funding','Past 24 months\' funding','Past 36 months\' funding'),
-                           label = c('table:capacitymods'),
-                           custom.note = "$^* 0$ outside the credible interval\\\
-                           OWRI: Spending on non-OWEB Restoration capacitys as reported in Oregon Watershed Restoration Inventory datacapacity",
-                           custom.coef.names = rev(name.vec),
-                           file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacitymods2.tex')
-                    
-                    
+  facet_wrap(~Lag) + 
+  scale_x_continuous(name='Posterior credible interval (0.025 to 0.975)')+
+  #                                     limits=c(-0.05,0.11))+ 
+  theme_bw() +
+  scale_y_discrete(name='',labels= name.vec) + 
+  theme(
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.title = element_text(size=14),
+    axis.text = element_text(size=12),
+    strip.text = element_text(size=14))  +
+  geom_vline(xintercept = 0,lty=2)
+
+ggsave('JPART_Submission/Version2/capacitycoefplot2.png',capacitycoefplot)
+
+
+
+tempcoef12$ID = rownames(tempcoef12)
+tempcoef12$Model = 'tempcoef12'
+tempcoef24$ID = rownames(tempcoef24)
+tempcoef24$Model = 'tempcoef24'
+tempcoef36$ID = rownames(tempcoef36)
+tempcoef36$Model = 'tempcoef36'
+# tempcoef48$ID = rownames(tempcoef48)
+# tempcoef48$Model = 'tempcoef48'
+# tempcoef60$ID = rownames(tempcoef60)
+# tempcoef60$Model = 'tempcoef60'
+# tempcoefAll$ID = rownames(tempcoefAll)
+# tempcoefAll$Model = 'tempcoefAll'
+
+
+rowname.vector = c(
+  
+  '$\\%$  Devel. in HUC8',
+  "$\\%$  Agric. in HUC8",
+  '$\\%$  Forest in HUC8',
+  'Elevation (10m)',
+  'Dist. from coast (10km)',
+  'Monthly precip. (10cm)',
+  'Non-OWEB Rest. (\\$100k)',
+  'OWEB funds to WC (\\$100k)',
+  'OWEB funds to SWCD (\\$100k)',
+  'WC * SWCD')
+
+library(lme4)
+library(texreg)
+
+
+mod_capacity_tex_12 = texreg::createTexreg(
+  coef.names = rev(name.vec),
+  coef = tempcoef12[,1],
+  ci.low = tempcoef12[,2],
+  ci.up = tempcoef12[,3],
+  gof.names = 'DIC',
+  gof = mod_capacity_12$dic$dic)
+
+
+mod_capacity_tex_24 = texreg::createTexreg(
+  coef.names = rev(name.vec),
+  coef = tempcoef24[,1],
+  ci.low = tempcoef24[,2],
+  ci.up = tempcoef24[,3],
+  gof.names = 'DIC',
+  gof = mod_capacity_24$dic$dic)
+
+
+mod_capacity_tex_36 = texreg::createTexreg(
+  coef.names = rev(name.vec),
+  coef = tempcoef36[,1],
+  ci.low = tempcoef36[,2],
+  ci.up = tempcoef36[,3],
+  gof.names = 'DIC',
+  gof = mod_capacity_36$dic$dic)
+
+texreg(l = list(mod_capacity_tex_12,
+                mod_capacity_tex_24,
+                mod_capacity_tex_36),
+       stars=numeric(0),ci.test = 0,digits = 3,
+       caption = "capacityline models with only OWEB funding to Watershed Councils", caption.above = TRUE, 
+       custom.model.names = c('Past 12 months\' funding','Past 24 months\' funding','Past 36 months\' funding'),
+       label = c('table:capacitymods'),
+       custom.note = "$^* 0$ outside the credible interval\\\
+       OWRI: Spending on non-OWEB Restoration capacitys as reported in Oregon Watershed Restoration Inventory datacapacity",
+       custom.coef.names = rev(name.vec),
+       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacitymods2.tex')
+
+
+
+
