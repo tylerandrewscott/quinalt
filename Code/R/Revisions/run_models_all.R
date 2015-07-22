@@ -65,59 +65,62 @@ covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR
 
 covars[is.na(covars)] = 0
 
-#covars$OWEB_Grant_Capacity_PriorTo12 = #covars$OWEB_Grant_Capacity_All_WC - #covars$OWEB_Grant_Capacity_12_WC
-#covars$OWEB_Grant_Capacity_PriorTo36 = #covars$OWEB_Grant_Capacity_All_WC - #covars$OWEB_Grant_Capacity_36_WC
-#covars$OWEB_Grant_Capacity_PriorTo60 = #covars$OWEB_Grant_Capacity_All_WC - #covars$OWEB_Grant_Capacity_60_WC
+
+#covars$OWEB_HUC8_Grant_Capacity_PriorTo12 = #covars$OWEB_HUC8_Grant_Capacity_All_WC - #covars$OWEB_HUC8_Grant_Capacity.WC_12
+#covars$OWEB_HUC8_Grant_Capacity_PriorTo36 = #covars$OWEB_HUC8_Grant_Capacity_All_WC - #covars$OWEB_HUC8_Grant_Capacity.WC_36
+#covars$OWEB_HUC8_Grant_Capacity_PriorTo60 = #covars$OWEB_HUC8_Grant_Capacity_All_WC - #covars$OWEB_HUC8_Grant_Capacity_60_WC
 
 
-covars = mutate(covars,OWEB_Grant_All_12_WC = OWEB_Grant_Restoration_12_WC+
-                  OWEB_Grant_Capacity_12_WC +
-                  OWEB_Grant_Tech_12_WC +
-                  OWEB_Grant_Outreach_12_WC,
-                OWEB_Grant_All_24_WC = OWEB_Grant_Restoration_24_WC+
-                  OWEB_Grant_Capacity_24_WC +
-                  OWEB_Grant_Tech_24_WC +
-                  OWEB_Grant_Outreach_24_WC,
-                OWEB_Grant_All_36_WC = OWEB_Grant_Restoration_36_WC+
-                  OWEB_Grant_Capacity_36_WC +
-                  OWEB_Grant_Tech_36_WC +
-                  OWEB_Grant_Outreach_36_WC,
-                OWEB_Grant_All_48_WC = OWEB_Grant_Restoration_48_WC+
-                  OWEB_Grant_Capacity_48_WC +
-                  OWEB_Grant_Tech_48_WC +
-                  OWEB_Grant_Outreach_48_WC,
-                OWEB_Grant_All_60_WC = OWEB_Grant_Restoration_60_WC+
-                  OWEB_Grant_Capacity_60_WC +
-                  OWEB_Grant_Tech_60_WC +
-                  OWEB_Grant_Outreach_60_WC,
-                OWEB_Grant_All_All_WC = OWEB_Grant_Restoration_All_WC+
-                  OWEB_Grant_Capacity_All_WC +
-                  OWEB_Grant_Tech_All_WC +
-                  OWEB_Grant_Outreach_All_WC,
-                OWEB_Grant_All_12_SWCD = OWEB_Grant_Restoration_12_SWCD+
-                  OWEB_Grant_Capacity_12_SWCD +
-                  OWEB_Grant_Tech_12_SWCD +
-                  OWEB_Grant_Outreach_12_SWCD,
-                OWEB_Grant_All_24_SWCD = OWEB_Grant_Restoration_24_SWCD+
-                  OWEB_Grant_Capacity_24_SWCD +
-                  OWEB_Grant_Tech_24_SWCD +
-                  OWEB_Grant_Outreach_24_SWCD,
-                OWEB_Grant_All_36_SWCD = OWEB_Grant_Restoration_36_SWCD+
-                  OWEB_Grant_Capacity_36_SWCD +
-                  OWEB_Grant_Tech_36_SWCD +
-                  OWEB_Grant_Outreach_48_SWCD,
-                OWEB_Grant_All_48_SWCD = OWEB_Grant_Restoration_48_SWCD+
-                  OWEB_Grant_Capacity_48_SWCD +
-                  OWEB_Grant_Tech_48_SWCD +
-                  OWEB_Grant_Outreach_48_SWCD,
-                OWEB_Grant_All_60_SWCD = OWEB_Grant_Restoration_60_SWCD+
-                  OWEB_Grant_Capacity_60_SWCD +
-                  OWEB_Grant_Tech_60_SWCD +
-                  OWEB_Grant_Outreach_60_SWCD,
-                OWEB_Grant_All_All_SWCD = OWEB_Grant_Restoration_All_SWCD+
-                  OWEB_Grant_Capacity_All_SWCD +
-                  OWEB_Grant_Tech_All_SWCD +
-                  OWEB_Grant_Outreach_All_SWCD
+covars = mutate(covars,OWEB_HUC8_Grant_All.WC_12 = OWEB_HUC8_Grant_Restoration.WC_12+
+                  OWEB_HUC8_Grant_Capacity.WC_12 +
+                  OWEB_HUC8_Grant_Tech.WC_12 +
+                  OWEB_HUC8_Grant_Outreach.WC_12,
+                OWEB_HUC8_Grant_All.WC_24 = OWEB_HUC8_Grant_Restoration.WC_24+
+                  OWEB_HUC8_Grant_Capacity.WC_24 +
+                  OWEB_HUC8_Grant_Tech.WC_24 +
+                  OWEB_HUC8_Grant_Outreach.WC_24,
+                OWEB_HUC8_Grant_All.WC_36 = OWEB_HUC8_Grant_Restoration.WC_36+
+                  OWEB_HUC8_Grant_Capacity.WC_36 +
+                  OWEB_HUC8_Grant_Tech.WC_36 +
+                  OWEB_HUC8_Grant_Outreach.WC_36,
+#                 OWEB_HUC8_Grant_All_48_WC = OWEB_HUC8_Grant_Restoration_48_WC+
+#                   OWEB_HUC8_Grant_Capacity_48_WC +
+#                   OWEB_HUC8_Grant_Tech_48_WC +
+#                   OWEB_HUC8_Grant_Outreach_48_WC,
+#                 OWEB_HUC8_Grant_All_60_WC = OWEB_HUC8_Grant_Restoration_60_WC+
+#                   OWEB_HUC8_Grant_Capacity_60_WC +
+#                   OWEB_HUC8_Grant_Tech_60_WC +
+#                   OWEB_HUC8_Grant_Outreach_60_WC,
+#                 OWEB_HUC8_Grant_All_All_WC = OWEB_HUC8_Grant_Restoration_All_WC+
+#                   OWEB_HUC8_Grant_Capacity_All_WC +
+#                   OWEB_HUC8_Grant_Tech_All_WC +
+#                   OWEB_HUC8_Grant_Outreach_All_WC,
+
+                OWEB_HUC8_Grant_All.SWCD_12 = OWEB_HUC8_Grant_Restoration.SWCD_12+
+                  OWEB_HUC8_Grant_Capacity.SWCD_12 +
+                  OWEB_HUC8_Grant_Tech.SWCD_12 +
+                  OWEB_HUC8_Grant_Outreach.SWCD_12,
+                
+                OWEB_HUC8_Grant_All.SWCD_24 = OWEB_HUC8_Grant_Restoration.SWCD_24+
+                  OWEB_HUC8_Grant_Capacity.SWCD_24 +
+                  OWEB_HUC8_Grant_Tech.SWCD_24 +
+                  OWEB_HUC8_Grant_Outreach.SWCD_24,
+                OWEB_HUC8_Grant_All.SWCD_36 = OWEB_HUC8_Grant_Restoration.SWCD_36+
+                  OWEB_HUC8_Grant_Capacity.SWCD_36 +
+                  OWEB_HUC8_Grant_Tech.SWCD_36 +
+                  OWEB_HUC8_Grant_Outreach.SWCD_36
+#                 OWEB_HUC8_Grant_All_48_SWCD = OWEB_HUC8_Grant_Restoration_48_SWCD+
+#                   OWEB_HUC8_Grant_Capacity_48_SWCD +
+#                   OWEB_HUC8_Grant_Tech_48_SWCD +
+#                   OWEB_HUC8_Grant_Outreach_48_SWCD,
+#                 OWEB_HUC8_Grant_All_60_SWCD = OWEB_HUC8_Grant_Restoration_60_SWCD+
+#                   OWEB_HUC8_Grant_Capacity_60_SWCD +
+#                   OWEB_HUC8_Grant_Tech_60_SWCD +
+#                   OWEB_HUC8_Grant_Outreach_60_SWCD,
+#                 OWEB_HUC8_Grant_All_All_SWCD = OWEB_HUC8_Grant_Restoration_All_SWCD+
+#                   OWEB_HUC8_Grant_Capacity_All_SWCD +
+#                   OWEB_HUC8_Grant_Tech_All_SWCD +
+#                   OWEB_HUC8_Grant_Outreach_All_SWCD
 )
 
 
@@ -179,9 +182,9 @@ X = cbind(rep(1,n.data),
           covars$elevation,
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_12)
-#covars$OWEB_Grant_All_12_WC,
-#covars$OWEB_Grant_All_12_SWCD,
-#covars$OWEB_Grant_All_12_WC*#covars$OWEB_Grant_All_12_SWCD)
+#covars$OWEB_HUC8_Grant_All.WC_12,
+#covars$OWEB_HUC8_Grant_All.SWCD_12,
+#covars$OWEB_HUC8_Grant_All.WC_12*#covars$OWEB_HUC8_Grant_All.SWCD_12)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -193,9 +196,9 @@ form_base_12 <-  y ~ 0 + b0 +
   seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_12 + 
-  OWEB_Grant_All_12_WC+
-  OWEB_Grant_All_12_SWCD+
-  OWEB_Grant_All_12_WC:OWEB_Grant_All_12_SWCD+
+  OWEB_HUC8_Grant_All.WC_12+
+  OWEB_HUC8_Grant_All.SWCD_12+
+  OWEB_HUC8_Grant_All.WC_12:OWEB_HUC8_Grant_All.SWCD_12+
   f(HUC8,model='iid')+ 
   f(YEAR,model='iid')+ 
   # f(total.period,model='rw2') + 
@@ -226,20 +229,20 @@ X = cbind(rep(1,n.data),
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_12)
 
-#covars$OWEB_Grant_Outreach_12_WC, 
-#covars$OWEB_Grant_Outreach_12_SWCD,
-#covars$OWEB_Grant_Outreach_12_WC*#covars$OWEB_Grant_Outreach_12_SWCD,
+#covars$OWEB_HUC8_Grant_Outreach.WC_12, 
+#covars$OWEB_HUC8_Grant_Outreach.SWCD_12,
+#covars$OWEB_HUC8_Grant_Outreach.WC_12*#covars$OWEB_HUC8_Grant_Outreach.SWCD_12,
 
-#covars$OWEB_Grant_Tech_12_WC, 
-#covars$OWEB_Grant_Tech_12_SWCD,
-#covars$OWEB_Grant_Tech_12_WC*#covars$OWEB_Grant_Tech_12_SWCD, 
+#covars$OWEB_HUC8_Grant_Tech.WC_12, 
+#covars$OWEB_HUC8_Grant_Tech.SWCD_12,
+#covars$OWEB_HUC8_Grant_Tech.WC_12*#covars$OWEB_HUC8_Grant_Tech.SWCD_12, 
 
-#covars$OWEB_Grant_Restoration_12_WC, 
-#covars$OWEB_Grant_Restoration_12_SWCD, 
-#covars$OWEB_Grant_Restoration_12_WC*#covars$OWEB_Grant_Restoration_12_SWCD, 
+#covars$OWEB_HUC8_Grant_Restoration.WC_12, 
+#covars$OWEB_HUC8_Grant_Restoration.SWCD_12, 
+#covars$OWEB_HUC8_Grant_Restoration.WC_12*#covars$OWEB_HUC8_Grant_Restoration.SWCD_12, 
 
-#covars$OWEB_Grant_Outreach_12_WC*#covars$OWEB_Grant_Tech_12_WC*#covars$OWEB_Grant_Restoration_12_WC*
-#covars$OWEB_Grant_Outreach_12_SWCD*#covars$OWEB_Grant_Tech_12_SWCD*#covars$OWEB_Grant_Restoration_12_SWCD
+#covars$OWEB_HUC8_Grant_Outreach.WC_12*#covars$OWEB_HUC8_Grant_Tech.WC_12*#covars$OWEB_HUC8_Grant_Restoration.WC_12*
+#covars$OWEB_HUC8_Grant_Outreach.SWCD_12*#covars$OWEB_HUC8_Grant_Tech.SWCD_12*#covars$OWEB_HUC8_Grant_Restoration.SWCD_12
 
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
@@ -250,17 +253,17 @@ form_project_12 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_12 + 
   
-  OWEB_Grant_Outreach_12_WC+
-  OWEB_Grant_Outreach_12_SWCD + 
-  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Outreach_12_SWCD + 
-  OWEB_Grant_Tech_12_WC+
-  OWEB_Grant_Tech_12_SWCD + 
-  OWEB_Grant_Tech_12_WC:OWEB_Grant_Tech_12_SWCD + 
-  OWEB_Grant_Restoration_12_WC +
-  OWEB_Grant_Restoration_12_SWCD + 
-  OWEB_Grant_Restoration_12_WC:OWEB_Grant_Restoration_12_SWCD + 
-  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Tech_12_WC:OWEB_Grant_Restoration_12_WC:
-  OWEB_Grant_Outreach_12_SWCD:OWEB_Grant_Tech_12_SWCD:OWEB_Grant_Restoration_12_SWCD + 
+  OWEB_HUC8_Grant_Outreach.WC_12+
+  OWEB_HUC8_Grant_Outreach.SWCD_12 + 
+  OWEB_HUC8_Grant_Outreach.WC_12:OWEB_HUC8_Grant_Outreach.SWCD_12 + 
+  OWEB_HUC8_Grant_Tech.WC_12+
+  OWEB_HUC8_Grant_Tech.SWCD_12 + 
+  OWEB_HUC8_Grant_Tech.WC_12:OWEB_HUC8_Grant_Tech.SWCD_12 + 
+  OWEB_HUC8_Grant_Restoration.WC_12 +
+  OWEB_HUC8_Grant_Restoration.SWCD_12 + 
+  OWEB_HUC8_Grant_Restoration.WC_12:OWEB_HUC8_Grant_Restoration.SWCD_12 + 
+  OWEB_HUC8_Grant_Outreach.WC_12:OWEB_HUC8_Grant_Tech.WC_12:OWEB_HUC8_Grant_Restoration.WC_12:
+  OWEB_HUC8_Grant_Outreach.SWCD_12:OWEB_HUC8_Grant_Tech.SWCD_12:OWEB_HUC8_Grant_Restoration.SWCD_12 + 
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -290,10 +293,10 @@ X = cbind(rep(1,n.data),
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_12)
-#covars$OWEB_Grant_Outreach_12_WC, 
-#covars$OWEB_Grant_Tech_12_WC,
-#covars$OWEB_Grant_Restoration_12_WC,
-#covars$OWEB_Grant_Capacity_12_WC)
+#covars$OWEB_HUC8_Grant_Outreach.WC_12, 
+#covars$OWEB_HUC8_Grant_Tech.WC_12,
+#covars$OWEB_HUC8_Grant_Restoration.WC_12,
+#covars$OWEB_HUC8_Grant_Capacity.WC_12)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -302,14 +305,14 @@ form_capacity_12 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
   forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_12+
-  OWEB_Grant_Outreach_12_WC+
-  OWEB_Grant_Tech_12_WC+
-  OWEB_Grant_Restoration_12_WC+
-  OWEB_Grant_Capacity_12_WC + 
-  OWEB_Grant_Outreach_12_WC:OWEB_Grant_Capacity_12_WC+
-  OWEB_Grant_Tech_12_WC:OWEB_Grant_Capacity_12_WC+
-  OWEB_Grant_Restoration_12_WC:OWEB_Grant_Capacity_12_WC+
-  OWEB_Grant_Capacity_12_WC:OWEB_Grant_Outreach_12_WC:OWEB_Grant_Tech_12_WC:OWEB_Grant_Capacity_12_WC:OWEB_Grant_Restoration_12_WC+
+  OWEB_HUC8_Grant_Outreach.WC_12+
+  OWEB_HUC8_Grant_Tech.WC_12+
+  OWEB_HUC8_Grant_Restoration.WC_12+
+  OWEB_HUC8_Grant_Capacity.WC_12 + 
+  OWEB_HUC8_Grant_Outreach.WC_12:OWEB_HUC8_Grant_Capacity.WC_12+
+  OWEB_HUC8_Grant_Tech.WC_12:OWEB_HUC8_Grant_Capacity.WC_12+
+  OWEB_HUC8_Grant_Restoration.WC_12:OWEB_HUC8_Grant_Capacity.WC_12+
+  OWEB_HUC8_Grant_Capacity.WC_12:OWEB_HUC8_Grant_Outreach.WC_12:OWEB_HUC8_Grant_Tech.WC_12:OWEB_HUC8_Grant_Capacity.WC_12:OWEB_HUC8_Grant_Restoration.WC_12+
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -338,9 +341,9 @@ X = cbind(rep(1,n.data),
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_24)
-#covars$OWEB_Grant_All_24_WC,
-#covars$OWEB_Grant_All_24_SWCD,
-#covars$OWEB_Grant_All_24_WC*#covars$OWEB_Grant_All_24_SWCD)
+#covars$OWEB_HUC8_Grant_All.WC_24,
+#covars$OWEB_HUC8_Grant_All.SWCD_24,
+#covars$OWEB_HUC8_Grant_All.WC_24*#covars$OWEB_HUC8_Grant_All.SWCD_24)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -350,9 +353,9 @@ form_base_24 <-  y ~ 0 + b0 +
   ag.huc8+
   forst.huc8 +dev.huc8 +  elevation + seaDist + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_24 + 
-  OWEB_Grant_All_24_WC+
-  OWEB_Grant_All_24_SWCD+
-  OWEB_Grant_All_24_WC:OWEB_Grant_All_24_SWCD+
+  OWEB_HUC8_Grant_All.WC_24+
+  OWEB_HUC8_Grant_All.SWCD_24+
+  OWEB_HUC8_Grant_All.WC_24:OWEB_HUC8_Grant_All.SWCD_24+
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -381,20 +384,20 @@ X = cbind(rep(1,n.data),
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_24)
 
-#covars$OWEB_Grant_Outreach_24_WC, 
-#covars$OWEB_Grant_Outreach_24_SWCD,
-#covars$OWEB_Grant_Outreach_24_WC*#covars$OWEB_Grant_Outreach_24_SWCD,
+#covars$OWEB_HUC8_Grant_Outreach.WC_24, 
+#covars$OWEB_HUC8_Grant_Outreach.SWCD_24,
+#covars$OWEB_HUC8_Grant_Outreach.WC_24*#covars$OWEB_HUC8_Grant_Outreach.SWCD_24,
 
-#covars$OWEB_Grant_Tech_24_WC, 
-#covars$OWEB_Grant_Tech_24_SWCD,
-#covars$OWEB_Grant_Tech_24_WC*#covars$OWEB_Grant_Tech_24_SWCD, 
+#covars$OWEB_HUC8_Grant_Tech.WC_24, 
+#covars$OWEB_HUC8_Grant_Tech.SWCD_24,
+#covars$OWEB_HUC8_Grant_Tech.WC_24*#covars$OWEB_HUC8_Grant_Tech.SWCD_24, 
 
-#covars$OWEB_Grant_Restoration_24_WC, 
-#covars$OWEB_Grant_Restoration_24_SWCD, 
-#covars$OWEB_Grant_Restoration_24_WC*#covars$OWEB_Grant_Restoration_24_SWCD, 
+#covars$OWEB_HUC8_Grant_Restoration.WC_24, 
+#covars$OWEB_HUC8_Grant_Restoration.SWCD_24, 
+#covars$OWEB_HUC8_Grant_Restoration.WC_24*#covars$OWEB_HUC8_Grant_Restoration.SWCD_24, 
 
-#covars$OWEB_Grant_Outreach_24_WC*#covars$OWEB_Grant_Tech_24_WC*#covars$OWEB_Grant_Restoration_24_WC*
-#covars$OWEB_Grant_Outreach_24_SWCD*#covars$OWEB_Grant_Tech_24_SWCD*#covars$OWEB_Grant_Restoration_24_SWCD
+#covars$OWEB_HUC8_Grant_Outreach.WC_24*#covars$OWEB_HUC8_Grant_Tech.WC_24*#covars$OWEB_HUC8_Grant_Restoration.WC_24*
+#covars$OWEB_HUC8_Grant_Outreach.SWCD_24*#covars$OWEB_HUC8_Grant_Tech.SWCD_24*#covars$OWEB_HUC8_Grant_Restoration.SWCD_24
 
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
@@ -405,17 +408,17 @@ form_project_24 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_24 + 
   
-  OWEB_Grant_Outreach_24_WC+
-  OWEB_Grant_Outreach_24_SWCD + 
-  OWEB_Grant_Outreach_24_WC:OWEB_Grant_Outreach_24_SWCD + 
-  OWEB_Grant_Tech_24_WC+
-  OWEB_Grant_Tech_24_SWCD + 
-  OWEB_Grant_Tech_24_WC:OWEB_Grant_Tech_24_SWCD + 
-  OWEB_Grant_Restoration_24_WC +
-  OWEB_Grant_Restoration_24_SWCD + 
-  OWEB_Grant_Restoration_24_WC:OWEB_Grant_Restoration_24_SWCD + 
-  OWEB_Grant_Outreach_24_WC:OWEB_Grant_Tech_24_WC:OWEB_Grant_Restoration_24_WC:
-  OWEB_Grant_Outreach_24_SWCD:OWEB_Grant_Tech_24_SWCD:OWEB_Grant_Restoration_24_SWCD + 
+  OWEB_HUC8_Grant_Outreach.WC_24+
+  OWEB_HUC8_Grant_Outreach.SWCD_24 + 
+  OWEB_HUC8_Grant_Outreach.WC_24:OWEB_HUC8_Grant_Outreach.SWCD_24 + 
+  OWEB_HUC8_Grant_Tech.WC_24+
+  OWEB_HUC8_Grant_Tech.SWCD_24 + 
+  OWEB_HUC8_Grant_Tech.WC_24:OWEB_HUC8_Grant_Tech.SWCD_24 + 
+  OWEB_HUC8_Grant_Restoration.WC_24 +
+  OWEB_HUC8_Grant_Restoration.SWCD_24 + 
+  OWEB_HUC8_Grant_Restoration.WC_24:OWEB_HUC8_Grant_Restoration.SWCD_24 + 
+  OWEB_HUC8_Grant_Outreach.WC_24:OWEB_HUC8_Grant_Tech.WC_24:OWEB_HUC8_Grant_Restoration.WC_24:
+  OWEB_HUC8_Grant_Outreach.SWCD_24:OWEB_HUC8_Grant_Tech.SWCD_24:OWEB_HUC8_Grant_Restoration.SWCD_24 + 
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -444,10 +447,10 @@ X = cbind(rep(1,n.data),
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_24)
-#covars$OWEB_Grant_Outreach_24_WC, 
-#covars$OWEB_Grant_Tech_24_WC,
-#covars$OWEB_Grant_Restoration_24_WC,
-#covars$OWEB_Grant_Capacity_24_WC)
+#covars$OWEB_HUC8_Grant_Outreach.WC_24, 
+#covars$OWEB_HUC8_Grant_Tech.WC_24,
+#covars$OWEB_HUC8_Grant_Restoration.WC_24,
+#covars$OWEB_HUC8_Grant_Capacity.WC_24)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -456,14 +459,14 @@ form_capacity_24 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
   forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_24+
-  OWEB_Grant_Outreach_24_WC+
-  OWEB_Grant_Tech_24_WC+
-  OWEB_Grant_Restoration_24_WC+
-  OWEB_Grant_Capacity_24_WC + 
-  OWEB_Grant_Outreach_24_WC:OWEB_Grant_Capacity_24_WC+
-  OWEB_Grant_Tech_24_WC:OWEB_Grant_Capacity_24_WC+
-  OWEB_Grant_Restoration_24_WC:OWEB_Grant_Capacity_24_WC+
-  OWEB_Grant_Capacity_24_WC:OWEB_Grant_Outreach_24_WC:OWEB_Grant_Tech_24_WC:OWEB_Grant_Capacity_24_WC:OWEB_Grant_Restoration_24_WC+
+  OWEB_HUC8_Grant_Outreach.WC_24+
+  OWEB_HUC8_Grant_Tech.WC_24+
+  OWEB_HUC8_Grant_Restoration.WC_24+
+  OWEB_HUC8_Grant_Capacity.WC_24 + 
+  OWEB_HUC8_Grant_Outreach.WC_24:OWEB_HUC8_Grant_Capacity.WC_24+
+  OWEB_HUC8_Grant_Tech.WC_24:OWEB_HUC8_Grant_Capacity.WC_24+
+  OWEB_HUC8_Grant_Restoration.WC_24:OWEB_HUC8_Grant_Capacity.WC_24+
+  OWEB_HUC8_Grant_Capacity.WC_24:OWEB_HUC8_Grant_Outreach.WC_24:OWEB_HUC8_Grant_Tech.WC_24:OWEB_HUC8_Grant_Capacity.WC_24:OWEB_HUC8_Grant_Restoration.WC_24+
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -490,9 +493,9 @@ X = cbind(rep(1,n.data),
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_36)
-#covars$OWEB_Grant_All_36_WC,
-#covars$OWEB_Grant_All_36_SWCD,
-#covars$OWEB_Grant_All_36_WC*#covars$OWEB_Grant_All_36_SWCD)
+#covars$OWEB_HUC8_Grant_All.WC_36,
+#covars$OWEB_HUC8_Grant_All.SWCD_36,
+#covars$OWEB_HUC8_Grant_All.WC_36*#covars$OWEB_HUC8_Grant_All.SWCD_36)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -501,9 +504,9 @@ form_base_36 <-  y ~ 0 + b0 + #Ag + Forst + Dev  +
   ag.huc8+
   forst.huc8 +dev.huc8 +  elevation + seaDist + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_36 + 
-  OWEB_Grant_All_36_WC+
-  OWEB_Grant_All_36_SWCD+
-  OWEB_Grant_All_36_WC:OWEB_Grant_All_36_SWCD+
+  OWEB_HUC8_Grant_All.WC_36+
+  OWEB_HUC8_Grant_All.SWCD_36+
+  OWEB_HUC8_Grant_All.WC_36:OWEB_HUC8_Grant_All.SWCD_36+
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -532,20 +535,20 @@ X = cbind(rep(1,n.data),
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_36)
 
-#covars$OWEB_Grant_Outreach_36_WC, 
-#covars$OWEB_Grant_Outreach_36_SWCD,
-#covars$OWEB_Grant_Outreach_36_WC*#covars$OWEB_Grant_Outreach_36_SWCD,
+#covars$OWEB_HUC8_Grant_Outreach.WC_36, 
+#covars$OWEB_HUC8_Grant_Outreach.SWCD_36,
+#covars$OWEB_HUC8_Grant_Outreach.WC_36*#covars$OWEB_HUC8_Grant_Outreach.SWCD_36,
 
-#covars$OWEB_Grant_Tech_36_WC, 
-#covars$OWEB_Grant_Tech_36_SWCD,
-#covars$OWEB_Grant_Tech_36_WC*#covars$OWEB_Grant_Tech_36_SWCD, 
+#covars$OWEB_HUC8_Grant_Tech.WC_36, 
+#covars$OWEB_HUC8_Grant_Tech.SWCD_36,
+#covars$OWEB_HUC8_Grant_Tech.WC_36*#covars$OWEB_HUC8_Grant_Tech.SWCD_36, 
 
-#covars$OWEB_Grant_Restoration_36_WC, 
-#covars$OWEB_Grant_Restoration_36_SWCD, 
-#covars$OWEB_Grant_Restoration_36_WC*#covars$OWEB_Grant_Restoration_36_SWCD, 
+#covars$OWEB_HUC8_Grant_Restoration.WC_36, 
+#covars$OWEB_HUC8_Grant_Restoration.SWCD_36, 
+#covars$OWEB_HUC8_Grant_Restoration.WC_36*#covars$OWEB_HUC8_Grant_Restoration.SWCD_36, 
 
-#covars$OWEB_Grant_Outreach_36_WC*#covars$OWEB_Grant_Tech_36_WC*#covars$OWEB_Grant_Restoration_36_WC*
-#covars$OWEB_Grant_Outreach_36_SWCD*#covars$OWEB_Grant_Tech_36_SWCD*#covars$OWEB_Grant_Restoration_36_SWCD
+#covars$OWEB_HUC8_Grant_Outreach.WC_36*#covars$OWEB_HUC8_Grant_Tech.WC_36*#covars$OWEB_HUC8_Grant_Restoration.WC_36*
+#covars$OWEB_HUC8_Grant_Outreach.SWCD_36*#covars$OWEB_HUC8_Grant_Tech.SWCD_36*#covars$OWEB_HUC8_Grant_Restoration.SWCD_36
 
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
@@ -557,17 +560,17 @@ form_project_36 <-  y ~ 0 + b0 +
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_36 + 
   
-  OWEB_Grant_Outreach_36_WC+
-  OWEB_Grant_Outreach_36_SWCD + 
-  OWEB_Grant_Outreach_36_WC:OWEB_Grant_Outreach_36_SWCD + 
-  OWEB_Grant_Tech_36_WC+
-  OWEB_Grant_Tech_36_SWCD + 
-  OWEB_Grant_Tech_36_WC:OWEB_Grant_Tech_36_SWCD + 
-  OWEB_Grant_Restoration_36_WC +
-  OWEB_Grant_Restoration_36_SWCD + 
-  OWEB_Grant_Restoration_36_WC:OWEB_Grant_Restoration_36_SWCD + 
-  OWEB_Grant_Outreach_36_WC:OWEB_Grant_Tech_36_WC:OWEB_Grant_Restoration_36_WC:
-  OWEB_Grant_Outreach_36_SWCD:OWEB_Grant_Tech_36_SWCD:OWEB_Grant_Restoration_36_SWCD + 
+  OWEB_HUC8_Grant_Outreach.WC_36+
+  OWEB_HUC8_Grant_Outreach.SWCD_36 + 
+  OWEB_HUC8_Grant_Outreach.WC_36:OWEB_HUC8_Grant_Outreach.SWCD_36 + 
+  OWEB_HUC8_Grant_Tech.WC_36+
+  OWEB_HUC8_Grant_Tech.SWCD_36 + 
+  OWEB_HUC8_Grant_Tech.WC_36:OWEB_HUC8_Grant_Tech.SWCD_36 + 
+  OWEB_HUC8_Grant_Restoration.WC_36 +
+  OWEB_HUC8_Grant_Restoration.SWCD_36 + 
+  OWEB_HUC8_Grant_Restoration.WC_36:OWEB_HUC8_Grant_Restoration.SWCD_36 + 
+  OWEB_HUC8_Grant_Outreach.WC_36:OWEB_HUC8_Grant_Tech.WC_36:OWEB_HUC8_Grant_Restoration.WC_36:
+  OWEB_HUC8_Grant_Outreach.SWCD_36:OWEB_HUC8_Grant_Tech.SWCD_36:OWEB_HUC8_Grant_Restoration.SWCD_36 + 
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -596,10 +599,10 @@ X = cbind(rep(1,n.data),
           covars$seaDist, covars$elevation,
           covars$monthly.precip.median, 
           covars$NOT_OWEB_OWRI.wq.TotalCash_36)
-#covars$OWEB_Grant_Outreach_36_WC, 
-#covars$OWEB_Grant_Tech_36_WC,
-#covars$OWEB_Grant_Restoration_36_WC,
-#covars$OWEB_Grant_Capacity_36_WC)
+#covars$OWEB_HUC8_Grant_Outreach.WC_36, 
+#covars$OWEB_HUC8_Grant_Tech.WC_36,
+#covars$OWEB_HUC8_Grant_Restoration.WC_36,
+#covars$OWEB_HUC8_Grant_Capacity.WC_36)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
@@ -609,14 +612,14 @@ form_capacity_36 <-  y ~ 0 + b0 +
   forst.huc8 + elevation + seaDist + 
   monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_36+
-  OWEB_Grant_Outreach_36_WC+
-  OWEB_Grant_Tech_36_WC+
-  OWEB_Grant_Restoration_36_WC+
-  OWEB_Grant_Capacity_36_WC + 
-  OWEB_Grant_Outreach_36_WC:OWEB_Grant_Capacity_36_WC+
-  OWEB_Grant_Tech_36_WC:OWEB_Grant_Capacity_36_WC+
-  OWEB_Grant_Restoration_36_WC:OWEB_Grant_Capacity_36_WC+
-  OWEB_Grant_Capacity_36_WC:OWEB_Grant_Outreach_36_WC:OWEB_Grant_Tech_36_WC:OWEB_Grant_Capacity_36_WC:OWEB_Grant_Restoration_36_WC+
+  OWEB_HUC8_Grant_Outreach.WC_36+
+  OWEB_HUC8_Grant_Tech.WC_36+
+  OWEB_HUC8_Grant_Restoration.WC_36+
+  OWEB_HUC8_Grant_Capacity.WC_36 + 
+  OWEB_HUC8_Grant_Outreach.WC_36:OWEB_HUC8_Grant_Capacity.WC_36+
+  OWEB_HUC8_Grant_Tech.WC_36:OWEB_HUC8_Grant_Capacity.WC_36+
+  OWEB_HUC8_Grant_Restoration.WC_36:OWEB_HUC8_Grant_Capacity.WC_36+
+  OWEB_HUC8_Grant_Capacity.WC_36:OWEB_HUC8_Grant_Outreach.WC_36:OWEB_HUC8_Grant_Tech.WC_36:OWEB_HUC8_Grant_Capacity.WC_36:OWEB_HUC8_Grant_Restoration.WC_36+
   f(HUC8,model='iid')+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',replicate = Station.Repl) + 
@@ -935,7 +938,7 @@ name.vec = c( 'All projects',
               'WC Rest.',
               'WC Tech.',
               'WC Outreach',
-              'OWRI capacitys',
+              'OWRI restoration',
               'Month precip.',
               'Dist. from coast',
               'Elevation',
