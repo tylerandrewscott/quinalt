@@ -1,5 +1,22 @@
+# validation = list()
+# index = inla.stack.index(stack,"val")$data
+# tmp.mean = result$summary.linear.predictor[index,"mean"]
+# tmp.sd = result$summary.linear.predictor[index,"sd"]
+# validation$res = Piemonte_data_validation$logPM10 - tmp.mean
+# validation$res.std = validation$res /
+#   sqrt(tmp.sd^2 + 1/result$summary.hyperpar[1,"mean"])
+# From this, we calculate the actual coverage probability of a prediction interval
+# with nominal coverage probability 95%:
+#   validation$p = pnorm(validation$res.std)
+# validation$cover = mean((validation$p>0.025) & (validation$p<0.975), na.rm=TRUE)
+# 
 
-
+# > mod_base_12$dic$dic
+# [1] 128173.6
+# > mod_base_24$dic$dic
+# [1] 128249.7
+# > mod_base_36$dic$dic
+# [1] 128168.5
 
 setwd('/homes/tscott1/win/user/quinalt')
 require(foreign)
@@ -48,7 +65,7 @@ mod.data = join(mod.data,huc8.repl)
 
 #test = readOGR(dsn='government_units','state_nrcs_a_or')
 
-INLA::inla.setOption(num.threads=16) 
+INLA::inla.setOption(num.threads=32) 
 
 #mod.data = all.params.spdf@data
 
@@ -113,7 +130,7 @@ covars = mutate(covars,OWEB_HUC8_Grant_All.WC_12 = OWEB_HUC8_Grant_Restoration.W
                 OWEB_HUC8_Grant_All.SWCD_36 = OWEB_HUC8_Grant_Restoration.SWCD_36+
                   OWEB_HUC8_Grant_Capacity.SWCD_36 +
                   OWEB_HUC8_Grant_Tech.SWCD_36 +
-                  OWEB_HUC8_Grant_Outreach.SWCD_36
+                  OWEB_HUC8_Grant_Outreach.SWCD_36,
 #                 OWEB_HUC8_Grant_All_48_SWCD = OWEB_HUC8_Grant_Restoration_48_SWCD+
 #                   OWEB_HUC8_Grant_Capacity_48_SWCD +
 #                   OWEB_HUC8_Grant_Tech_48_SWCD +
@@ -126,7 +143,52 @@ covars = mutate(covars,OWEB_HUC8_Grant_All.WC_12 = OWEB_HUC8_Grant_Restoration.W
 #                   OWEB_HUC8_Grant_Capacity_All_SWCD +
 #                   OWEB_HUC8_Grant_Tech_All_SWCD +
 #                   OWEB_HUC8_Grant_Outreach_All_SWCD
+
+
+OWEB_HUC8_Grant_AllButWC_12 = 
+  OWEB_HUC8_Grant_Restoration.SWCD_12+
+  OWEB_HUC8_Grant_Capacity.SWCD_12 +
+  OWEB_HUC8_Grant_Tech.SWCD_12 +
+  OWEB_HUC8_Grant_Outreach.SWCD_12 + 
+  OWEB_HUC8_Grant_Restoration.Public_12+
+  OWEB_HUC8_Grant_Capacity.Public_12 +
+  OWEB_HUC8_Grant_Tech.Public_12 +
+  OWEB_HUC8_Grant_Outreach.Public_12 +
+  
+  OWEB_HUC8_Grant_Restoration.Other_12+
+  OWEB_HUC8_Grant_Capacity.Other_12 +
+  OWEB_HUC8_Grant_Tech.Other_12 +
+  OWEB_HUC8_Grant_Outreach.Other_12,
+
+
+OWEB_HUC8_Grant_AllButWC_24 = OWEB_HUC8_Grant_Restoration.SWCD_24+
+  OWEB_HUC8_Grant_Capacity.SWCD_24 +
+  OWEB_HUC8_Grant_Tech.SWCD_24 +
+  OWEB_HUC8_Grant_Outreach.SWCD_24 + 
+  OWEB_HUC8_Grant_Restoration.Public_24+
+  OWEB_HUC8_Grant_Capacity.Public_24 +
+  OWEB_HUC8_Grant_Tech.Public_24 +
+  OWEB_HUC8_Grant_Outreach.Public_24 +
+  OWEB_HUC8_Grant_Restoration.Other_24+
+  OWEB_HUC8_Grant_Capacity.Other_24 +
+  OWEB_HUC8_Grant_Tech.Other_24 +
+  OWEB_HUC8_Grant_Outreach.Other_24,
+
+
+OWEB_HUC8_Grant_AllButWC_36 = OWEB_HUC8_Grant_Restoration.SWCD_36+
+  OWEB_HUC8_Grant_Capacity.SWCD_36 +
+  OWEB_HUC8_Grant_Tech.SWCD_36 +
+  OWEB_HUC8_Grant_Outreach.SWCD_36 + 
+  OWEB_HUC8_Grant_Restoration.Public_36+
+  OWEB_HUC8_Grant_Capacity.Public_36 +
+  OWEB_HUC8_Grant_Tech.Public_36 +
+  OWEB_HUC8_Grant_Outreach.Public_36 +
+  OWEB_HUC8_Grant_Restoration.Other_36+
+  OWEB_HUC8_Grant_Capacity.Other_36 +
+  OWEB_HUC8_Grant_Tech.Other_36 +
+  OWEB_HUC8_Grant_Outreach.Other_36
 )
+
 
 
 
@@ -151,8 +213,19 @@ covars$Ag = 100 * covars$Ag
 covars$Forst = 100 * covars$Forst
 covars$Dev = 100 * covars$Dev
 covars$monthly.precip.median = covars$monthly.precip.median/100
-covars$Decimal_Lat = covars$Decimal_Lat - mean(covars$Decimal_Lat)
-covars$Decimal_long = covars$Decimal_long - mean(covars$Decimal_long)
+#covars$Decimal_Lat = covars$Decimal_Lat - mean(covars$Decimal_Lat)
+#covars$Decimal_long = covars$Decimal_long - mean(covars$Decimal_long)
+
+
+covars$OWEB_HUC8_Grant_All_HASGRANT.WC_12 = covars$OWEB_HUC8_Grant_All.WC_12!=0
+covars$OWEB_HUC8_Grant_All_HASGRANT.SWCD_12 = covars$OWEB_HUC8_Grant_All.SWCD_12!=0
+
+k = 100000
+covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
+
+covars[,sapply(covars,class) == 'numeric'] = scale(covars[,sapply(covars,class) == 'numeric'],center=TRUE,
+                                                   scale=FALSE)
+
 
 # 
 # covars[,c('elev100m','seaDist10km','ag.huc8','dev.huc8',
@@ -160,8 +233,7 @@ covars$Decimal_long = covars$Decimal_long - mean(covars$Decimal_long)
 #   log(covars[,c('elev100m','seaDist10km','ag.huc8','dev.huc8',
 #             'forst.huc8','Ag','Dev','Forst','monthly.precip.median','owqi')] + 0.001)
 
-k = 100000
-covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
+
 #covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))]+0.001)
 
 # some book keeping
@@ -196,9 +268,8 @@ mesh.a =
                           offset=c(1, 3),
                           max.edge=c(10,100),
                           min.angle=c(26, 21),
-                          cutoff=.3,
+                          cutoff=.5,
                           plot.delay=NULL)
-
 
 spde.a <- inla.spde2.matern(mesh.a)
 
@@ -215,6 +286,7 @@ pintercept = 0.001
 DIC = TRUE
 WAIC = TRUE
 CPO = TRUE
+SEASONLENGTH = 12
 
 X = cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
           covars$ag.huc8, covars$forst.huc8,
@@ -228,7 +300,7 @@ covars$OWEB_HUC8_Grant_All.SWCD_12)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_base_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + 
+form_base_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + 
   # Ag + Forst + Dev  + 
   ag.huc8+ forst.huc8 +dev.huc8 + 
   elev100m + 
@@ -236,13 +308,13 @@ form_base_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + +
   NOT_OWEB_OWRI.wq.TotalCash_12 + 
 OWEB_HUC8_Grant_All.WC_12+
 OWEB_HUC8_Grant_All.SWCD_12+
-OWEB_HUC8_Grant_All.WC_12:OWEB_HUC8_Grant_All.SWCD_12+
+ OWEB_HUC8_Grant_All.WC_12:OWEB_HUC8_Grant_All.SWCD_12+
   f(HUC8,model='iid',param=c(0.001,0.001))+ 
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),
     replicate = Station.Repl) + 
   f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),
-    season.length=12)+ 
+    season.length=SEASONLENGTH)+ 
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -258,8 +330,6 @@ mod_base_12 <- inla(form_base_12, family='gaussian',
                     control.inla = list(
                       correct = TRUE,
                       correct.factor = correctionfactor))
-
-
 
 
 X = cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
@@ -283,7 +353,7 @@ covars$OWEB_HUC8_Grant_Restoration.SWCD_12
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_project_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + Dev  + 
+form_project_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + #Ag + Forst + Dev  + 
   ag.huc8+
   forst.huc8 + dev.huc8 + elev100m +  
   monthly.precip.median + 
@@ -293,10 +363,8 @@ form_project_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + De
   OWEB_HUC8_Grant_Outreach.SWCD_12 + 
   OWEB_HUC8_Grant_Tech.WC_12+
   OWEB_HUC8_Grant_Tech.SWCD_12 + 
-
   OWEB_HUC8_Grant_Restoration.WC_12 +
   OWEB_HUC8_Grant_Restoration.SWCD_12 + 
-  OWEB_HUC8_Grant_Restoration.WC_12:OWEB_HUC8_Grant_Restoration.SWCD_12 + 
   OWEB_HUC8_Grant_Outreach.WC_12:OWEB_HUC8_Grant_Tech.WC_12:OWEB_HUC8_Grant_Restoration.WC_12:
   OWEB_HUC8_Grant_Outreach.SWCD_12:OWEB_HUC8_Grant_Tech.SWCD_12:OWEB_HUC8_Grant_Restoration.SWCD_12 + 
   f(HUC8,model='iid',param=c(0.001,0.001))+ 
@@ -304,7 +372,7 @@ form_project_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + De
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
   f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),   
-    season.length=12)+  
+    season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -337,7 +405,7 @@ covars$OWEB_HUC8_Grant_Capacity.WC_12)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_capacity_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + Dev  + 
+form_capacity_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + #Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m +  
   monthly.precip.median + 
@@ -354,7 +422,7 @@ form_capacity_12 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + D
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -387,7 +455,7 @@ n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
 
-form_base_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + 
+form_base_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + 
   #Ag + Forst + Dev  + 
   ag.huc8+
   forst.huc8 +dev.huc8 +  elev100m + monthly.precip.median + 
@@ -399,7 +467,7 @@ form_base_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + +
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -437,7 +505,7 @@ covars$OWEB_HUC8_Grant_Restoration.SWCD_24
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_project_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + Dev  + 
+form_project_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + #Ag + Forst + Dev  + 
   ag.huc8+
   forst.huc8 + dev.huc8 + elev100m +  
   monthly.precip.median + 
@@ -458,7 +526,7 @@ form_project_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + De
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -490,7 +558,7 @@ covars$OWEB_HUC8_Grant_Capacity.WC_24)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_capacity_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + Dev  + 
+form_capacity_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + #Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m +  
   monthly.precip.median + 
@@ -507,7 +575,7 @@ form_capacity_24 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + D
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -539,7 +607,7 @@ n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
 
-form_base_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + Dev  + 
+form_base_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + #Ag + Forst + Dev  + 
   ag.huc8+
   forst.huc8 +dev.huc8 +  elev100m + monthly.precip.median + 
   NOT_OWEB_OWRI.wq.TotalCash_36 + 
@@ -550,7 +618,7 @@ form_base_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + #Ag + Forst + Dev  
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -588,7 +656,7 @@ covars$OWEB_HUC8_Grant_Restoration.SWCD_36
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_project_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + 
+form_project_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + 
   #Ag + Forst + Dev  + 
   ag.huc8+
   forst.huc8 + dev.huc8 + elev100m + 
@@ -610,7 +678,7 @@ form_project_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + +
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -642,7 +710,7 @@ covars$OWEB_HUC8_Grant_Capacity.WC_36)
 n.covariates = ncol(X)
 Q = qr.Q(qr(X))
 
-form_capacity_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + + 
+form_capacity_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + 
   #Ag + Forst + Dev  + 
   dev.huc8 + ag.huc8+
   forst.huc8 + elev100m +  
@@ -660,7 +728,7 @@ form_capacity_36 <-  y ~ 0 + b0 + Decimal_Lat + Decimal_long + +
   f(YEAR,model='iid',param=c(0.001,0.001))+ 
   # f(total.period,model='rw2') + 
   f(total.period,model='ar1',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) + 
-  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=12)+  
+  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=SEASONLENGTH)+  
   f(s, model=spde.a,
     extraconstr = list(A = as.matrix(t(Q)%*%A.1), e= rep(0,n.covariates)))
 
@@ -674,7 +742,7 @@ mod_capacity_36 <- inla(form_capacity_36, family='gaussian', data=inla.stack.dat
 
 sendmail('tyler.andrew.scott@gmail.com','36 models done','36 mods')
 
-save.image('temp_results2.RData')
+save.image('temp_results.RData')
 # library(mail)
 # sendmail('tyler.andrew.scott@gmail.com','temp mod 1992 results available','models done')
 # rm(list=ls())
@@ -734,7 +802,7 @@ basecoefplot = ggplot(data=plottemp) +
   geom_vline(xintercept = 0,lty=2)
 
 
-ggsave('JPART_Submission/Version2/basecoefplot2.png',basecoefplot)
+ggsave('JPART_Submission/Version2/basecoefplot.png',basecoefplot)
 
 
 
@@ -807,7 +875,7 @@ texreg(l = list(mod_base_tex_12,
        custom.note = "$^* 0$ outside the credible interval\\\
        OWRI: Spending on non-OWEB Restoration projects as reported in Oregon Watershed Restoration Inventory database",
        custom.coef.names = rev(name.vec),
-       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/basemods2.tex')
+       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/basemods.tex')
 
 
 library(mail)
@@ -873,7 +941,7 @@ projectcoefplot = ggplot(data=plottemp) +
     strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
 
-ggsave('JPART_Submission/Version2/projectcoefplot2.png',projectcoefplot)
+ggsave('JPART_Submission/Version2/projectcoefplot.png',projectcoefplot)
 
 
 
@@ -944,7 +1012,7 @@ texreg(l = list(mod_project_tex_12,
        custom.note = "$^* 0$ outside the credible interval\\\
        OWRI: Spending on non-OWEB Restoration projects as reported in Oregon Watershed Restoration Inventory dataproject",
        custom.coef.names = rev(name.vec),
-       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/projectmods2.tex')
+       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/projectmods.tex')
 
 
 ## Capacity ###
@@ -1010,7 +1078,7 @@ capacitycoefplot = ggplot(data=plottemp) +
     strip.text = element_text(size=14))  +
   geom_vline(xintercept = 0,lty=2)
 
-ggsave('JPART_Submission/Version2/capacitycoefplot2.png',capacitycoefplot)
+ggsave('JPART_Submission/Version2/capacitycoefplot.png',capacitycoefplot)
 
 
 
@@ -1081,6 +1149,6 @@ texreg(l = list(mod_capacity_tex_12,
        custom.note = "$^* 0$ outside the credible interval\\\
        OWRI: Spending on non-OWEB Restoration capacitys as reported in Oregon Watershed Restoration Inventory datacapacity",
        custom.coef.names = rev(name.vec),
-       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacitymods2.tex')
+       file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacitymods.tex')
 
 
