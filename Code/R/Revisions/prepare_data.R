@@ -525,7 +525,7 @@ oregon.outline = readOGR(dsn='SpatialData/government_units',
 files <- list.files('SpatialData/precip_rasters/',pattern='\\.bil$')
 files = files[nchar(files) != min(nchar(files))]
 
-
+# 
 # for each of vars, create raster object for each tile and merge
 # (this is a bit messy, but all I could think of for now...)
 # grids will be a list of rasters, each of which is the merged tiles for a BC var.
@@ -919,12 +919,40 @@ oweb.all$which.group[is.na(oweb.all$which.group)] = 'Other'
 oweb.restoration = oweb.all[oweb.all$Project.Type=='Restoration',]
 oweb.all$Project.Type = as.character(oweb.all$Project.Type)
 
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                intersect(grep('coordinator|Coordinator',oweb.all$Project.Name),grep('Fund|fund',oweb.all$Project.Summary)))] = 'Watershed Council'
+
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                intersect(grep('Support|support',oweb.all$Project.Summary),grep('Council|council',oweb.all$Project.Summary)))] = 'Watershed Council'
+
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                intersect(grep('Support|support',oweb.all$Project.Summary),grep('coordinator|Coordinator',oweb.all$Project.Summary)))] = 'Watershed Council'
+
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                intersect(grep('Council|council',oweb.all$Project.Summary),grep('coordinator|Coordinator',oweb.all$Project.Summary)))] = 'Watershed Council'
+
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                grep('WSC',oweb.all$Project.Summary))] = 'Watershed Council'
+
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                grep('WSC|Council Coordinator',oweb.all$Project.Name))] = 'Watershed Council'
+
+oweb.all$Grantee.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                grep('WS Coord|Council for WS',oweb.all$Project.Name))] = 'Watershed Council'
+
+oweb.all$Project.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                grep('Engineer',oweb.all$Project.Name))] = 'Tech'
+
+oweb.all$Project.Type[intersect(which(oweb.all$Project.Type=='Council Support'&oweb.all$Grantee.Type!='Watershed Council'),
+                                grep('Educat',oweb.all$Project.Name))] = 'Education'
+
+oweb.all$Project.Type[oweb.all$Project.Type=='Council Support'] = 'Capacity'
 oweb.all$Project.Type[oweb.all$Project.Type=='SWCD'] = 'Capacity'
 oweb.all$Project.Type[oweb.all$Project.Type=='Education'] = 'Outreach'
 oweb.all$Project.Type[oweb.all$Project.Type=='Assessment'] = 'Tech'
 oweb.all$Project.Type[oweb.all$Project.Type=='Monitoring'] = 'Tech'
 oweb.all$Project.Type[oweb.all$Project.Type=='Technical Assistance'] = 'Tech'
-oweb.all$Project.Type[oweb.all$Project.Type=='Council Support'] = 'Capacity'
+
 
 oweb.all$sabs = Year.Month$Abs.Month[match(paste(oweb.all$START.YEAR,oweb.all$START.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
 oweb.all$eabs = Year.Month$Abs.Month[match(paste(oweb.all$END.YEAR,oweb.all$END.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]

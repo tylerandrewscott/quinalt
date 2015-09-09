@@ -105,3 +105,4 @@ Input/*.accdb
 
 SpatialData/*
 TempData/*
+.Rproj.user
