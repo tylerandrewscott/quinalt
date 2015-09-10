@@ -37,22 +37,40 @@ library(maptools)
 
 #load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
 mod.data = read.csv('Input/temp_data.csv')
-mod.data = mod.data %>% mutate(altName = as.character(altName))
+mod.data = mod.data %>% mutate(which.wc = as.character(which.wc))
 
 mod.data$which.wc[grep('Middle Deschutes',mod.data$which.wc)] <- 'Willow Creek WC'
-
 
 library(mosaic)
 council.dat = fetchGoogle('https://docs.google.com/spreadsheets/d/1OXdC54OK8BwXAbIzMDudAKMvdblMhQQBJZ82_LUijFc/pub?output=csv')
 
-temp = dplyr::select(mod.data, which.wc)
 
-test = left_join(temp,council.dat,by=c('which.wc' = 'altName'))
+council.dat <- dplyr::select(council.dat,altName,OPERATING.BUDGET,TOTAL.BUDGET,YEAR.FOUNDED,COORD.TYPE,STAFF.FTE,Federal.Support,Foundation.Support,Donors.Support,Membership.Support)
+
+council.dat$OPERATING.BUDGET = ordered(council.dat$OPERATING.BUDGET,c('$0 - $50,000','$50,001 - $100,000','$100,001 - $150,000',
+                                                                      '$150,001 - $200,000', '$200,001 - $400,000',
+                                                                      '$400,001 - $600,000','$600,001 - $800,000',
+                                                                      '$1,000,001 - $5,000,000'
+                                                                    ))
+
+council.dat$TOTAL.BUDGET = ordered(council.dat$TOTAL.BUDGET,c('$0 - $100,000', '$100,001 - $250,000', '$250,001 - $500,000',
+                                                              '$500,001 - $1,000,000', '$1,000,001 - $5,000,000'))
+
+council.dat$YEAR.FOUNDED
+mod.data = left_join(mod.data,council.dat,by=c('which.wc' = 'altName'))
 
 
-unique(test$which.wc[is.na(test$Federal.Support)])
 
 
+
+unique(test$which.wc[is.na(test$COORD.TYPE)])
+
+library(foreign)
+
+extract <- read.table('//Users/TScott/Downloads/py13_990.dat',header=T)
+
+head(extract[,1:10])
+names(extract)
 
 class(temp)
 
