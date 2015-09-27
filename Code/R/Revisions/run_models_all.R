@@ -56,23 +56,17 @@ council.dat$OPERATING.BUDGET = ordered(council.dat$OPERATING.BUDGET,c('$0 - $50,
 council.dat$TOTAL.BUDGET = ordered(council.dat$TOTAL.BUDGET,c('$0 - $100,000', '$100,001 - $250,000', '$250,001 - $500,000',
                                                               '$500,001 - $1,000,000', '$1,000,001 - $5,000,000'))
 
-council.dat$YEAR.FOUNDED
+
 mod.data = left_join(mod.data,council.dat,by=c('which.wc' = 'altName'))
 
+mod.data$YEARS.ACTIVE <- NA
+mod.data$YEARS.ACTIVE[is.na(mod.data$which.wc)] <- 0
+
+mod.data$YEARS.ACTIVE[!is.na(mod.data$YEAR.FOUNDED)] <- mod.data$YEAR[!is.na(mod.data$YEAR.FOUNDED)] - mod.data$YEAR.FOUNDED[!is.na(mod.data$YEAR.FOUNDED)]
+
+mod.data$YEARS.ACTIVE[!is.na(mod.data$YEAR.FOUNDED)][mod.data$YEARS.ACTIVE[!is.na(mod.data$YEAR.FOUNDED)] < 0] <- 0
 
 
-
-
-unique(test$which.wc[is.na(test$COORD.TYPE)])
-
-library(foreign)
-
-extract <- read.table('//Users/TScott/Downloads/py13_990.dat',header=T)
-
-head(extract[,1:10])
-names(extract)
-
-class(temp)
 
 
 
@@ -264,6 +258,9 @@ covars[colnames(covars) %in% c('Decimal_Lat','Decimal_long','ag.huc8','dev.huc8'
   apply(covars[colnames(covars) %in% c('Decimal_Lat','Decimal_long','ag.huc8','dev.huc8','forst.huc8','NOT_OWEB_OWRI.wq.TotalCash_24',
   'monthly.precip.median')],2,scale,center=TRUE,scale=FALSE)
 
+
+
+
 # some book keeping
 n.data = length(covars$owqi)
 
@@ -308,6 +305,10 @@ A.1 <- inla.spde.make.A(mesh.a,
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
 stk.1 <- inla.stack(data=list(y=covars$owqi), A=list(A.1,1),
                     effects=list(ind.1, list(data.frame(b0=1,covars))))
+
+dim(covars)
+dim(stk.1$effects$data)
+
 
 #model settings
 correctionfactor = 10

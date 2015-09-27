@@ -12,8 +12,10 @@ if(!remote)
 
 First.Year = 1990
 Last.Year = 2035
-
-
+calc.precip=FALSE
+site.buffers=FALSE
+compile.by.wc = FALSE
+compile.by.swcd = FALSE
 ######### NEEDED PACKAGES #############
 
 require(foreign)
@@ -38,12 +40,13 @@ require(splancs)
 require(fields)
 library(raster)
 library(shapefiles)
-library(raster)
+
 library(rasterVis)  # raster visualisation
 library(rWBclimate)
 library(stargazer)
 library(texreg)
 library(xtable)
+
 oregon.outline = readOGR(dsn='SpatialData/government_units',
                          layer = 'state_nrcs_a_or')
 #source("http://www.math.ntnu.no/inla/givemeINLA.R")
@@ -57,6 +60,8 @@ Year.Month = merge(YEAR,MONTH, type='full')
 Year.Month$Month.Num = match(Year.Month$MONTH,month.name)
 Year.Month$Year.Num = Year.Month$YEAR - First.Year + 1
 Year.Month$Abs.Month = Year.Month$Month.Num  + (Year.Month$Year.Num-1) *12
+Year.Month$Water.Year = Year.Month$YEAR
+Year.Month$Water.Year[Year.Month$Month.Num%in%10:12] <- Year.Month$Water.Year[Year.Month$Month.Num%in%10:12] -1
 
 ###### MAKE HUC8 DATAFRAME ##########
 localDir <- 'TempData'
@@ -158,7 +163,7 @@ cover.1997 = cover.1992; cover.1997$YEAR = 1997
 cover.1998 = cover.1992; cover.1998$YEAR = 1998
 cover.1999 = cover.1992; cover.1999$YEAR = 1999
 cover.2000 = cover.1992; cover.2000$YEAR = 2000
-
+cover.2001 = cover.1992; cover.2001$YEAR = 2001
 
 #2001 nlcd
 crop.huc8.2001 = read.dbf('LandUse_RasterData/crop_huc8_2001.dbf');colnames(crop.huc8.2001$dbf)[5] = 'crop.huc8'
@@ -170,14 +175,13 @@ ag.huc8.2001 = crop.huc8.2001
 ag.huc8.2001$dbf$ag.huc8 = crop.huc8.2001$dbf$crop.huc8+
   past.huc8.2001$dbf$past.huc8[match(crop.huc8.2001$dbf$HUC8,past.huc8.2001$dbf$HUC8)]
 
-
-cover.2001 = join_all(list(ag.huc8.2001$dbf,wet.huc8.2001$dbf,forst.huc8.2001$dbf,dev.huc8.2001$dbf))
-cover.2001$YEAR = 2001
-cover.2001 = dplyr::select(cover.2001,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
-cover.2002 = cover.2001; cover.2002$YEAR = 2002
-cover.2003 = cover.2001; cover.2003$YEAR = 2003
-cover.2004 = cover.2001; cover.2004$YEAR = 2004
-cover.2005 = cover.2001; cover.2005$YEAR = 2005
+cover.2002 = join_all(list(ag.huc8.2001$dbf,wet.huc8.2001$dbf,forst.huc8.2001$dbf,dev.huc8.2001$dbf))
+cover.2002$YEAR = 2002
+cover.2002 = dplyr::select(cover.2001,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
+cover.2003 = cover.2002; cover.2003$YEAR = 2003
+cover.2004 = cover.2003; cover.2004$YEAR = 2004
+cover.2005 = cover.2004; cover.2005$YEAR = 2005
+cover.2006 = cover.2005; cover.2006$YEAR = 2006
 
 #2006 nlcd
 crop.huc8.2006 = read.dbf('LandUse_RasterData/crop_huc8_2006.dbf');colnames(crop.huc8.2006$dbf)[5] = 'crop.huc8'
@@ -189,14 +193,13 @@ ag.huc8.2006 = crop.huc8.2006
 ag.huc8.2006$dbf$ag.huc8 = crop.huc8.2006$dbf$crop.huc8+
   past.huc8.2006$dbf$past.huc8[match(crop.huc8.2006$dbf$HUC8,past.huc8.2006$dbf$HUC8)]
 
-
-cover.2006 = join_all(list(ag.huc8.2006$dbf,wet.huc8.2006$dbf,forst.huc8.2006$dbf,dev.huc8.2006$dbf))
-cover.2006$YEAR = 2006
-cover.2006 = dplyr::select(cover.2006,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
-cover.2007 = cover.2006; cover.2007$YEAR = 2007
-cover.2008 = cover.2006; cover.2008$YEAR = 2008
-cover.2009 = cover.2006; cover.2009$YEAR = 2009
-cover.2010 = cover.2006; cover.2010$YEAR = 2010
+cover.2007 = join_all(list(ag.huc8.2006$dbf,wet.huc8.2006$dbf,forst.huc8.2006$dbf,dev.huc8.2006$dbf))
+cover.2007$YEAR = 2007
+cover.2007 = dplyr::select(cover.2007,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
+cover.2008 = cover.2007; cover.2008$YEAR = 2007
+cover.2009 = cover.2008; cover.2009$YEAR = 2008
+cover.2010 = cover.2009; cover.2010$YEAR = 2009
+cover.2011 = cover.2010; cover.2011$YEAR = 2010
 
 #2011 nlcd
 crop.huc8.2011 = read.dbf('LandUse_RasterData/crop_huc8_2011.dbf');colnames(crop.huc8.2011$dbf)[5] = 'crop.huc8'
@@ -207,22 +210,21 @@ dev.huc8.2011 = read.dbf('LandUse_RasterData/dev_huc8_2011.dbf');colnames(dev.hu
 ag.huc8.2011 = crop.huc8.2011
 ag.huc8.2011$dbf$ag.huc8 = crop.huc8.2011$dbf$crop.huc8+past.huc8.2011$dbf$past.huc8[match(crop.huc8.2011$dbf$HUC8,past.huc8.2011$dbf$HUC8)]
 
-cover.2011 = join_all(list(ag.huc8.2011$dbf,wet.huc8.2011$dbf,forst.huc8.2011$dbf,dev.huc8.2011$dbf))
+cover.2012 = join_all(list(ag.huc8.2011$dbf,wet.huc8.2011$dbf,forst.huc8.2011$dbf,dev.huc8.2011$dbf))
 
-
-cover.2011$YEAR = 2011
-cover.2011 = dplyr::select(cover.2011,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
-cover.2012 = cover.2011; cover.2012$YEAR = 2012
-cover.2013 = cover.2011; cover.2013$YEAR = 2013
-cover.2014 = cover.2011; cover.2014$YEAR = 2014
-cover.2015 = cover.2011; cover.2015$YEAR = 2015
-cover.2016 = cover.2011; cover.2016$YEAR = 2016
+cover.2012$YEAR = 2012
+cover.2012 = dplyr::select(cover.2012,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
+cover.2013 = cover.2012; cover.2013$YEAR = 2013
+cover.2014 = cover.2013; cover.2014$YEAR = 2014
+cover.2015 = cover.2014; cover.2015$YEAR = 2015
+cover.2016 = cover.2015; cover.2016$YEAR = 2016
+cover.2017 = cover.2016; cover.2017$YEAR = 2017
 
 land.cover.huc8 = join_all(list(cover.1990,cover.1991,cover.1992,cover.1993,cover.1994,
                                 cover.1995,cover.1996,cover.1997,cover.1998,cover.1999,
                                 cover.2000,cover.2001,cover.2002,cover.2003,cover.2004,
                                 cover.2005,cover.2006,cover.2007,cover.2008,cover.2009,
-                                cover.2010,cover.2011,cover.2012,cover.2013,cover.2014,cover.2015,cover.2016),
+                                cover.2010,cover.2011,cover.2012,cover.2013,cover.2014,cover.2015,cover.2016,cover.2017),
                            type='full')
 
 names(oregon.huc8.df)[1] = 'HUC8'
@@ -258,8 +260,10 @@ all.params.spdf@data$Month.Num = month(all.params.spdf$DATE)
 all.params.spdf@data$YEAR = year(foo(all.params.spdf$DATE))
 all.params.spdf@data$DATE = foo(all.params.spdf$DATE)
 
+all.params.spdf@data$Water.Year = all.params.spdf@data$YEAR
+all.params.spdf@data$Water.Year[all.params.spdf@data$Month.Num %in% 10:12] <- all.params.spdf@data$Water.Year[all.params.spdf@data$Month.Num %in% 10:12] - 1
 
-all.params.spdf = all.params.spdf[all.params.spdf@data$YEAR>=1992,]
+all.params.spdf = all.params.spdf[all.params.spdf@data$Water.Year>=1995,]
 
 
 uq = all.params.spdf[!duplicated(all.params.spdf@data$Station),]
@@ -278,20 +282,22 @@ uq.coords = as.matrix(cbind(uq$Decimal_long,uq$Decimal_Lat))
 
 m = data.frame(lon = uq$Decimal_long,lat = uq$Decimal_Lat)
 us.alt = getData('alt',country='US')
+
 elevation.df = cbind(m, alt = raster::extract(us.alt[[1]], m, method = "bilinear"))
+
+
 uq@data$elevation = elevation.df$alt
 
 rm(elevation.df)
 rm(us.alt)
 
 
-#load oregon boundary shapefile
-oregon = readOGR(dsn="SpatialData/government_units", layer="state_nrcs_a_or")
+#load oregon huc8 shapefile
+oregon= readOGR(dsn="SpatialData/government_units/", layer="state_nrcs_a_or")
 oregon@data$id = rownames(oregon@data)
-oregon.points = fortify(oregon, region="id")
+oregon.points = fortify(oregon,'id')
 oregon.df = join(oregon.points, oregon@data, by="id")
 
-#load oregon huc8 shapefile
 oregon.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")
 oregon.huc8@data$id = rownames(oregon.huc8@data)
 #join into one polygon
@@ -310,84 +316,50 @@ rm(oregon.huc8.reference)
 rm(oregon.df)
 rm(oregon)
 
+all.params.spdf@data = join(all.params.spdf@data,dplyr::select(uq@data,Station,elevation,seaDist))
 
-R1.ag = raster('SpatialData/tf_rasters/tf_ag_1992')
-R1.dev = raster('SpatialData/tf_rasters/tf_dev_1992')
-R1.wet = raster('SpatialData/tf_rasters/tf_wetl_1992')
-R1.forst = raster('SpatialData/tf_rasters/tf_forst_1992')
-R2.crop = raster('SpatialData/tf_rasters/tf_crop_2001')
-R2.past = raster('SpatialData/tf_rasters/tf_past_2001')
-R2.dev = raster('SpatialData/tf_rasters/tf_dev_2001')
-R2.wet = raster('SpatialData/tf_rasters/tf_wetl_2001')
-R2.forst = raster('SpatialData/tf_rasters/tf_forst_2001')
-R3.crop = raster('SpatialData/tf_rasters/tf_crop_2006')
-R3.past = raster('SpatialData/tf_rasters/tf_past_2006')
-R3.dev = raster('SpatialData/tf_rasters/tf_dev_2006')
-R3.wet = raster('SpatialData/tf_rasters/tf_wetl_2006')
-R3.forst = raster('SpatialData/tf_rasters/tf_forst_2006')
-R4.crop = raster('SpatialData/tf_rasters/tf_crop_2011')
-R4.past = raster('SpatialData/tf_rasters/tf_past_2011')
-R4.dev = raster('SpatialData/tf_rasters/tf_dev_2011')
-R4.wet = raster('SpatialData/tf_rasters/tf_wetl_2011')
-R4.forst = raster('SpatialData/tf_rasters/tf_forst_2011')
-
-uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
-
-R1.ag.v = raster::extract(R1.ag,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R1.dev.v = raster::extract(R1.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R1.wet.v = raster::extract(R1.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R1.forst.v = raster::extract(R1.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-
-R2.crop.v = raster::extract(R2.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.past.v = raster::extract(R2.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.dev.v = raster::extract(R2.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.wet.v = raster::extract(R2.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.forst.v = raster::extract(R2.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R2.ag.v = data.frame(ID = R2.crop.v$ID,tf_ag_2001 = R2.crop.v$tf_crop_2001+R2.past.v$tf_past_2001)
-
-R3.crop.v = raster::extract(R3.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.past.v = raster::extract(R3.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.dev.v = raster::extract(R3.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.wet.v = raster::extract(R3.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.forst.v = raster::extract(R3.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R3.ag.v = data.frame(ID = R3.crop.v$ID,tf_ag_2006 = R3.crop.v$tf_crop_2006+R3.past.v$tf_past_2006)
-
-R4.crop.v = raster::extract(R4.crop,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.past.v = raster::extract(R4.past,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.dev.v = raster::extract(R4.dev,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.wet.v = raster::extract(R4.wet,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.forst.v = raster::extract(R4.forst,uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE)
-R4.ag.v = data.frame(ID = R4.crop.v$ID,tf_ag_2011 = R4.crop.v$tf_crop_2011+R4.past.v$tf_past_2011)
-
-
-R1 = join_all(list(R1.ag.v,R1.dev.v,R1.wet.v,R1.forst.v))
-R2 = join_all(list(R2.ag.v,R2.dev.v,R2.wet.v,R2.forst.v))
-R3 = join_all(list(R3.ag.v,R3.dev.v,R3.wet.v,R3.forst.v))
-R4 = join_all(list(R4.ag.v,R4.dev.v,R4.wet.v,R4.forst.v))
-
-
-cov1992 = rbind(R1,R1,R1,R1,R1,R1,R1,R1,R1);colnames(cov1992) = c('ID','Ag','Dev','Wetl','Forst')
-cov1992$YEAR = rep(1992:2000,each=dim(uq)[1])
-cov1992$Station = uq$Station
-
-cov2001 = rbind(R2,R2,R2,R2,R2);colnames(cov2001) = c('ID','Ag','Dev','Wetl','Forst')
-cov2001$YEAR = rep(2001:2005,each=dim(uq)[1])
-cov2001$Station = uq$Station
-
-cov2006 = rbind(R3,R3,R3,R3,R3);colnames(cov2006) = c('ID','Ag','Dev','Wetl','Forst')
-cov2006$YEAR = rep(2006:2010,each=dim(uq)[1])
-cov2006$Station = uq$Station
-
-cov2011 = rbind(R4,R4,R4);colnames(cov2011) = c('ID','Ag','Dev','Wetl','Forst')
-cov2011$YEAR = rep(2011:2013,each=dim(uq)[1])
-cov2011$Station = uq$Station
-
-cov = rbind(cov1992,cov2001,cov2006,cov2011)
-
-all.params.spdf@data = join(all.params.spdf@data,uq@data[,c('Station','elevation','seaDist')])
-
-all.params.spdf@data = join(all.params.spdf@data,cov)
-
+if (site.buffers)
+{
+  uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
+  
+  R1.list = sapply(paste0('SpatialData/tf_rasters/',grep('1992',list.files('SpatialData/tf_rasters/'),value=T)), function(x) raster(x))
+  R1.list <- lapply(R1.list, function(x) raster::extract(x,y=uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE))
+  R1 = join_all(R1.list)
+  
+  R2.list = sapply(paste0('SpatialData/tf_rasters/',grep('2001',list.files('SpatialData/tf_rasters/'),value=T)), function(x) raster(x))
+  R2.list <- lapply(R2.list, function(x) raster::extract(x,y=uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE))
+  R2 = join_all(R2.list)
+  R2 = mutate(R1,tf_ag_2001 = tf_past_2001 + tf_crop_2001)
+  
+  R3.list = sapply(paste0('SpatialData/tf_rasters/',grep('2006',list.files('SpatialData/tf_rasters/'),value=T)), function(x) raster(x))
+  R3.list <- lapply(R3.list, function(x) raster::extract(x,y=uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE))
+  R3 = join_all(R3.list)
+  R3 = mutate(R1,tf_ag_2006 = tf_past_2006 + tf_crop_2006)
+  
+  R4.list = sapply(paste0('SpatialData/tf_rasters/',grep('2011',list.files('SpatialData/tf_rasters/'),value=T)), function(x) raster(x))
+  R4.list <- lapply(R4.list, function(x) raster::extract(x,y=uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE))
+  R4 = join_all(R4.list)
+  R4 = mutate(R1,tf_ag_2011 = tf_past_2011 + tf_crop_2011)
+  
+  cov1992 = rbind(R1,R1,R1,R1,R1,R1,R1,R1,R1);colnames(cov1992) = c('ID','Ag','Dev','Wetl','Forst')
+  cov1992$YEAR = rep(1992:2000,each=dim(uq)[1])
+  cov1992$Station = uq$Station
+  
+  cov2001 = rbind(R2,R2,R2,R2,R2);colnames(cov2001) = c('ID','Ag','Dev','Wetl','Forst')
+  cov2001$YEAR = rep(2001:2005,each=dim(uq)[1])
+  cov2001$Station = uq$Station
+  
+  cov2006 = rbind(R3,R3,R3,R3,R3);colnames(cov2006) = c('ID','Ag','Dev','Wetl','Forst')
+  cov2006$YEAR = rep(2006:2010,each=dim(uq)[1])
+  cov2006$Station = uq$Station
+  
+  cov2011 = rbind(R4,R4,R4);colnames(cov2011) = c('ID','Ag','Dev','Wetl','Forst')
+  cov2011$YEAR = rep(2011:2013,each=dim(uq)[1])
+  cov2011$Station = uq$Station
+  
+  cov = rbind(cov1992,cov2001,cov2006,cov2011)
+  all.params.spdf@data = join(all.params.spdf@data,cov)
+}
 
 which.huc8 = over(spTransform(all.params.spdf,CRS(proj4string(oregon.huc8))),oregon.huc8)
 
@@ -395,16 +367,14 @@ all.params.spdf@data$HUC8 = which.huc8$HUC8
 
 all.params.spdf@data = join(all.params.spdf@data,Year.Month)
 
-
 all.params.spdf@data$uq.tid = paste(all.params.spdf@data$HUC8, all.params.spdf@data$Abs.Month,sep='_')
-
-
 
 #write.csv(all.params.spdf@data,'Input/site_obs_data.csv')
 
 ####### ADD GRANT DATA ##########
 
 proj.info = read.csv('Input/owri_project_info.csv')
+
 proj.info = proj.info %>% filter(StartYear!=0,CompleteYear!=0,StartMonth!=0,CompleteMonth!=0)
 
 convertCurrency <- function(currency) {
@@ -420,17 +390,15 @@ proj.info$Start.Abs = Year.Month$Abs.Month[match(paste(proj.info$StartMonth,proj
 proj.info$Complete.Abs = Year.Month$Abs.Month[match(paste(proj.info$CompleteMonth,proj.info$CompleteYear),paste(Year.Month$Month.Num,Year.Month$YEAR))]
 
 
-proj.info$Project.Number = proj.info$drvdOwebNum
-proj.info$HUC8 = proj.info$drvdHUC4thField
-proj.info = proj.info %>% filter(StartYear!=0,CompleteYear!=0,StartMonth!=0,CompleteMonth!=0)
+proj.info <- proj.info %>% dplyr::mutate(Project.Number = drvdOwebNum, HUC8 = drvdHUC4thField) %>%
+#  filter(StartYear!=0,CompleteYear!=0,StartMonth!=0,CompleteMonth!=0) %>%
+  mutate(YEAR = CompleteYear, Month.Num = CompleteMonth) 
 
-### proj.info = join(proj.info,all.points.uq.df,type='left')
-proj.info$YEAR = proj.info$CompleteYear
-proj.info$Month.Num = proj.info$CompleteMonth
+
 
 proj.info = join(proj.info,Year.Month)
-proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
 
+proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
 
 
 #   proj.partners= read.csv('Input/owri_project_participants.csv')
@@ -457,10 +425,8 @@ proj.info$uq.tid = paste(proj.info$HUC8,proj.info$Abs.Month,sep='_')
 
 
 #binary true/false: OWEB project?
-proj.info$OWRI.OWEB.Grant = ifelse(proj.info$drvdOwebNum=='','NOT_OWEB_OWRI','OWEB_OWRI')
-
-#proj.info$activity_t = tolower(proj.info$activity_t)
-proj.info$drvdProjDesc = tolower(proj.info$drvdProjDesc)
+proj.info <- proj.info %>% mutate(OWRI.OWEB.Grant = ifelse(proj.info$drvdOwebNum=='','NOT_OWEB_OWRI','OWEB_OWRI'),
+                                  drvdProjDesc = tolower(proj.info$drvdProjDesc))
 
 ###Create true/false for project about water quality
 
@@ -494,6 +460,10 @@ proj.info$about_wq[
 
 
 temp.huc8 = oregon.huc8.df
+
+owri.huc8.summary = proj.info %>% dplyr::filter(about_wq=='wq',OWRI.OWEB.Grant=='NOT_OWEB_OWRI') %>% dplyr::group_by(Water.Year,HUC8) %>% dplyr::summarise(owri.wq.nonoweb.cash.wy = sum(TotalCash),owri.wq.nonoweb.inkind.wy=sum(TotalInKind),owri.wq.nonoweb.both.wy=sum(TotalBoth))
+
+
 temp = proj.info %>% dplyr::group_by(uq.tid,about_wq,OWRI.OWEB.Grant) %>% 
   dplyr::summarise_each(funs(sum),TotalCash)
 tt = melt(temp,id.vars=c('uq.tid','about_wq','OWRI.OWEB.Grant'))
@@ -516,312 +486,56 @@ temp.huc8[,grep('Total',colnames(temp.huc8))][is.na(temp.huc8[,grep('Total',coln
 huc8_data = temp.huc8
 
 ####### ADD PRECIP VARIABLE ###########
-
-oregon.outline = readOGR(dsn='SpatialData/government_units',
-                         layer = 'state_nrcs_a_or')
-
-#setwd('/homes/tscott1/win/user/quinalt/')
-# create a list of .bil files that exist in the wd
-files <- list.files('SpatialData/precip_rasters/',pattern='\\.bil$')
-files = files[nchar(files) != min(nchar(files))]
-
-# 
-# for each of vars, create raster object for each tile and merge
-# (this is a bit messy, but all I could think of for now...)
-# grids will be a list of rasters, each of which is the merged tiles for a BC var.
-
-if(remote)
-{setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')}
-if(!remote)
-{setwd('//Users/TScott/Google Drive/quinalt/SpatialData/precip_rasters/')}
-
-
-huc8_data$pull_raster = paste0(huc8_data$YEAR,ifelse(nchar(huc8_data$Month.Num)==2,huc8_data$Month.Num,paste0(0,huc8_data$Month.Num)))
-huc8_data = huc8_data[huc8_data$HUC8!='17070106',]
-huc8_data$monthly.precip.median = NA
-
-
-which.file = sapply(huc8_data$pull_raster,FUN = grep,x=files)
-which.file = as.character(which.file)
-which.file = ifelse(which.file=='integer(0)',NA,which.file)
-which.file = unlist(which.file)
-print.list = seq(0,100000,1000)
-
-for (i in 1:nrow(huc8_data))
+if(calc.precip)
 {
-  if (!is.na(which.file[i]))
+  oregon.outline = readOGR(dsn='SpatialData/government_units',
+                           layer = 'state_nrcs_a_or')
+  
+  #setwd('/homes/tscott1/win/user/quinalt/')
+  # create a list of .bil files that exist in the wd
+  files <- list.files('SpatialData/precip_rasters/',pattern='\\.bil$')
+  files = files[nchar(files) != min(nchar(files))]
+  
+  # 
+  # for each of vars, create raster object for each tile and merge
+  # (this is a bit messy, but all I could think of for now...)
+  # grids will be a list of rasters, each of which is the merged tiles for a BC var.
+  
+  if(remote)
+  {setwd('/homes/tscott1/win/user/quinalt/SpatialData/precip_rasters/')}
+  if(!remote)
+  {setwd('//Users/TScott/Google Drive/quinalt/SpatialData/precip_rasters/')}
+  
+  
+  huc8_data$pull_raster = paste0(huc8_data$YEAR,ifelse(nchar(huc8_data$Month.Num)==2,huc8_data$Month.Num,paste0(0,huc8_data$Month.Num)))
+  huc8_data = huc8_data[huc8_data$HUC8!='17070106',]
+  huc8_data$monthly.precip.median = NA
+  
+  
+  which.file = sapply(huc8_data$pull_raster,FUN = grep,x=files)
+  which.file = as.character(which.file)
+  which.file = ifelse(which.file=='integer(0)',NA,which.file)
+  which.file = unlist(which.file)
+  print.list = seq(0,100000,1000)
+  
+  for (i in 1:nrow(huc8_data))
   {
-    huc8_data$monthly.precip.median[i] = raster::extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
-                                                         oregon.huc8[as.character(oregon.huc8@data$HUC8)==
-                                                                       as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)[1]
+    if (!is.na(which.file[i]))
+    {
+      huc8_data$monthly.precip.median[i] = raster::extract(crop(raster(files[as.numeric(which.file[i])]),oregon.outline),
+                                                           oregon.huc8[as.character(oregon.huc8@data$HUC8)==
+                                                                         as.character(huc8_data$HUC8[i]),],fun=median,na.rm=TRUE)[1]
+    }
+    if(i %in% print.list){print(i)}
   }
-  if(i %in% print.list){print(i)}
 }
 
 
-# 
-# select1990 = files[grep('1990',files)]
-# grids1990<- sapply(select1990 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1990
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1991 = files[grep('1991',files)]
-# grids1991<- sapply(select1991 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1991
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1992 = files[grep('1992',files)]
-# grids1992<- sapply(select1992 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1992
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1993 = files[grep('1993',files)]
-# grids1993<- sapply(select1993 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1993
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1994 = files[grep('1994',files)]
-# grids1994<- sapply(select1994 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1994
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1995 = files[grep('1995',files)]
-# grids1995<- sapply(select1995 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1995
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1996 = files[grep('1996',files)]
-# grids1996<- sapply(select1996 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1996
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1997 = files[grep('1997',files)]
-# grids1997<- sapply(select1997 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1997
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1998 = files[grep('1998',files)]
-# grids1998<- sapply(select1998 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1998
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select1999 = files[grep('1999',files)]
-# grids1999<- sapply(select1999 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select1999
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2000 = files[grep('2000',files)]
-# grids2000<- sapply(select2000 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2000
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2001 = files[grep('2001',files)]
-# grids2001<- sapply(select2001 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2001
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2002 = files[grep('2002',files)]
-# grids2002<- sapply(select2002 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2002
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2003 = files[grep('2003',files)]
-# grids2003<- sapply(select2003 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2003
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2004 = files[grep('2004',files)]
-# grids2004<- sapply(select2004 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2004
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2005 = files[grep('2005',files)]
-# grids2005<- sapply(select2005 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2005
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2006 = files[grep('2006',files)]
-# grids2006<- sapply(select2006 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2006
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2007 = files[grep('2007',files)]
-# grids2007<- sapply(select2007 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2007
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2008 = files[grep('2008',files)]
-# grids2008<- sapply(select2008 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2008
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# select2009 = files[grep('2009',files)]
-# grids2009<- sapply(select2009 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2009
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2010 = files[grep('2010',files)]
-# grids2010<- sapply(select2010 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2010
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# select2011 = files[grep('2011',files)]
-# grids2011<- sapply(select2011 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2011
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2012 = files[grep('2012',files)]
-# grids2012<- sapply(select2012 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2012
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# select2013 = files[grep('2013',files)]
-# grids2013<- sapply(select2013 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2013
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# select2014 = files[grep('2014',files)]
-# grids2014<- sapply(select2014 , function(x) {
-#   #patt <- paste('precip', x, '_', sep='')
-#   tiles <- select2014
-#   merged <- eval(parse(text=paste('merge(', toString(paste('raster(', tiles, ')', 
-#                                                            sep='"')), ')', sep='')))
-# })
-# 
-# 
-# all.grids = c(grids1990,grids1991,grids1992,grids1993,grids1994,grids1995,grids1996,grids1997,grids1998,grids1999,
-#               grids2000,grids2001,grids2002,grids2003,grids2004,grids2005,grids2006,grids2007,grids2008,grids2009,
-#               grids2010,grids2011,grids2012,grids2013,grids2014)
-# 
-# 
-# # give the list elements names
-# which.month = gsub('_bil','',
-#                    gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_[0123456789]{4}','',files)))
-# 
-# which.year = gsub('[0123456789]{2}$','',gsub('_bil','',
-#                                              gsub('.bil','',gsub('PRISM_ppt_stable_4kmM2_','',files))))
-# 
-# which.year.month = paste(which.year,which.month,sep='_')
-# names(all.grids) = which.year.month
-# 
-# #combine all list elements into a stack
-# s <- stack(all.grids)
-# s.crop <- crop(s, oregon.outline)
-# 
-# all.params.spdf@data$monthly.precip = NA
-# precip.data = data.frame(NULL)
-# empty = list(NULL)
-# for (i in 1:dim(s.crop)[3])
-# {
-#   empty[[i]] = raster::extract(s.crop[[i]],all.params.spdf,method='bilinear')
-# }
-# precip.list = as.data.frame(empty)
-# names(precip.list) = names(s.crop)
-# 
-# empty = list(NULL)
-# for (i in 1:dim(s.crop)[3])
-# {
-#   empty[[i]] = raster::extract(s.crop[[i]],oregon.huc8,fun=median,na.rm=T)
-# }
-# 
-# names(empty) = names(s.crop)
-# 
-# 
-# which.grab =  match(paste0('X',all.params.spdf@data$YEAR,'_',
-#                            ifelse(all.params.spdf@data$Month.Num<10,paste0(0,all.params.spdf@data$Month.Num),
-#                                   all.params.spdf@data$Month.Num)),names(precip.list))
-# 
-# all.params.spdf@data$monthly.precip.site = NA
-# 
-# for (i in 1:nrow(all.params.spdf@data))
-# {
-#   all.params.spdf@data$monthly.precip.site[i] = 
-#     precip.list[i,match(paste0('X',all.params.spdf@data$YEAR[i],'_',
-#                                ifelse(all.params.spdf@data$Month.Num[i]<10,paste0(0,all.params.spdf@data$Month.Num[i]),
-#                                       all.params.spdf@data$Month.Num[i])),names(precip.list))]
-# }
-
-
 ######### ADD COUNTY POP ##########
- if(remote)
- {setwd('/homes/tscott1/win/user/quinalt')}
- if(!remote)
- {setwd('//Users/TScott/Google Drive/quinalt')}
+if(remote)
+{setwd('/homes/tscott1/win/user/quinalt')}
+if(!remote)
+{setwd('//Users/TScott/Google Drive/quinalt')}
 # 
 # county.pop = read.csv('Input/oregon_county_populations.csv')
 # county.pop  = filter(county.pop, County != '')
@@ -850,7 +564,7 @@ for (i in 1:nrow(huc8_data))
 
 
 all.params.spdf@data = join(all.params.spdf@data,dplyr::select(huc8_data,HUC8,Abs.Month,
-                                                        uq.tid))
+                                                               uq.tid))
 
 
 ########### CLEAN OWEB WC GRANTS ############
@@ -951,7 +665,7 @@ oweb.all$Project.Type[oweb.all$Project.Type=='SWCD'] = 'Capacity'
 oweb.all$Project.Type[oweb.all$Project.Type=='Education'] = 'Outreach'
 oweb.all$Project.Type[oweb.all$Project.Type=='Assessment'] = 'Tech'
 oweb.all$Project.Type[oweb.all$Project.Type=='Monitoring'] = 'Tech'
-oweb.all$Project.Type[oweb.all$Project.Type=='Technical Assistance'] = 'Tech'
+oweb.all$Project.Type[oweb.all$Project.Type=='Technical Assistance'] = 'Capacity'
 
 
 oweb.all$sabs = Year.Month$Abs.Month[match(paste(oweb.all$START.YEAR,oweb.all$START.MONTH,sep='_'),paste(Year.Month$YEAR,Year.Month$Month.Num,sep='_'))]
@@ -966,16 +680,18 @@ oweb.all$Project.Type = as.character(oweb.all$Project.Type)
 
 
 temp = (oweb.all %>% 
-          filter(which.group == 'WC' |which.group=='SWCD') %>% group_by(Project.Type,which.group) %>%
-          summarise_each(funs(nobs,mean),Project.Amount,abs.length))[,-3]
+          dplyr::filter(END.YEAR>=2012,which.group %in% c('WC')) %>% group_by(Project.Type,which.group) %>%
+          summarise_each(funs(nobs,mean),Project.Amount))
 temp[,1] = ifelse(duplicated(data.frame(temp)[,1]),'',data.frame(temp)[,1])
-names(temp) = c('Project','Grantee','N','Average cost','Average length (months)')
-
+names(temp) = c('Project','Grantee','N','Average cost')
 
 stargazer(data.frame(temp),summary=F,rownames = F,no.space = T,digits=0,type='latex',
-          out='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/grantsummarytable.tex',
-          title = 'OWEB grant summary statistics (1997-2013)',
+          out='/homes/tscott1/win/user/quinalt/Deliverables/JPART_Submission/Version2/grantsummarytable.tex',
+          title = 'OWEB grant summary statistics (1/2012-2015)',
           label='table:grantsummary')
+
+
+
 
 # nm = is.mapped[is.na(test$HUC8),]
 # mapped  = is.mapped[!is.na(test$HUC8),]
@@ -1148,65 +864,27 @@ oweb.all =  rbind(oweb.all[oweb.all$Grantee!='Rickreall & Glenn-Gibson WCs',],re
 oweb.all$Grantee[grep('East Lane SWCD',oweb.all$Grantee)] = 'Upper Willamette SWCD'
 oweb.all$Grantee[grep('Baker Assn of Conservation Dist',oweb.all$Grantee)] = 'Baker Valley SWCD'
 
-for (i in 1:nrow(oweb.all))
-{
-  if(is.na(oweb.all$HUC8[i]) & oweb.all$which.group[i]=='WC')
-  {
-    oweb.all$HUC8[i] = oregon.wc@data$HUC_8[match(oweb.all$Grantee[i],oregon.wc@data$altName)]
-  }
-if(is.na(oweb.all$HUC8[i]) & oweb.all$which.group[i]=='SWCD')
-{
-  oweb.all$HUC8[i] = oregon.swcd@data$HUC_8[match(oweb.all$Grantee[i],oregon.swcd@data$SWCD_Name)]
-}
-}
+oweb.all <- oweb.all %>% mutate(HUC8 = as.character(HUC8),which.group = as.character(which.group))
 
-
-
-oregon.swcd@data$HUC_8[which(oregon.swcd$SWCD_Name == oweb.all$Grantee[(is.na(oweb.all$HUC8))][i])]
-oweb.all$which.group[(is.na(oweb.all$HUC8))][i]=='SWCD'
-oweb.all$Grantee[(is.na(oweb.all$HUC8))][i]
-oregon.wc@data$HUC_8[which(oregon.wc$altName == oweb.all$Grantee[(is.na(oweb.all$HUC8))][i])]
+#fill in missing huc8 values using oregon gis data so that all grants have an huc8 associated with them
+oweb.all$HUC8[is.na(oweb.all$HUC8) & oweb.all$which.group=='WC'] <- as.character(oregon.wc@data$HUC_8[match(oweb.all$Grantee[is.na(oweb.all$HUC8) & oweb.all$which.group=='WC'],oregon.wc@data$altName)])
+oweb.all$HUC8[is.na(oweb.all$HUC8) & oweb.all$which.group=='SWCD'] <- as.character(oregon.swcd@data$HUC_8[match(oweb.all$Grantee[is.na(oweb.all$HUC8) & oweb.all$which.group=='SWCD'],oregon.swcd@data$SWCD_Name)])
 
 
 oweb.all$uq.tid= paste(oweb.all$HUC8,oweb.all$Abs.Month,sep='_')
 
 oweb.all = filter(oweb.all,!is.na(oweb.all$HUC8))
 
-
-
 oweb.all$Project.Amount.Monthly = oweb.all$Project.Amount / ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length)
-
 
 oweb.all.projbymonth = oweb.all[rep(rownames(oweb.all),ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length)),]
 oweb.all.projbymonth$Abs.Month = oweb.all$sabs +unlist(sapply(ifelse(oweb.all$abs.length==0,1,oweb.all$abs.length), function(x) 1:x))
 oweb.all.projbymonth$uq.tid = paste(oweb.all.projbymonth$HUC8,oweb.all.projbymonth$Abs.Month,sep='_')
 
 
+# Grants that finished in prior water year
+oweb.all$Water.Year = oweb.all$END.YEAR
 
-################# COMPILE OWEB WC GRANTS BY  HUC8 #############
-temp =  oweb.all.projbymonth %>% dplyr::group_by(uq.tid,Project.Type,which.group) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
-
-
-huc8_data[,as.vector(outer(unique(paste('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,sep='_')), 
-                           unique(oweb.all.projbymonth$which.group), paste, sep="."))] = NA
-
-for (i in 1:nrow(temp))
-{
-  huc8_data[match(temp$uq.tid[i],huc8_data$uq.tid),
-            which(colnames(huc8_data)==paste(paste('OWEB_HUC8_Grant',temp$Project.Type[i],sep='_'),
-                                             temp$which.group[i],sep='.'))] = 
-    temp$Project.Amount.Monthly[i]
-}
-
-
-huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
-  is.na(huc8_data[,colnames(huc8_data) %in%  unique(as.vector(outer('OWEB_HUC8_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
-
-
-huc8_data[,grep('OWEB',colnames(huc8_data))][is.na(huc8_data[,grep('OWEB',colnames(huc8_data))])] = 0
-
-
-################# COMPILE OWEB GRANTS BY WC #############
 
 site.in.wc = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.wc))),oregon.wc)
 site.in.swcd = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.swcd))),oregon.swcd)
@@ -1216,216 +894,183 @@ all.params.spdf@data$which.swcd = site.in.swcd$SWCD_Name
 all.params.spdf@data$uq.wc.tid = paste(all.params.spdf@data$which.wc,all.params.spdf@data$Abs.Month,sep='_')
 all.params.spdf@data$uq.swcd.tid = paste(all.params.spdf@data$which.swcd,all.params.spdf@data$Abs.Month,sep='_')
 
-wc.year.month = merge(as.data.frame(oregon.wc@data$altName),Year.Month)
-names(wc.year.month)[1] = 'altName'
-wc.year.month$uq.wc.tid = paste(wc.year.month$altName,wc.year.month$Abs.Month,sep='_')
 
-swcd.year.month = merge(as.data.frame(oregon.swcd@data$SWCD_Name),Year.Month)
-names(swcd.year.month)[1] = 'SWCD_Name'
-swcd.year.month$uq.swcd.tid = paste(swcd.year.month$SWCD_Name,swcd.year.month$Abs.Month,sep='_')
+oweb.huc8.summary = oweb.all %>% group_by(Water.Year,HUC8,which.group) %>% summarise_each(funs(sum),Project.Amount)
 
-oweb.all.projbymonth$uq.wc.tid = paste(oweb.all.projbymonth$Grantee,oweb.all.projbymonth$Abs.Month,sep='_')
-oweb.all.projbymonth$uq.swcd.tid = paste(oweb.all.projbymonth$Grantee,oweb.all.projbymonth$Abs.Month,sep='_')
-
-temp =  oweb.all.projbymonth %>% filter(which.group=='WC') %>% dplyr::group_by(uq.wc.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
-wc.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')))] = NA
-for (i in 1:nrow(temp))
-{wc.year.month[match(temp$uq.wc.tid[i],wc.year.month$uq.wc.tid),
-               which(colnames(wc.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
-  temp$Project.Amount.Monthly[i]}
-
-wc.year.month[,colnames(wc.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
-  is.na(wc.year.month[,colnames(wc.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
-wc.year.month[,grep('OWEB',colnames(wc.year.month))][is.na(wc.year.month[,grep('OWEB',colnames(wc.year.month))])] = 0
-
-################# COMPILE OWEB GRANTS BY SWCD #############
-
-temp =  oweb.all.projbymonth %>% filter(which.group=='SWCD') %>% dplyr::group_by(uq.swcd.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
-swcd.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')))] = NA
-for (i in 1:nrow(temp))
-{swcd.year.month[match(temp$uq.swcd.tid[i],swcd.year.month$uq.swcd.tid),
-                 which(colnames(swcd.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
-  temp$Project.Amount.Monthly[i]}
-
-swcd.year.month[,colnames(swcd.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
-  is.na(swcd.year.month[,colnames(swcd.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
-swcd.year.month[,grep('OWEB',colnames(swcd.year.month))][is.na(swcd.year.month[,grep('OWEB',colnames(swcd.year.month))])] = 0
+library(tidyr)
 
 
-########## ADD WC DATA ###################
+oweb.huc8.summary.project = oweb.all %>% group_by(Water.Year,HUC8,which.group,Project.Type) %>% summarise_each(funs(sum),Project.Amount)
 
-# surv = read.csv('https://github.com/tylerascott/quinalt/raw/master/Input/Winter-2012-Council-Survey_Scott.csv')
-# surv[surv==''] = NA
-# 
-# wc.data = data.frame(NAME = surv$Custom.Data)
-# wc.data$RECOGNIZED = surv$Is.your.council.officially.designated.or.recognized.by.a.local.government.=='Yes'
-# wc.data$NONPROFIT = surv$Is.your.council.a.designated.501.c..3..non.profit.organization.=='Yes'
-# wc.data$CITY = surv$X.80
-# wc.data$ZIPCODE = surv$X.82
-# 
-# te.foun = melt(surv[,c(1,87:109)],id.vars='Custom.Data')
-# te.foun = te.foun[!is.na(te.foun$value),]
-# colnames(te.foun) = c('NAME','Question','YEAR.FOUNDED')
-# wc.data = join(wc.data,te.foun[,-2])
-# 
-# te.bud = melt(surv[,c(1,118:124)],id.vars='Custom.Data')
-# te.bud = te.bud[!is.na(te.bud$value),]
-# colnames(te.bud) = c('NAME','Question','OPERATING.BUDGET')
-# wc.data = join(wc.data,te.bud[,-2])
-# 
-# te.bud = melt(surv[,c(1,127:133)],id.vars='Custom.Data')
-# te.bud = te.bud[!is.na(te.bud$value),]
-# colnames(te.bud) = c('NAME','Question','TOTAL.BUDGET')
-# wc.data = join(wc.data,te.bud[,-2])
-# 
-# 
-# te.coord = melt(surv[,c(1,134:136)],id.vars='Custom.Data')
-# te.coord = te.coord[!is.na(te.coord$value),]
-# colnames(te.coord) = c('NAME','Question','COORD.TYPE')
-# wc.data = join(wc.data,te.coord[,-2])
-# 
-# te.coord.fte = melt(surv[,c(1,134:136)],id.vars='Custom.Data')
-# te.coord.fte = te.coord.fte[!is.na(te.coord.fte$value),]
-# colnames(te.coord.fte) = c('NAME','Question','COORD.FTE')
-# wc.data = join(wc.data,te.coord.fte[,-2])
-# 
-# te.staff.fte = melt(surv[,c(1,156:166)],id.vars='Custom.Data')
-# te.staff.fte = te.staff.fte[!is.na(te.staff.fte$value),]
-# colnames(te.staff.fte) = c('NAME','Question','STAFF.FTE')
-# wc.data = join(wc.data,te.staff.fte[,-2])
-# 
-# wc.data = cbind(wc.data,!is.na(surv[,c(211:216)]))
-# colnames(wc.data)[13:ncol(wc.data)] = c(paste(c('OWEB','Federal','Foundation','Donors','Membership','Other'),'Support',sep='.'))
-# 
-# wc.data$VOLUNTEERS = surv$Approximately.how.many.non.board.volunteers.have.you.engaged.over.the.past.year.
-# 
-# wc.data$BOARD.SIZE = surv$How.many.members.serve.on.your.board.
-# 
-# #write.csv(oregon.wc@data,'Input/watershed_councils.csv')
-# write.csv(wc.data,'Input/watershed_councils_tempfile.csv')
-# 
-# 
-# 
+oweb.huc8.summary.project <- mutate(oweb.huc8.summary.project,which.group,Project.Type,sep='.')
 
-# 
-# oregon.wc@data$altName[unlist(sapply(wc.data$NAME,agrep,oregon.wc@data$altName,ignore.case=TRUE,max=2))]
-# 
-# 
-# sapply(wc.data$NAME,agrep,oregon.wc@data$altName,ignore.case=TRUE,max=2)
-# 
+
+if(compile.by.wc)
+{
+  ################# COMPILE OWEB GRANTS BY WC #############
+  
+  site.in.wc = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.wc))),oregon.wc)
+  site.in.swcd = sp::over(spTransform(all.params.spdf,CRS=CRS(proj4string(oregon.swcd))),oregon.swcd)
+  
+  all.params.spdf@data$which.wc = site.in.wc$altName
+  all.params.spdf@data$which.swcd = site.in.swcd$SWCD_Name
+  all.params.spdf@data$uq.wc.tid = paste(all.params.spdf@data$which.wc,all.params.spdf@data$Abs.Month,sep='_')
+  all.params.spdf@data$uq.swcd.tid = paste(all.params.spdf@data$which.swcd,all.params.spdf@data$Abs.Month,sep='_')
+  
+  wc.year.month = merge(as.data.frame(oregon.wc@data$altName),Year.Month)
+  names(wc.year.month)[1] = 'altName'
+  wc.year.month$uq.wc.tid = paste(wc.year.month$altName,wc.year.month$Abs.Month,sep='_')
+  
+  swcd.year.month = merge(as.data.frame(oregon.swcd@data$SWCD_Name),Year.Month)
+  names(swcd.year.month)[1] = 'SWCD_Name'
+  swcd.year.month$uq.swcd.tid = paste(swcd.year.month$SWCD_Name,swcd.year.month$Abs.Month,sep='_')
+  
+  oweb.all$uq.wc.tid = paste(oweb.all$Grantee,oweb$Water.Year,sep='_')
+  oweb.all$uq.swcd.tid = paste(oweb.all$Grantee,oweb.all$Water.Year,sep='_')
+  
+  temp =  oweb.all %>% filter(which.group=='WC') %>% dplyr::group_by(uq.wc.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
+  wc.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')))] = NA
+  for (i in 1:nrow(temp))
+  {wc.year.month[match(temp$uq.wc.tid[i],wc.year.month$uq.wc.tid),
+                 which(colnames(wc.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
+    temp$Project.Amount.Monthly[i]}
+  
+  wc.year.month[,colnames(wc.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
+    is.na(wc.year.month[,colnames(wc.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
+  wc.year.month[,grep('OWEB',colnames(wc.year.month))][is.na(wc.year.month[,grep('OWEB',colnames(wc.year.month))])] = 0
+}
+
+if(compile.by.swcd)
+{
+  ################# COMPILE OWEB GRANTS BY SWCD #############
+  
+  
+  temp =  oweb.all.projbymonth %>% filter(which.group=='SWCD') %>% dplyr::group_by(uq.swcd.tid,Project.Type) %>% dplyr::summarise_each(funs(sum),Project.Amount.Monthly)
+  swcd.year.month[,as.vector(unique(paste('OWEB_Grant',oweb.all.projbymonth$Project.Type,sep='_')))] = NA
+  for (i in 1:nrow(temp))
+  {swcd.year.month[match(temp$uq.swcd.tid[i],swcd.year.month$uq.swcd.tid),
+                   which(colnames(swcd.year.month)==paste('OWEB_Grant',temp$Project.Type[i],sep='_'))] = 
+    temp$Project.Amount.Monthly[i]}
+  
+  swcd.year.month[,colnames(swcd.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))][
+    is.na(swcd.year.month[,colnames(swcd.year.month) %in%  unique(as.vector(outer('OWEB_Grant',oweb.all.projbymonth$Project.Type,paste,sep='_')))])]  = 0
+  swcd.year.month[,grep('OWEB',colnames(swcd.year.month))][is.na(swcd.year.month[,grep('OWEB',colnames(swcd.year.month))])] = 0
+  
+}
+
 
 
 ######### COMPUTE RESTORATION GRANT COVARIATES #########
-
-obs.data = all.params.spdf@data
-
-#HUC8 Covariates#
-tempAll = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(cumsum),contains('OWEB'))
-names(tempAll)[grep('OWEB',names(tempAll))] = paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_')
-
-temp12 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
-names(temp12)[grep('OWEB',names(temp12))] = paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_')
-
-temp24 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
-names(temp24)[grep('OWEB',names(temp24))] = paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_')
-
-temp36 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
-names(temp36)[grep('OWEB',names(temp36))] = paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_')
-
-temp48 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
-names(temp48)[grep('OWEB',names(temp48))] = paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_')
-
-temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
-names(temp60)[grep('OWEB',names(temp60))] = paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_')
-
-
-temp = join_all(list(as.data.frame(tempAll[,c('HUC8','uq.tid',grep('OWEB',names(tempAll),value=T))]),
-                     as.data.frame(temp12[,c('HUC8','uq.tid',grep('OWEB',names(temp12),value=T))]),
-                     as.data.frame(temp24[,c('HUC8','uq.tid',grep('OWEB',names(temp24),value=T))]),
-                     as.data.frame(temp36[,c('HUC8','uq.tid',grep('OWEB',names(temp36),value=T))]),
-                     as.data.frame(temp48[,c('HUC8','uq.tid',grep('OWEB',names(temp48),value=T))]),
-                     as.data.frame(temp60[,c('HUC8','uq.tid',grep('OWEB',names(temp60),value=T))])))
-temp[is.na(temp)] = 0
-
-obs.data = join(obs.data,temp)
-
-all.params.spdf@data = obs.data
-
-#WC covariates##
-obs.data = all.params.spdf@data
-tempAll = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
-  dplyr::mutate_each(funs(cumsum),contains('OWEB'))
-names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'WC',sep='_')
-
-temp12 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
-names(temp12)[grep('OWEB',names(temp12))] = paste(paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_'),'WC',sep='_')
-
-temp24 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
-names(temp24)[grep('OWEB',names(temp24))] = paste(paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_'),'WC',sep='_')
-
-temp36 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
-names(temp36)[grep('OWEB',names(temp36))] = paste(paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_'),'WC',sep='_')
-
-temp48 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
-names(temp48)[grep('OWEB',names(temp48))] = paste(paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_'),'WC',sep='_')
-
-temp60 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
-names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_'),'WC',sep='_')
-
-temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
-                     as.data.frame(temp36),as.data.frame(temp48),
-                     as.data.frame(temp60)))
-temp[is.na(temp)] = 0
-
-obs.data = join(obs.data,temp)
-
-all.params.spdf@data = obs.data
-
-#SWCD Covariates#
-obs.data = all.params.spdf@data
-tempAll = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
-  dplyr::mutate_each(funs(cumsum),contains('OWEB'))
-names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'SWCD',sep='_')
-
-temp12 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
-names(temp12)[grep('OWEB',names(temp12))] = paste(paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_'),'SWCD',sep='_')
-
-temp24 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
-names(temp24)[grep('OWEB',names(temp24))] = paste(paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_'),'SWCD',sep='_')
-
-temp36 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
-names(temp36)[grep('OWEB',names(temp36))] = paste(paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_'),'SWCD',sep='_')
-
-temp48 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
-names(temp48)[grep('OWEB',names(temp48))] = paste(paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_'),'SWCD',sep='_')
-
-temp60 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
-  dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
-names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_'),'SWCD',sep='_')
-
-temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
-                     as.data.frame(temp36),as.data.frame(temp48),
-                     as.data.frame(temp60)))
-temp[is.na(temp)] = 0
-
-obs.data = join(obs.data,temp)
-
-all.params.spdf@data = obs.data
+# 
+# obs.data = all.params.spdf@data
+# 
+# #HUC8 Covariates#
+# tempAll = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+#   dplyr::mutate_each(funs(cumsum),contains('OWEB'))
+# names(tempAll)[grep('OWEB',names(tempAll))] = paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_')
+# 
+# temp12 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
+# names(temp12)[grep('OWEB',names(temp12))] = paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_')
+# 
+# temp24 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
+# names(temp24)[grep('OWEB',names(temp24))] = paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_')
+# 
+# temp36 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
+# names(temp36)[grep('OWEB',names(temp36))] = paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_')
+# 
+# temp48 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
+# names(temp48)[grep('OWEB',names(temp48))] = paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_')
+# 
+# temp60 = huc8_data %>% dplyr::group_by(HUC8) %>% dplyr::arrange(HUC8,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
+# names(temp60)[grep('OWEB',names(temp60))] = paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_')
+# 
+# 
+# temp = join_all(list(as.data.frame(tempAll[,c('HUC8','uq.tid',grep('OWEB',names(tempAll),value=T))]),
+#                      as.data.frame(temp12[,c('HUC8','uq.tid',grep('OWEB',names(temp12),value=T))]),
+#                      as.data.frame(temp24[,c('HUC8','uq.tid',grep('OWEB',names(temp24),value=T))]),
+#                      as.data.frame(temp36[,c('HUC8','uq.tid',grep('OWEB',names(temp36),value=T))]),
+#                      as.data.frame(temp48[,c('HUC8','uq.tid',grep('OWEB',names(temp48),value=T))]),
+#                      as.data.frame(temp60[,c('HUC8','uq.tid',grep('OWEB',names(temp60),value=T))])))
+# temp[is.na(temp)] = 0
+# 
+# obs.data = join(obs.data,temp)
+# 
+# all.params.spdf@data = obs.data
+# 
+# #WC covariates##
+# obs.data = all.params.spdf@data
+# tempAll = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+#   dplyr::mutate_each(funs(cumsum),contains('OWEB'))
+# names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'WC',sep='_')
+# 
+# temp12 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
+# names(temp12)[grep('OWEB',names(temp12))] = paste(paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_'),'WC',sep='_')
+# 
+# temp24 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
+# names(temp24)[grep('OWEB',names(temp24))] = paste(paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_'),'WC',sep='_')
+# 
+# temp36 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
+# names(temp36)[grep('OWEB',names(temp36))] = paste(paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_'),'WC',sep='_')
+# 
+# temp48 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
+# names(temp48)[grep('OWEB',names(temp48))] = paste(paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_'),'WC',sep='_')
+# 
+# temp60 = wc.year.month %>% dplyr::group_by(altName) %>% dplyr::arrange(altName,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
+# names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_'),'WC',sep='_')
+# 
+# temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
+#                      as.data.frame(temp36),as.data.frame(temp48),
+#                      as.data.frame(temp60)))
+# temp[is.na(temp)] = 0
+# 
+# obs.data = join(obs.data,temp)
+# 
+# all.params.spdf@data = obs.data
+# 
+# #SWCD Covariates#
+# obs.data = all.params.spdf@data
+# tempAll = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+#   dplyr::mutate_each(funs(cumsum),contains('OWEB'))
+# names(tempAll)[grep('OWEB',names(tempAll))] = paste(paste(names(tempAll)[grep('OWEB',names(tempAll))],'All',sep='_'),'SWCD',sep='_')
+# 
+# temp12 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=12,fill=0)),contains('OWEB'))
+# names(temp12)[grep('OWEB',names(temp12))] = paste(paste(names(temp12)[grep('OWEB',names(temp12))],'12',sep='_'),'SWCD',sep='_')
+# 
+# temp24 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=24,fill=0)),contains('OWEB'))
+# names(temp24)[grep('OWEB',names(temp24))] = paste(paste(names(temp24)[grep('OWEB',names(temp24))],'24',sep='_'),'SWCD',sep='_')
+# 
+# temp36 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=36,fill=0)),contains('OWEB'))
+# names(temp36)[grep('OWEB',names(temp36))] = paste(paste(names(temp36)[grep('OWEB',names(temp36))],'36',sep='_'),'SWCD',sep='_')
+# 
+# temp48 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=48,fill=0)),contains('OWEB'))
+# names(temp48)[grep('OWEB',names(temp48))] = paste(paste(names(temp48)[grep('OWEB',names(temp48))],'48',sep='_'),'SWCD',sep='_')
+# 
+# temp60 = swcd.year.month %>% dplyr::group_by(SWCD_Name) %>% dplyr::arrange(SWCD_Name,Abs.Month) %>%
+#   dplyr::mutate_each(funs(roll_sumr(.,n=60,fill=0)),contains('OWEB'))
+# names(temp60)[grep('OWEB',names(temp60))] = paste(paste(names(temp60)[grep('OWEB',names(temp60))],'60',sep='_'),'SWCD',sep='_')
+# 
+# temp = join_all(list(as.data.frame(tempAll),as.data.frame(temp12),as.data.frame(temp24),
+#                      as.data.frame(temp36),as.data.frame(temp48),
+#                      as.data.frame(temp60)))
+# temp[is.na(temp)] = 0
+# 
+# obs.data = join(obs.data,temp)
+# 
+# all.params.spdf@data = obs.data
 
 #####rename counties for a few stations#####
 
@@ -1433,8 +1078,72 @@ all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10407] = 'MALHEU
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 12261] = 'MALHEUR'
 all.params.spdf@data$CountyName[all.params.spdf@data$Station == 10616] = 'MULTNOMAH'
 
-all.params.spdf@data = join(all.params.spdf@data,
-                     dplyr::select(huc8_data,-c(grep('OWEB_OWRI',names(huc8_data)),grep('OWEB_HUC8',names(huc8_data)))))
+temp = all.params.spdf@data
+
+
+temp$OWEB.p1.WC = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='WC'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='WC'])]
+temp$OWEB.p2.WC = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='WC'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='WC'])]
+temp$OWEB.p3.WC = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='WC'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='WC'])]
+
+oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+
+temp$OWEB.p1.WC.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+temp$OWEB.p2.WC.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+temp$OWEB.p3.WC.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+temp$OWEB.p1.WC.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p2.WC.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p3.WC.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p1.WC.Capacity = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Capacity'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Capacity'])]
+temp$OWEB.p2.WC.Capacity = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Capacity'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Capacity'])]
+temp$OWEB.p3.WC.Capacity = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Capacity'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Capacity'])]
+temp$OWEB.p1.WC.Outreach = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Outreach'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Outreach'])]
+temp$OWEB.p2.WC.Outreach = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Outreach'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Outreach'])]
+temp$OWEB.p3.WC.Outreach = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Outreach'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Outreach'])]
+
+
+temp$OWEB.p1.SWCD = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='SWCD'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='SWCD'])]
+temp$OWEB.p2.SWCD = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='SWCD'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='SWCD'])]
+temp$OWEB.p3.SWCD = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='SWCD'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='SWCD'])]
+
+
+temp$OWEB.p1.SWCD.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+temp$OWEB.p2.SWCD.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+temp$OWEB.p3.SWCD.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Tech'])]
+temp$OWEB.p1.SWCD.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p2.SWCD.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p3.SWCD.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p1.SWCD.Capacity = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Capacity'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Capacity'])]
+temp$OWEB.p2.SWCD.Capacity = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Capacity'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Capacity'])]
+temp$OWEB.p3.SWCD.Capacity = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Capacity'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Capacity'])]
+temp$OWEB.p1.SWCD.Outreach = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Outreach'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Outreach'])]
+temp$OWEB.p2.SWCD.Outreach = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Outreach'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Outreach'])]
+temp$OWEB.p3.SWCD.Outreach = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Outreach'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='SWCD'&oweb.huc8.summary.project$Project.Type=='Outreach'])]
+
+temp$OWRI.proj.in.p1.wy = owri.huc8.summary$owri.wq.nonoweb.cash.wy[match(paste(temp$Water.Year - 1,temp$HUC8),paste(owri.huc8.summary$Water.Year,owri.huc8.summary$HUC8))]
+temp$OWRI.proj.in.p2.wy = owri.huc8.summary$owri.wq.nonoweb.cash.wy[match(paste(temp$Water.Year - 2,temp$HUC8),paste(owri.huc8.summary$Water.Year,owri.huc8.summary$HUC8))]
+temp$OWRI.proj.in.p3.wy = owri.huc8.summary$owri.wq.nonoweb.cash.wy[match(paste(temp$Water.Year - 3,temp$HUC8),paste(owri.huc8.summary$Water.Year,owri.huc8.summary$HUC8))]
+
+temp$OWRI.proj.in.p1.wy[is.na(temp$OWRI.proj.in.p1.wy)] = 0
+temp$OWRI.proj.in.p2.wy[is.na(temp$OWRI.proj.in.p2.wy)] = 0
+temp$OWRI.proj.in.p3.wy[is.na(temp$OWRI.proj.in.p3.wy)] = 0
+
+temp$OWEB.p1.Public.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p2.Public.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+temp$OWEB.p3.Public.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
+
+# all.params.spdf@data = join(all.params.spdf@data,
+#                             dplyr::select(huc8_data,-c(grep('OWEB_OWRI',names(huc8_data)),grep('OWEB_HUC8',names(huc8_data)))))
+
+
+
+#load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
+mod.data = read.csv('Input/temp_data.csv')
+
+mod.data$Station = as.character(mod.data$Station)
+
+temp = left_join(temp,dplyr::select(mod.data,uq.tid,Station,ag.huc8,forst.huc8,wet.huc8,dev.huc8,monthly.precip.median,Wetl,Forst,Ag,Dev))
+
+all.params.spdf@data <- temp
 
 ###### REMOVE AND SAVE ########
 if(remote)
@@ -1452,8 +1161,11 @@ rm(list=ls()[grep('R4',ls())])
 rm(s)
 rm(s.crop)
 
+
+
+
 save.image('temp_workspace_data.RData')
-write.csv(all.params.spdf@data,'Input/temp_data.csv')
+write.csv(all.params.spdf@data,'Input/update_data.csv')
 
 library(mail)
 mail::sendmail('tyler.andrew.scott@gmail.com','prepare_data.R finished','nori has finished quinalt project data prep (with precip)')

@@ -1,4 +1,4 @@
-
+rm(list=ls())
 setwd('/homes/tscott1/win/user/quinalt')
 require(foreign)
 require(plyr)
@@ -165,6 +165,13 @@ stk.1 <- inla.stack(data=list(y=covars$owqi), A=list(A.1,1),
                     effects=list(ind.1, list(data.frame(b0=1,covars))))
 
 
+
+str(covars)
+str(ind.1)
+
+
+dim(covars)
+dim(stk.1$effects$data)
 
 
 ##########Capacity Building#############
