@@ -71,7 +71,10 @@ vignettes/*.pdf
 #
 DocFiles/*.*
 Scraps/*.*
-Deliverables/*.*
+Deliverables/*.docx
+Deliverables/*.pptx
+Deliverables/*.gsheet
+Deliverables/*.gdoc
 Readings/*
 ExtraData/*
 *.Rout
@@ -97,11 +100,14 @@ vignettes/*.pdf
 *.accdb
 Input/*.accdb
 
-
+*Icon
+*Icon?
+*Iconr
 
 *.shp
 *.shx
 *.gdb
+
 
 SpatialData/*
 TempData/*
