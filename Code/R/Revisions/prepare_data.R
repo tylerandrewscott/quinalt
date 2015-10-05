@@ -12,7 +12,7 @@ if(!remote)
 
 First.Year = 1990
 Last.Year = 2035
-calc.precip=FALSE
+calc.precip=TRUE
 site.buffers=FALSE
 compile.by.wc = FALSE
 compile.by.swcd = FALSE
@@ -177,7 +177,7 @@ ag.huc8.2001$dbf$ag.huc8 = crop.huc8.2001$dbf$crop.huc8+
 
 cover.2002 = join_all(list(ag.huc8.2001$dbf,wet.huc8.2001$dbf,forst.huc8.2001$dbf,dev.huc8.2001$dbf))
 cover.2002$YEAR = 2002
-cover.2002 = dplyr::select(cover.2001,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
+cover.2002 = dplyr::select(cover.2002,-c(COUNT,AREA,ZONE_CODE,crop.huc8))
 cover.2003 = cover.2002; cover.2003$YEAR = 2003
 cover.2004 = cover.2003; cover.2004$YEAR = 2004
 cover.2005 = cover.2004; cover.2005$YEAR = 2005
@@ -237,6 +237,10 @@ oregon.huc8.df = join(oregon.huc8.df,land.cover.huc8,type='left')
 
 
 wq.dat = read.csv('Input/Scott_OWQI_1980_2013.csv',header=T,skip=1)
+wq.2014 = read.csv('Input/Scott_OWQI_2014.csv',header=T,skip=0)
+
+wq.dat = plyr::join(wq.dat,wq.2014,type='full')
+
 wq.dat = wq.dat[!duplicated(wq.dat),]
 
 station.locs = read.csv('Input/oregon_wq_stations.csv')
@@ -320,9 +324,8 @@ all.params.spdf@data = join(all.params.spdf@data,dplyr::select(uq@data,Station,e
 
 if (site.buffers)
 {
-  uq = spTransform(uq,CRSobj=CRS(proj4string(R1.ag)))
-  
   R1.list = sapply(paste0('SpatialData/tf_rasters/',grep('1992',list.files('SpatialData/tf_rasters/'),value=T)), function(x) raster(x))
+  uq = spTransform(uq,CRSobj=CRS(proj4string(R1.list[[1]])))
   R1.list <- lapply(R1.list, function(x) raster::extract(x,y=uq,fun=mean,df=T,buffer=100,na.rm=TRUE,small=FALSE))
   R1 = join_all(R1.list)
   
@@ -466,6 +469,9 @@ owri.huc8.summary = proj.info %>% dplyr::filter(about_wq=='wq',OWRI.OWEB.Grant==
 
 temp = proj.info %>% dplyr::group_by(uq.tid,about_wq,OWRI.OWEB.Grant) %>% 
   dplyr::summarise_each(funs(sum),TotalCash)
+
+
+
 tt = melt(temp,id.vars=c('uq.tid','about_wq','OWRI.OWEB.Grant'))
 tt$var.id = paste(tt$OWRI.OWEB.Grant,tt$about_wq,tt$variable,sep='.')
 temp.huc8[,unique(tt$var.id)] = NA
@@ -680,17 +686,16 @@ oweb.all$Project.Type = as.character(oweb.all$Project.Type)
 
 
 temp = (oweb.all %>% 
-          dplyr::filter(END.YEAR>=2012,which.group %in% c('WC')) %>% group_by(Project.Type,which.group) %>%
+          dplyr::filter(END.YEAR>=2009,which.group %in% c('WC','SWCD')) %>% 
+          group_by(Project.Type,which.group) %>%
           summarise_each(funs(nobs,mean),Project.Amount))
 temp[,1] = ifelse(duplicated(data.frame(temp)[,1]),'',data.frame(temp)[,1])
 names(temp) = c('Project','Grantee','N','Average cost')
 
-stargazer(data.frame(temp),summary=F,rownames = F,no.space = T,digits=0,type='latex',
-          out='/homes/tscott1/win/user/quinalt/Deliverables/JPART_Submission/Version2/grantsummarytable.tex',
-          title = 'OWEB grant summary statistics (1/2012-2015)',
+stargazer(data.frame(temp),summary=F,rownames = F,no.space = T,digits=0,type='html',
+         out='Deliverables/JPART/Version2/grantsummarytable.html',
+          title = 'OWEB grant summary statistics (1/2012-9/2015)',
           label='table:grantsummary')
-
-
 
 
 # nm = is.mapped[is.na(test$HUC8),]
@@ -898,9 +903,9 @@ all.params.spdf@data$uq.swcd.tid = paste(all.params.spdf@data$which.swcd,all.par
 oweb.huc8.summary = oweb.all %>% group_by(Water.Year,HUC8,which.group) %>% summarise_each(funs(sum),Project.Amount)
 
 library(tidyr)
+library(magrittr)
 
-
-oweb.huc8.summary.project = oweb.all %>% group_by(Water.Year,HUC8,which.group,Project.Type) %>% summarise_each(funs(sum),Project.Amount)
+oweb.huc8.summary.project = oweb.all %>% group_by(Water.Year,HUC8,which.group,Project.Type) %>% summarise_each(funs(sum),Project.Amount) %>% as.data.frame(.)
 
 oweb.huc8.summary.project <- mutate(oweb.huc8.summary.project,which.group,Project.Type,sep='.')
 
@@ -1085,7 +1090,6 @@ temp$OWEB.p1.WC = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group
 temp$OWEB.p2.WC = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='WC'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='WC'])]
 temp$OWEB.p3.WC = oweb.huc8.summary$Project.Amount[oweb.huc8.summary$which.group=='WC'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary$Water.Year,oweb.huc8.summary$HUC8)[oweb.huc8.summary$which.group=='WC'])]
 
-oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
 
 temp$OWEB.p1.WC.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 1,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
 temp$OWEB.p2.WC.Tech = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='WC'&oweb.huc8.summary.project$Project.Type=='Tech'])]
@@ -1131,19 +1135,17 @@ temp$OWEB.p1.Public.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.
 temp$OWEB.p2.Public.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 2,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
 temp$OWEB.p3.Public.Restoration = oweb.huc8.summary.project$Project.Amount[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'][match(paste(temp$Water.Year - 3,temp$HUC8),paste(oweb.huc8.summary.project$Water.Year,oweb.huc8.summary.project$HUC8)[oweb.huc8.summary.project$which.group=='Public'&oweb.huc8.summary.project$Project.Type=='Restoration'])]
 
-# all.params.spdf@data = join(all.params.spdf@data,
-#                             dplyr::select(huc8_data,-c(grep('OWEB_OWRI',names(huc8_data)),grep('OWEB_HUC8',names(huc8_data)))))
-
-
-
-#load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
-mod.data = read.csv('Input/temp_data.csv')
-
-mod.data$Station = as.character(mod.data$Station)
-
-temp = left_join(temp,dplyr::select(mod.data,uq.tid,Station,ag.huc8,forst.huc8,wet.huc8,dev.huc8,monthly.precip.median,Wetl,Forst,Ag,Dev))
 
 all.params.spdf@data <- temp
+
+all.params.spdf@data = join(all.params.spdf@data,
+                             dplyr::select(huc8_data,-c(grep('OWEB_OWRI',names(huc8_data)),grep('OWEB_HUC8',names(huc8_data)))))
+
+#load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
+#mod.data = read.csv('Input/temp_data.csv')
+#mod.data$Station = as.character(mod.data$Station)
+#temp = left_join(temp,dplyr::select(mod.data,uq.tid,Station,ag.huc8,forst.huc8,wet.huc8,dev.huc8,monthly.precip.median,Wetl,Forst,Ag,Dev))
+
 
 ###### REMOVE AND SAVE ########
 if(remote)
@@ -1160,9 +1162,6 @@ rm(list=ls()[grep('R3',ls())])
 rm(list=ls()[grep('R4',ls())])
 rm(s)
 rm(s.crop)
-
-
-
 
 save.image('temp_workspace_data.RData')
 write.csv(all.params.spdf@data,'Input/update_data.csv')

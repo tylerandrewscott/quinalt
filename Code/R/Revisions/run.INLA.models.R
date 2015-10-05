@@ -1,7 +1,6 @@
 rm(list=ls())
 
 run.owqi.only = TRUE
-setwd('/homes/tscott1/win/user/quinalt')
 
 require(foreign)
 require(plyr)
@@ -18,7 +17,6 @@ library(RCurl)
 library(gdata)
 require(proj4)
 library(lubridate)
-
 require(gridExtra)
 require(lattice)
 require(splancs)
@@ -35,9 +33,8 @@ library(INLA)
 require(xtable)
 library(maptools)
 
-
 #load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
-mod.data = read.csv('Input/update_data.csv')
+mod.data = read.csv('../../../Input/update_data.csv')
 
 for (i in 1:nrow(mod.data))
 {
@@ -45,7 +42,13 @@ mod.data$hist.avg.owqi[i] =
   ifelse(is.na(mean(mod.data$owqi[mod.data$HUC8==mod.data$HUC8[i]&mod.data$Abs.Month<mod.data$Abs.Month[i]])),
          mean(mod.data$owqi[mod.data$Abs.Month<mod.data$Abs.Month[i]]),
          mean(mod.data$owqi[mod.data$HUC8==mod.data$HUC8[i]&mod.data$Abs.Month<mod.data$Abs.Month[i]]))
-                        
+}
+
+
+if(!run.owqi.only)
+{
+for (i in 1:nrow(mod.data))
+{
 mod.data$hist.avg.temp_si[i] = 
   ifelse(is.na(mean(mod.data$temp_si[mod.data$HUC8==mod.data$HUC8[i]&mod.data$Abs.Month<mod.data$Abs.Month[i]])),
          mean(mod.data$temp_si[mod.data$Abs.Month<mod.data$Abs.Month[i]]),
@@ -96,6 +99,8 @@ mod.data$hist.avg.bact_si[i] =
          mean(mod.data$bact_si[mod.data$Abs.Month<mod.data$Abs.Month[i]]),
          mean(mod.data$bact_si[mod.data$HUC8==mod.data$HUC8[i]&mod.data$Abs.Month<mod.data$Abs.Month[i]]))
 }
+}
+
 
 mod.data = mod.data %>% mutate(which.wc = as.character(which.wc))
 
@@ -195,7 +200,7 @@ mod.data <- mod.data %>% mutate(OWEB.proj.in.last.3yr.WC  = OWEB.p1.WC + OWEB.p2
   OWEB.proj.in.last.1yr.SWCD.Tech = OWEB.p1.SWCD.Tech ,
   OWEB.proj.in.last.1yr.SWCD.Capacity = OWEB.p1.SWCD.Capacity ,
   OWEB.proj.in.last.1yr.SWCD.Restoration = OWEB.p1.SWCD.Restoration ,
-  OWEB.proj.in.last.1yr.SWCD.Outreach = OWEB.p1.SWCD.Outreach  )
+  OWEB.proj.in.last.1yr.SWCD.Outreach = OWEB.p1.SWCD.Outreach)
 
   
 mod.data$elev100m = mod.data$elevation/100
@@ -228,9 +233,12 @@ mod.data$STAFF.FTE <- ifelse(mod.data$STAFF.FTE=='less than 1',0.5,mod.data$STAF
 mod.data$STAFF.FTE <- as.numeric(mod.data$STAFF.FTE)
 mod.data$STAFF.FTE[is.na(mod.data$STAFF.FTE)] = 0
 
-low.op = levels(mod.data$OPERATING.BUDGET)[1:5]
+mod.data$COORD.TYPE[mod.data$COORD.TYPE==''] <- NA
 
-mod.data$OP.BUDGET.400k <- ifelse(mod.data$OPERATING.BUDGET %in% low.op,0,1)
+
+low.op = levels(mod.data$OPERATING.BUDGET)[1:4]
+
+mod.data$OP.BUDGET.200k <- ifelse(mod.data$OPERATING.BUDGET %in% low.op,0,1)
 
 mod.data = mod.data %>% mutate(OWEB.proj.in.last.3yr.WC.Interaction = OWEB.proj.in.last.3yr.WC.Tech*
   OWEB.proj.in.last.3yr.WC.Restoration*
@@ -247,68 +255,27 @@ mod.data = mod.data %>% mutate(OWEB.proj.in.last.3yr.WC.Interaction = OWEB.proj.
   )
 
 
+temp = mod.data %>% dplyr::filter(!duplicated(which.wc)) %>% dplyr::select(OP.BUDGET.200k,STAFF.FTE,YEARS.ACTIVE)
 
+
+#stargazer(temp,summary = FALSE)
+  
 covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR','uq.tid',
                      'ag.huc8','dev.huc8','wet.huc8','forst.huc8','owqi',
-                     'owqi','monthly.precip.median','YEARS.ACTIVE','TOTAL.BUDGET','OPERATING.BUDGET','OP.BUDGET.400k',
+                     'owqi','monthly.precip.median','YEARS.ACTIVE','TOTAL.BUDGET','OPERATING.BUDGET','OP.BUDGET.200k',
                      'STAFF.FTE','COORD.TYPE',
                      'which.wc',
                      'Decimal_Lat',
                      'Decimal_long','elev100m','seaDist10km',
-                     'seasonal','Ag','Dev','Wetl','Forst','Station.Repl','HUC8.Repl',grep('proj.in|grants.in',colnames(mod.data),value=T),
+                     'seasonal',
+                    # 'Ag','Dev','Wetl','Forst',
+                     'Station.Repl','HUC8.Repl',grep('proj.in|grants.in',colnames(mod.data),value=T),
                      grep('OWEB',names(mod.data),value=T),
                      grep('cond_good',names(mod.data),value=T),
                      grep('hist.avg',names(mod.data),value=T),
                      grep('_si',names(mod.data),value=T))]
 
 dep.var.list = c(grep('_si',names(mod.data),value=T),'owqi')
-
-# 
-# covars[,c('elev100m','seaDist10km','ag.huc8','dev.huc8',
-#           'forst.huc8','Ag','Dev','Forst','monthly.precip.median','owqi')] = 
-#   log(covars[,c('elev100m','seaDist10km','ag.huc8','dev.huc8',
-#             'forst.huc8','Ag','Dev','Forst','monthly.precip.median','owqi')] + 0.001)
-
-# 
-# binary.funding.indicator = data.frame(ifelse(covars[,grep('OWEB_HUC8',colnames(covars))] >0, 1,0))
-# colnames(binary.funding.indicator) = paste0(colnames(covars)[grep('OWEB_HUC8',colnames(covars))],'.ind')
-# covars = cbind(covars,binary.funding.indicator)
-
-#k = 100000
-#covars[,grep('OWEB',names(covars))] = covars[,grep('OWEB',names(covars))]/k
-#covars[,grep('proj.in|OWEB',names(covars))] = covars[,grep('proj.in|OWEB',names(covars))]/k
-
-# covars$OWEB_HUC8_Grant_All.Both_24.ind <-  as.integer((covars$OWEB_HUC8_Grant_All.WC_24.ind + covars$OWEB_HUC8_Grant_All.SWCD_24.ind)>0)
-# covars$OWEB_HUC8_Grant_All.Both_12.ind <-  as.integer((covars$OWEB_HUC8_Grant_All.WC_12.ind + covars$OWEB_HUC8_Grant_All.SWCD_12.ind)>0)
-# covars$OWEB_HUC8_Grant_All.Both_36.ind <-  as.integer((covars$OWEB_HUC8_Grant_All.WC_36.ind + covars$OWEB_HUC8_Grant_All.SWCD_36.ind)>0)
-# 
-# covars$OWEB_HUC8_Grant_Restoration.Both_24.ind <-  as.integer((covars$OWEB_HUC8_Grant_Restoration.WC_24.ind + covars$OWEB_HUC8_Grant_Restoration.SWCD_24.ind)>0)
-# covars$OWEB_HUC8_Grant_Restoration.Both_12.ind <-  as.integer((covars$OWEB_HUC8_Grant_Restoration.WC_12.ind + covars$OWEB_HUC8_Grant_Restoration.SWCD_12.ind)>0)
-# covars$OWEB_HUC8_Grant_Restoration.Both_36.ind <-  as.integer((covars$OWEB_HUC8_Grant_Restoration.WC_36.ind + covars$OWEB_HUC8_Grant_Restoration.SWCD_36.ind)>0)
-# 
-# 
-# covars$OWEB_HUC8_Grant_Tech.Both_24.ind <-  as.integer((covars$OWEB_HUC8_Grant_Tech.WC_24.ind + covars$OWEB_HUC8_Grant_Tech.SWCD_24.ind)>0)
-# covars$OWEB_HUC8_Grant_Tech.Both_12.ind <-  as.integer((covars$OWEB_HUC8_Grant_Tech.WC_12.ind + covars$OWEB_HUC8_Grant_Tech.SWCD_12.ind)>0)
-# covars$OWEB_HUC8_Grant_Tech.Both_36.ind <-  as.integer((covars$OWEB_HUC8_Grant_Tech.WC_36.ind + covars$OWEB_HUC8_Grant_Tech.SWCD_36.ind)>0)
-# 
-# covars$OWEB_HUC8_Grant_Outreach.Both_24.ind <-  as.integer((covars$OWEB_HUC8_Grant_Outreach.WC_24.ind + covars$OWEB_HUC8_Grant_Outreach.SWCD_24.ind)>0)
-# covars$OWEB_HUC8_Grant_Outreach.Both_12.ind <-  as.integer((covars$OWEB_HUC8_Grant_Outreach.WC_12.ind + covars$OWEB_HUC8_Grant_Outreach.SWCD_12.ind)>0)
-# covars$OWEB_HUC8_Grant_Outreach.Both_36.ind <-  as.integer((covars$OWEB_HUC8_Grant_Outreach.WC_36.ind + covars$OWEB_HUC8_Grant_Outreach.SWCD_36.ind)>0)
-# 
-# covars$OWEB_HUC8_Grant_Capacity.Both_24.ind <-  as.integer((covars$OWEB_HUC8_Grant_Capacity.WC_24.ind + covars$OWEB_HUC8_Grant_Capacity.SWCD_24.ind)>0)
-# covars$OWEB_HUC8_Grant_Capacity.Both_12.ind <-  as.integer((covars$OWEB_HUC8_Grant_Capacity.WC_12.ind + covars$OWEB_HUC8_Grant_Capacity.SWCD_12.ind)>0)
-# covars$OWEB_HUC8_Grant_Capacity.Both_36.ind <-  as.integer((covars$OWEB_HUC8_Grant_Capacity.WC_36.ind + covars$OWEB_HUC8_Grant_Capacity.SWCD_36.ind)>0)
-
-#covars[,grep('OWEB',names(covars))] = log(covars[,grep('OWEB',names(covars))]+0.001)
-
-# 
-# covars[,intersect(grep('OWEB',names(covars)),grep('.ind',names(covars),invert = T))] <-
-#   apply(covars[,intersect(grep('OWEB',names(covars)),grep('.ind',names(covars),invert = T))],2,scale,center=TRUE,scale=FALSE)
-
-# covars[colnames(covars) %in% c('Decimal_Lat','Decimal_long','ag.huc8','dev.huc8','forst.huc8','NOT_OWEB_OWRI.wq.TotalCash_24',grep('proj.in|grants.in',names(covars),value=T),
-#                                'monthly.precip.median')] <-
-#   apply(covars[colnames(covars) %in% c('Decimal_Lat','Decimal_long','ag.huc8','dev.huc8','forst.huc8','NOT_OWEB_OWRI.wq.TotalCash_24',grep('proj.in|grants.in',names(covars),value=T),
-#                                        'monthly.precip.median')],2,scale,center=TRUE,scale=FALSE)
 
 # some book keeping
 n.data = length(covars$owqi)
@@ -348,11 +315,11 @@ length.of.season = 12
 
 form.base.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.1yr +
-  YEARS.ACTIVE + OP.BUDGET.400k +  STAFF.FTE + 
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.1yr.WC + 
   OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE + 
-  #OWEB.proj.in.last.1yr.WC:OP.BUDGET.400k +  
-  #OWEB.proj.in.last.1yr.WC:STAFF.FTE + 
+  OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k +  
+  OWEB.proj.in.last.1yr.WC:STAFF.FTE + 
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
  # f(total.period,model='rw2',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) +
@@ -361,40 +328,69 @@ form.base.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
 
 form.base.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.2yr +
-  YEARS.ACTIVE + OP.BUDGET.400k +  STAFF.FTE + 
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.2yr.WC + 
   OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.2yr.WC:OP.BUDGET.400k +  
+  OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k +  
   OWEB.proj.in.last.2yr.WC:STAFF.FTE + 
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
-  #f(total.period,model='rw2',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) +
-  #f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=length.of.season) + 
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p2)%*%A.1), e= rep(0,n.covariates.base.p2)))
 
 form.base.p3 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.3yr +
-  YEARS.ACTIVE + OP.BUDGET.400k +  STAFF.FTE + 
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.3yr.WC + 
   OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.3yr.WC:OP.BUDGET.400k +  
+  OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k +  
   OWEB.proj.in.last.3yr.WC:STAFF.FTE +   
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
- # f(total.period,model='rw2',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) +
-#  f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=length.of.season) + 
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p3)%*%A.1), e= rep(0,n.covariates.base.p3)))
 
+form.swcd.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
+  elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.1yr +
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.1yr.WC + 
+  OWEB.proj.in.last.1yr.SWCD + 
+  OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD +
+  f(HUC8,model='iid',param=c(0.001,0.001)) + 
+  f(total.period,model='iid',param=c(0.001,0.001)) +
+  # f(total.period,model='rw2',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) +
+  #f(seasonal,model='seasonal',values=seq(min(covars$total.period),max(covars$total.period)),     season.length=length.of.season) + 
+  f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p1)%*%A.1), e= rep(0,n.covariates.base.p1)))
 
+form.swcd.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
+  elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.2yr +
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.2yr.WC + 
+  OWEB.proj.in.last.2yr.SWCD + 
+  OWEB.proj.in.last.qyr.WC:OWEB.proj.in.last.qyr.SWCD +
+  f(HUC8,model='iid',param=c(0.001,0.001)) + 
+  f(total.period,model='iid',param=c(0.001,0.001)) +
+  f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p2)%*%A.1), e= rep(0,n.covariates.base.p2)))
+
+form.swcd.p3 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
+  elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.3yr +
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.3yr.WC + 
+  OWEB.proj.in.last.3yr.SWCD + 
+  OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD + 
+  f(HUC8,model='iid',param=c(0.001,0.001)) + 
+  f(total.period,model='iid',param=c(0.001,0.001)) +
+  f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p3)%*%A.1), e= rep(0,n.covariates.base.p3)))
 
 
 form.project.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
 elev100m +  monthly.precip.median + OWRI.proj.in.past.1yr +
-YEARS.ACTIVE + OP.BUDGET.400k +  STAFF.FTE + 
+YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.1yr.WC.Tech +
   OWEB.proj.in.last.1yr.WC.Restoration +
   OWEB.proj.in.last.1yr.WC.Outreach +
-  OWEB.proj.in.last.1yr.WC.Capacity +
+  OWEB.proj.in.last.1yr.WC.Capacity
+  OWEB.proj.in.last.1yr.WC.Capacity:OWEB.proj.in.last.1yr.WC.Tech +
+  OWEB.proj.in.last.1yr.WC.Capacity:OWEB.proj.in.last.1yr.WC.Restoration +
+  OWEB.proj.in.last.1yr.WC.Capacity:OWEB.proj.in.last.1yr.WC.Outreach +
   OWEB.proj.in.last.1yr.WC.Interaction +
   f(total.period,model='iid',param=c(0.001,0.001)) +
 f(HUC8,model='iid',param=c(0.001,0.001)) + 
@@ -406,11 +402,14 @@ f(HUC8,model='iid',param=c(0.001,0.001)) +
 form.project.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + 
   OWRI.proj.in.past.2yr +
-  YEARS.ACTIVE + OP.BUDGET.400k +  STAFF.FTE + 
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.2yr.WC.Tech +
   OWEB.proj.in.last.2yr.WC.Restoration +
   OWEB.proj.in.last.2yr.WC.Outreach +
   OWEB.proj.in.last.2yr.WC.Capacity +
+  OWEB.proj.in.last.2yr.WC.Capacity:OWEB.proj.in.last.2yr.WC.Tech +
+  OWEB.proj.in.last.2yr.WC.Capacity:OWEB.proj.in.last.2yr.WC.Restoration +
+  OWEB.proj.in.last.2yr.WC.Capacity:OWEB.proj.in.last.2yr.WC.Outreach +
   OWEB.proj.in.last.2yr.WC.Interaction +
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
@@ -422,11 +421,14 @@ form.project.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 
 form.project.p3 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + 
   OWRI.proj.in.past.3yr +
-  YEARS.ACTIVE + OP.BUDGET.400k +  STAFF.FTE + 
+  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.3yr.WC.Tech +
   OWEB.proj.in.last.3yr.WC.Restoration +
   OWEB.proj.in.last.3yr.WC.Outreach +
   OWEB.proj.in.last.3yr.WC.Capacity +
+  OWEB.proj.in.last.3yr.WC.Capacity:OWEB.proj.in.last.3yr.WC.Tech +
+  OWEB.proj.in.last.3yr.WC.Capacity:OWEB.proj.in.last.3yr.WC.Restoration +
+  OWEB.proj.in.last.3yr.WC.Capacity:OWEB.proj.in.last.3yr.WC.Outreach +
   OWEB.proj.in.last.3yr.WC.Interaction +
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
@@ -493,7 +495,6 @@ X.project.p3 <- cbind(rep(1,n.data),
                       covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
                       covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
                       #covars$YEARS.ACTIVE)
-
 n.covariates.project.p3 = ncol(X.project.p3)
 Q.project.p3 = qr.Q(qr(X.project.p3))
 
