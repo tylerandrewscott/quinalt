@@ -212,9 +212,16 @@ mod.data$forst.huc8 = 100 * mod.data$forst.huc8
 #mod.data$Forst = 100 * mod.data$Forst
 #mod.data$Dev = 100 * mod.data$Dev
 mod.data$monthly.precip.median = mod.data$monthly.precip.median/100
+mod.data$monthly.precip.median = mod.data$monthly.precip.median  - mean(mod.data$monthly.precip.median)
 mod.data$Decimal_Lat = mod.data$Decimal_Lat - mean(mod.data$Decimal_Lat)
 mod.data$Decimal_long = mod.data$Decimal_long - mean(mod.data$Decimal_long)
 mod.data$hist.avg.owqi = mod.data$hist.avg.owqi - mean(mod.data$hist.avg.owqi)
+mod.data$forst.huc8 = mod.data$forst.huc8 - mean(mod.data$forst.huc8)
+mod.data$ag.huc8 = mod.data$ag.huc8 - mean(mod.data$ag.huc8)
+mod.data$dev.huc8 = mod.data$dev.huc8 - mean(mod.data$dev.huc8)
+mod.data$elev100m = mod.data$elev100m - mean(mod.data$elev100m)
+
+
 
 bad = c('Fair','Poor','Very Poor')
 
@@ -240,6 +247,16 @@ low.op = levels(mod.data$OPERATING.BUDGET)[1:4]
 
 mod.data$OP.BUDGET.200k <- ifelse(mod.data$OPERATING.BUDGET %in% low.op,0,1)
 
+
+
+
+#mod.data$OWRI.proj.in.past.1yr = mod.data$OWRI.proj.in.past.1yr - mean(mod.data$OWRI.proj.in.past.1yr)
+#mod.data$OWRI.proj.in.past.2yr = mod.data$OWRI.proj.in.past.2yr - mean(mod.data$OWRI.proj.in.past.2yr)
+#mod.data$OWRI.proj.in.past.3yr = mod.data$OWRI.proj.in.past.3yr - mean(mod.data$OWRI.proj.in.past.3yr)
+
+
+
+
 mod.data = mod.data %>% mutate(OWEB.proj.in.last.3yr.WC.Interaction = OWEB.proj.in.last.3yr.WC.Tech*
   OWEB.proj.in.last.3yr.WC.Restoration*
   OWEB.proj.in.last.3yr.WC.Outreach*
@@ -259,7 +276,8 @@ temp = mod.data %>% dplyr::filter(!duplicated(which.wc)) %>% dplyr::select(OP.BU
 
 
 #stargazer(temp,summary = FALSE)
-  
+
+
 covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR','uq.tid',
                      'ag.huc8','dev.huc8','wet.huc8','forst.huc8','owqi',
                      'owqi','monthly.precip.median','YEARS.ACTIVE','TOTAL.BUDGET','OPERATING.BUDGET','OP.BUDGET.200k',
@@ -442,7 +460,8 @@ X.base.p1 = cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
                   covars$ag.huc8, covars$forst.huc8,
                   covars$dev.huc8,
                   covars$elev100m,covars$hist.avg.owqi,
-                  covars$monthly.precip.median)
+                  covars$monthly.precip.median,
+                  covars$OWRI.proj.in.past.1yr)
                   #covars$YEARS.ACTIVE)
 n.covariates.base.p1 = ncol(X.base.p1)
 Q.base.p1 = qr.Q(qr(X.base.p1))
@@ -452,7 +471,8 @@ X.base.p2 = cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
                   covars$ag.huc8, covars$forst.huc8,
                   covars$dev.huc8,
                   covars$elev100m,covars$hist.avg.owqi,
-                  covars$monthly.precip.median)
+                  covars$monthly.precip.median,
+                  covars$OWRI.proj.in.past.2yr)
                   #covars$YEARS.ACTIVE)
 
 n.covariates.base.p2 = ncol(X.base.p2)
@@ -463,7 +483,8 @@ X.base.p3 = cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
                   covars$ag.huc8, covars$forst.huc8,
                   covars$dev.huc8,
                   covars$elev100m,covars$hist.avg.owqi,
-                  covars$monthly.precip.median)
+                  covars$monthly.precip.median,
+                  covars$OWRI.proj.in.past.3yr)
                   #covars$YEARS.ACTIVE)
 
 n.covariates.base.p3 = ncol(X.base.p3)
@@ -474,7 +495,8 @@ Q.base.p3 = qr.Q(qr(X.base.p3))
 X.project.p1 <- cbind(rep(1,n.data),
                       covars$Decimal_Lat, covars$Decimal_long,
                       covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
-                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
+                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median,
+                      covars$OWRI.proj.in.past.1yr)
                       #covars$YEARS.ACTIVE)
 
 n.covariates.project.p1 = ncol(X.project.p1)
@@ -485,7 +507,8 @@ X.project.p2 <- cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
                       covars$ag.huc8, covars$forst.huc8,
                       covars$dev.huc8,
                       covars$elev100m,covars$hist.avg.owqi,
-                      covars$monthly.precip.median)
+                      covars$monthly.precip.median,
+                      covars$OWRI.proj.in.past.2yr)
 
 n.covariates.project.p2 = ncol(X.project.p2)
 Q.project.p2 = qr.Q(qr(X.project.p2))
@@ -493,7 +516,8 @@ Q.project.p2 = qr.Q(qr(X.project.p2))
 X.project.p3 <- cbind(rep(1,n.data),
                       covars$Decimal_Lat, covars$Decimal_long,
                       covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
-                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
+                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median,
+                      covars$OWRI.proj.in.past.3yr)
                       #covars$YEARS.ACTIVE)
 n.covariates.project.p3 = ncol(X.project.p3)
 Q.project.p3 = qr.Q(qr(X.project.p3))
@@ -503,7 +527,8 @@ Q.project.p3 = qr.Q(qr(X.project.p3))
 X.swcd.p1 <- cbind(rep(1,n.data),
                       covars$Decimal_Lat, covars$Decimal_long,
                       covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
-                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
+                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median,
+                   covars$OWRI.proj.in.past.1yr)
 #covars$YEARS.ACTIVE)
 
 n.covariates.swcd.p1 = ncol(X.swcd.p1)
@@ -514,7 +539,8 @@ X.swcd.p2 <- cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
                       covars$ag.huc8, covars$forst.huc8,
                       covars$dev.huc8,
                       covars$elev100m,covars$hist.avg.owqi,
-                      covars$monthly.precip.median)
+                      covars$monthly.precip.median,
+                   covars$OWRI.proj.in.past.2yr)
 
 n.covariates.swcd.p2 = ncol(X.swcd.p2)
 Q.swcd.p2 = qr.Q(qr(X.swcd.p2))
@@ -522,7 +548,8 @@ Q.swcd.p2 = qr.Q(qr(X.swcd.p2))
 X.swcd.p3 <- cbind(rep(1,n.data),
                       covars$Decimal_Lat, covars$Decimal_long,
                       covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
-                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
+                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median,
+                   covars$OWRI.proj.in.past.3yr)
 #covars$YEARS.ACTIVE)
 n.covariates.swcd.p3 = ncol(X.swcd.p3)
 Q.swcd.p3 = qr.Q(qr(X.swcd.p3))
