@@ -1,6 +1,142 @@
 rm(list=ls())
-setwd('/homes/tscott1/win/user/quinalt')
+
 load('Code/R/Revisions/test.results.RData')
+
+library(texreg)
+
+tex.base.p1 <- texreg::createTexreg(
+  coef.names = mod.base.p1$names.fixed,
+  coef = mod.base.p1$summary.lincomb.derived$mean,
+  ci.low = mod.base.p1$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.base.p1$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.base.p1$dic$dic,mod.base.p1$waic$waic))
+
+tex.base.p2 <- texreg::createTexreg(
+  coef.names = mod.base.p1$names.fixed,
+  coef = mod.base.p2$summary.lincomb.derived$mean,
+  ci.low = mod.base.p2$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.base.p2$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.base.p2$dic$dic,mod.base.p2$waic$waic))    
+    
+tex.base.p3 <- texreg::createTexreg(
+  coef.names = mod.base.p1$names.fixed,
+  coef = mod.base.p3$summary.lincomb.derived$mean,
+  ci.low = mod.base.p3$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.base.p3$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.base.p3$dic$dic,mod.base.p3$waic$waic))
+  
+  
+htmlreg(l=list(tex.base.p1,tex.base.p2,tex.base.p3),leading.zero=TRUE,
+       omit.coef = c('b0'),ci.test = 0,digits = 3,
+       custom.model.names = c('Past 1yr Funds','Past 2yr Funds','Past 3yr Funds'),
+       file = '../../../Deliverables/JPART/Version2/basemodtable.html')
+
+
+tex.project.p1 <- texreg::createTexreg(
+  coef.names = mod.project.p1$names.fixed,
+  coef = mod.project.p1$summary.lincomb.derived$mean,
+  ci.low = mod.project.p1$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.project.p1$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.project.p1$dic$dic,mod.project.p1$waic$waic))
+
+tex.project.p2 <- texreg::createTexreg(
+  coef.names = mod.project.p1$names.fixed,
+  coef = mod.project.p2$summary.lincomb.derived$mean,
+  ci.low = mod.project.p2$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.project.p2$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.project.p2$dic$dic,mod.project.p2$waic$waic))
+
+tex.project.p3 <- texreg::createTexreg(
+  coef.names = mod.project.p1$names.fixed,
+  coef = mod.project.p3$summary.lincomb.derived$mean,
+  ci.low = mod.project.p3$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.project.p3$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.project.p3$dic$dic,mod.project.p3$waic$waic))
+
+
+
+htmlreg(l=list(tex.project.p1,tex.project.p2,tex.project.p3),leading.zero=TRUE,
+        omit.coef = c('b0'),ci.test = 0,digits = 3,
+        custom.model.names = c('Past 1yr Funds','Past 2yr Funds','Past 3yr Funds'),
+        file = '../../../Deliverables/JPART/Version2/projectmodtable.html')
+
+
+tex.swcd.p1 <- texreg::createTexreg(
+  coef.names = mod.swcd.p1$names.fixed,
+  coef = mod.swcd.p1$summary.lincomb.derived$mean,
+  ci.low = mod.swcd.p1$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.swcd.p1$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.swcd.p1$dic$dic,mod.swcd.p1$waic$waic))
+
+tex.swcd.p2 <- texreg::createTexreg(
+  coef.names = mod.swcd.p1$names.fixed,
+  coef = mod.swcd.p2$summary.lincomb.derived$mean,
+  ci.low = mod.swcd.p2$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.swcd.p2$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.swcd.p2$dic$dic,mod.swcd.p2$waic$waic))
+
+tex.swcd.p3 <- texreg::createTexreg(
+  coef.names = mod.swcd.p1$names.fixed,
+  coef = mod.swcd.p3$summary.lincomb.derived$mean,
+  ci.low = mod.swcd.p3$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.swcd.p3$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.swcd.p3$dic$dic,mod.swcd.p3$waic$waic))
+
+htmlreg(l=list(tex.swcd.p1,tex.swcd.p2,tex.swcd.p3),leading.zero=TRUE,
+        omit.coef = c('b0'),ci.test = 0,digits = 3,
+        custom.model.names = c('Past 1yr Funds','Past 2yr Funds','Past 3yr Funds'),
+        file = '../../../Deliverables/JPART/Version2/swcdmodtable.html')
+
+
+n = 100 
+racewhite = rep_len(c('0','1'),100)
+educate = 1:n 
+y = rnorm(n) 
+
+r = inla(y ~ 1 + racewhite*educate, 
+         data = data.frame(racewhite, educate), 
+         control.predictor = list(compute=TRUE)) 
+
+## net effect of educate + racewhite:educate 
+lc = inla.make.lincombs( 
+  educate= r$model.matrix[, "educate"], 
+  "racewhite1:educate" = r$model.matrix[, "racewhite1:educate"]) 
+
+
+
+
+rr = inla(y ~ 1 + racewhite*educate, 
+          data = data.frame(racewhite, educate), 
+          control.predictor = list(compute=TRUE), 
+          lincomb = lc,verbose=T) 
+
+
+plot(rr$summary.lincomb.derived$mean)
+
+
+plot(density(rr$summary.lincomb.derived$mean), lty=1)
+lines(density(educate_racewhite), lty=2)
+
+
+
+texreg:::get.data(mod.base.p1)
+
+
+
+summary(mod.base.p1)
+
+get.data(mod.base.p1)
+
+class(mod.base.p1)
 
 
 base.p1.coef = mod.base.p1$summary.fixed

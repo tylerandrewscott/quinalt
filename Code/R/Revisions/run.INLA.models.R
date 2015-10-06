@@ -208,9 +208,9 @@ mod.data$seaDist10km = mod.data$seaDist/10
 mod.data$ag.huc8 = 100 * mod.data$ag.huc8
 mod.data$dev.huc8 = 100 * mod.data$dev.huc8
 mod.data$forst.huc8 = 100 * mod.data$forst.huc8
-mod.data$Ag = 100 * mod.data$Ag
-mod.data$Forst = 100 * mod.data$Forst
-mod.data$Dev = 100 * mod.data$Dev
+#mod.data$Ag = 100 * mod.data$Ag
+#mod.data$Forst = 100 * mod.data$Forst
+#mod.data$Dev = 100 * mod.data$Dev
 mod.data$monthly.precip.median = mod.data$monthly.precip.median/100
 mod.data$Decimal_Lat = mod.data$Decimal_Lat - mean(mod.data$Decimal_Lat)
 mod.data$Decimal_long = mod.data$Decimal_long - mean(mod.data$Decimal_long)
@@ -287,7 +287,7 @@ library(maptools)
 library(splancs)
 library(rgdal);library(rgeos);library(ggplot2)
 #load oregon huc8 shapefile
-oregon.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")
+oregon.huc8 = readOGR(dsn="../../../SpatialData/hydrologic_units", layer="wbdhu8_a_or")
 oregon.huc8@data$id = rownames(oregon.huc8@data)
 border <- unionSpatialPolygons(oregon.huc8, rep(1,nrow(oregon.huc8)),threshold=11000)
 
@@ -365,7 +365,7 @@ form.swcd.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
   YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.2yr.WC + 
   OWEB.proj.in.last.2yr.SWCD + 
-  OWEB.proj.in.last.qyr.WC:OWEB.proj.in.last.qyr.SWCD +
+  OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p2)%*%A.1), e= rep(0,n.covariates.base.p2)))
@@ -387,7 +387,7 @@ YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE +
   OWEB.proj.in.last.1yr.WC.Tech +
   OWEB.proj.in.last.1yr.WC.Restoration +
   OWEB.proj.in.last.1yr.WC.Outreach +
-  OWEB.proj.in.last.1yr.WC.Capacity
+  OWEB.proj.in.last.1yr.WC.Capacity +
   OWEB.proj.in.last.1yr.WC.Capacity:OWEB.proj.in.last.1yr.WC.Tech +
   OWEB.proj.in.last.1yr.WC.Capacity:OWEB.proj.in.last.1yr.WC.Restoration +
   OWEB.proj.in.last.1yr.WC.Capacity:OWEB.proj.in.last.1yr.WC.Outreach +
@@ -497,6 +497,36 @@ X.project.p3 <- cbind(rep(1,n.data),
                       #covars$YEARS.ACTIVE)
 n.covariates.project.p3 = ncol(X.project.p3)
 Q.project.p3 = qr.Q(qr(X.project.p3))
+
+
+
+X.swcd.p1 <- cbind(rep(1,n.data),
+                      covars$Decimal_Lat, covars$Decimal_long,
+                      covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
+                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
+#covars$YEARS.ACTIVE)
+
+n.covariates.swcd.p1 = ncol(X.swcd.p1)
+Q.swcd.p1 = qr.Q(qr(X.swcd.p1))
+
+# 
+X.swcd.p2 <- cbind(rep(1,n.data), covars$Decimal_Lat, covars$Decimal_long,
+                      covars$ag.huc8, covars$forst.huc8,
+                      covars$dev.huc8,
+                      covars$elev100m,covars$hist.avg.owqi,
+                      covars$monthly.precip.median)
+
+n.covariates.swcd.p2 = ncol(X.swcd.p2)
+Q.swcd.p2 = qr.Q(qr(X.swcd.p2))
+# 
+X.swcd.p3 <- cbind(rep(1,n.data),
+                      covars$Decimal_Lat, covars$Decimal_long,
+                      covars$ag.huc8,covars$forst.huc8,covars$dev.huc8,
+                      covars$elev100m,covars$hist.avg.owqi,covars$monthly.precip.median)
+#covars$YEARS.ACTIVE)
+n.covariates.swcd.p3 = ncol(X.swcd.p3)
+Q.swcd.p3 = qr.Q(qr(X.swcd.p3))
+
 
 (mesh.a <- inla.mesh.2d(
   cbind(mod.data$Decimal_long,mod.data$Decimal_Lat),
@@ -661,6 +691,42 @@ if (run.owqi.only)
                         correct = TRUE,
                         correct.factor = correctionfactor))
   
+  
+  mod.swcd.p1 <- inla(form.swcd.p1, family='gaussian',
+                         data=inla.stack.data(stk.1),
+                         control.predictor=list(A=inla.stack.A(stk.1), 
+                                                compute=TRUE),
+                         #  control.inla=list(strategy='laplace'), 
+                         control.compute=list(dic=DIC, cpo=CPO,waic=WAIC),
+                         control.fixed= list(prec.intercept = pintercept, correlation.matrix = TRUE),
+                         verbose=T,
+                         control.inla = list(
+                           correct = TRUE,
+                           correct.factor = correctionfactor))
+  mod.swcd.p2 <- inla(form.swcd.p2, family='gaussian',
+                         data=inla.stack.data(stk.1),
+                         control.predictor=list(A=inla.stack.A(stk.1), 
+                                                compute=TRUE),
+                         #  control.inla=list(strategy='laplace'), 
+                         control.compute=list(dic=DIC, cpo=CPO,waic=WAIC),
+                         control.fixed= list(prec.intercept = pintercept, correlation.matrix = TRUE),
+                         verbose=T,
+                         control.inla = list(
+                           correct = TRUE,
+                           correct.factor = correctionfactor))
+  
+  
+  mod.swcd.p3 <- inla(form.swcd.p3, family='gaussian',
+                         data=inla.stack.data(stk.1),
+                         control.predictor=list(A=inla.stack.A(stk.1), 
+                                                compute=TRUE),
+                         #  control.inla=list(strategy='laplace'), 
+                         control.compute=list(dic=DIC, cpo=CPO,waic=WAIC),
+                         control.fixed= list(prec.intercept = pintercept, correlation.matrix = TRUE),
+                         verbose=T,
+                         control.inla = list(
+                           correct = TRUE,
+                           correct.factor = correctionfactor))
 }
 
 
@@ -1509,7 +1575,105 @@ if (run.owqi.only)
 #        custom.coef.names = rev(name.vec),
 #        file='/homes/tscott1/win/user/quinalt/JPART_Submission/Version2/capacitymods2.tex')
 
-save.image('Code/R/Revisions/test.results.RData')
+
+
+library(texreg)
+
+tex.base.p1 <- texreg::createTexreg(
+  coef.names = mod.base.p1$names.fixed,
+  coef = mod.base.p1$summary.lincomb.derived$mean,
+  ci.low = mod.base.p1$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.base.p1$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.base.p1$dic$dic,mod.base.p1$waic$waic))
+
+tex.base.p2 <- texreg::createTexreg(
+  coef.names = mod.base.p1$names.fixed,
+  coef = mod.base.p2$summary.lincomb.derived$mean,
+  ci.low = mod.base.p2$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.base.p2$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.base.p2$dic$dic,mod.base.p2$waic$waic))    
+
+tex.base.p3 <- texreg::createTexreg(
+  coef.names = mod.base.p1$names.fixed,
+  coef = mod.base.p3$summary.lincomb.derived$mean,
+  ci.low = mod.base.p3$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.base.p3$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.base.p3$dic$dic,mod.base.p3$waic$waic))
+
+
+htmlreg(l=list(tex.base.p1,tex.base.p2,tex.base.p3),leading.zero=TRUE,
+        omit.coef = c('b0'),ci.test = 0,digits = 3,
+        custom.model.names = c('Past 1yr Funds','Past 2yr Funds','Past 3yr Funds'),
+        file = '../../../Deliverables/JPART/Version2/basemodtable.html')
+
+
+tex.project.p1 <- texreg::createTexreg(
+  coef.names = mod.project.p1$names.fixed,
+  coef = mod.project.p1$summary.lincomb.derived$mean,
+  ci.low = mod.project.p1$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.project.p1$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.project.p1$dic$dic,mod.project.p1$waic$waic))
+
+tex.project.p2 <- texreg::createTexreg(
+  coef.names = mod.project.p1$names.fixed,
+  coef = mod.project.p2$summary.lincomb.derived$mean,
+  ci.low = mod.project.p2$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.project.p2$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.project.p2$dic$dic,mod.project.p2$waic$waic))
+
+tex.project.p3 <- texreg::createTexreg(
+  coef.names = mod.project.p1$names.fixed,
+  coef = mod.project.p3$summary.lincomb.derived$mean,
+  ci.low = mod.project.p3$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.project.p3$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.project.p3$dic$dic,mod.project.p3$waic$waic))
+
+
+
+htmlreg(l=list(tex.project.p1,tex.project.p2,tex.project.p3),leading.zero=TRUE,
+        omit.coef = c('b0'),ci.test = 0,digits = 3,
+        custom.model.names = c('Past 1yr Funds','Past 2yr Funds','Past 3yr Funds'),
+        file = '../../../Deliverables/JPART/Version2/projectmodtable.html')
+
+
+tex.swcd.p1 <- texreg::createTexreg(
+  coef.names = mod.swcd.p1$names.fixed,
+  coef = mod.swcd.p1$summary.lincomb.derived$mean,
+  ci.low = mod.swcd.p1$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.swcd.p1$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.swcd.p1$dic$dic,mod.swcd.p1$waic$waic))
+
+tex.swcd.p2 <- texreg::createTexreg(
+  coef.names = mod.swcd.p1$names.fixed,
+  coef = mod.swcd.p2$summary.lincomb.derived$mean,
+  ci.low = mod.swcd.p2$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.swcd.p2$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.swcd.p2$dic$dic,mod.swcd.p2$waic$waic))
+
+tex.swcd.p3 <- texreg::createTexreg(
+  coef.names = mod.swcd.p1$names.fixed,
+  coef = mod.swcd.p3$summary.lincomb.derived$mean,
+  ci.low = mod.swcd.p3$summary.lincomb.derived$`0.025quant`,
+  ci.up = mod.swcd.p3$summary.lincomb.derived$`0.975quant`,
+  gof.names = c('DIC','WAIC'),
+  gof =  c(mod.swcd.p3$dic$dic,mod.swcd.p3$waic$waic))
+
+htmlreg(l=list(tex.swcd.p1,tex.swcd.p2,tex.swcd.p3),leading.zero=TRUE,
+        omit.coef = c('b0'),ci.test = 0,digits = 3,
+        custom.model.names = c('Past 1yr Funds','Past 2yr Funds','Past 3yr Funds'),
+        file = '../../../Deliverables/JPART/Version2/swcdmodtable.html')
+
+
+
+save.image('test.results.RData')
 
 library(mail)
 sendmail('tyler.andrew.scott@gmail.com','INLA model done')
