@@ -370,6 +370,9 @@ form.swcd.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.1yr +
   YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.1yr.WC + 
+  OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE + 
+  OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k +  
+  OWEB.proj.in.last.1yr.WC:STAFF.FTE + 
   OWEB.proj.in.last.1yr.SWCD + 
   OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
@@ -382,6 +385,9 @@ form.swcd.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.2yr +
   YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
   OWEB.proj.in.last.2yr.WC + 
+  OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE + 
+  OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k +  
+  OWEB.proj.in.last.2yr.WC:STAFF.FTE + 
   OWEB.proj.in.last.2yr.SWCD + 
   OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
@@ -391,6 +397,9 @@ form.swcd.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
 form.swcd.p3 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.3yr +
   YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE + 
+  OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k +  
+  OWEB.proj.in.last.3yr.WC:STAFF.FTE + 
   OWEB.proj.in.last.3yr.WC + 
   OWEB.proj.in.last.3yr.SWCD + 
   OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD + 

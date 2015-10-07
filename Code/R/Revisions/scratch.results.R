@@ -97,6 +97,112 @@ htmlreg(l=list(tex.swcd.p1,tex.swcd.p2,tex.swcd.p3),leading.zero=TRUE,
         file = '../../../Deliverables/JPART/Version2/swcdmodtable.html')
 
 
+
+
+
+library(INLA)
+
+draws = 100000
+oweb.p1 = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC)
+oweb.p1.staff = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)
+oweb.p1.budg = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)
+oweb.p1.years = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+oweb.p1.all = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+
+oweb.p2 = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC)
+oweb.p2.staff = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)
+oweb.p2.budg = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)
+oweb.p2.years = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+oweb.p2.all = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+
+oweb.p3 = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC)
+oweb.p3.staff = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)
+oweb.p3.budg = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)
+oweb.p3.years = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+oweb.p3.all = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+
+margs = data.frame(oweb.p1,oweb.p1.all)
+library(tidyr)
+margs.lon = gather(margs)
+library(ggplot2);library(ggthemes)
+ggplot(data=margs.lon,aes(x=value,col=key,linetype=key)) + 
+  geom_density(lwd=1) + theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: OWEB funds in past water-year ($100k)') + ylab('Density') +
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=14),
+        axis.text=element_text(size=12),
+        legend.title = element_blank(),
+        legend.text = element_text(size=12)) +
+  scale_x_continuous(expand=c(0,0)) + #,limits=c(-0.8,2.5))+
+  scale_color_colorblind(labels=c('Linear-only','Interaction'))+
+scale_linetype(labels=c('Linear-only','Interaction'))
+
+
+margs = data.frame(oweb.p2,oweb.p2.all)
+library(tidyr)
+margs.lon = gather(margs)
+library(ggplot2);library(ggthemes)
+ggplot(data=margs.lon,aes(x=value,col=key,linetype=key)) + 
+  geom_density(lwd=1) + theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: OWEB funds in past 2 water-years ($100k)') + ylab('Density') +
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=14),
+        axis.text=element_text(size=12),
+        legend.title = element_blank(),
+        legend.text = element_text(size=12)) +
+  scale_x_continuous(expand=c(0,0)) + #,limits=c(-0.8,2.5))+
+  scale_color_colorblind(labels=c('Linear-only','Interaction'))+
+  scale_linetype(labels=c('Linear-only','Interaction'))
+
+margs = data.frame(oweb.p3,oweb.p3.all)
+library(tidyr)
+margs.lon = gather(margs)
+library(ggplot2);library(ggthemes)
+ggplot(data=margs.lon,aes(x=value,col=key,linetype=key)) + 
+  geom_density(lwd=1) + theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: OWEB funds in past 3 water-years ($100k)') + ylab('Density') +
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=14),
+        axis.text=element_text(size=12),
+        legend.title = element_blank(),
+        legend.text = element_text(size=12)) +
+  scale_x_continuous(expand=c(0,0)) + #,limits=c(-0.8,2.5))+
+  scale_color_colorblind(labels=c('Linear-only','Interaction'))+
+  scale_linetype(labels=c('Linear-only','Interaction'))
+
+plot(density(oweb.p1),lty=1)
+lines(density(oweb.p1.staff),lty=2)
+lines(density(oweb.p1.budg),lty=2,col='red')
+lines(density(oweb.p1.years),lty=2,col='green')
+
+
+plot(density(educate), lty=1)
+lines(density(educate_racewhite), lty=2)
+
+
+
+
+
+
+
 n = 100 
 racewhite = rep_len(c('0','1'),100)
 educate = 1:n 
