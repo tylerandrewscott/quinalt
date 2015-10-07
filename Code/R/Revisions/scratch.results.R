@@ -115,91 +115,228 @@ oweb.p1.all = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.las
   inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
   inla.rmarginal(draws, mod.base.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
 
-oweb.p2 = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC)
-oweb.p2.staff = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)
-oweb.p2.budg = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)
-oweb.p2.years = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
-oweb.p2.all = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)+
-  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
-  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+oweb.p2 = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC)
+oweb.p2.staff = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC`)
+oweb.p2.budg = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC`)
+oweb.p2.years = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC`)
+oweb.p2.all = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC`)+
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC`)+
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC`)
 
-oweb.p3 = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC)
-oweb.p3.staff = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)
-oweb.p3.budg = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)
-oweb.p3.years = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
-oweb.p3.all = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
-  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)+
-  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
-  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`)
+oweb.p3 = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC)
+oweb.p3.staff = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC`)
+oweb.p3.budg = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC`)
+oweb.p3.years = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC`)
+oweb.p3.all = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC`)+
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC`)
+ 
 
-margs = data.frame(oweb.p1,oweb.p1.all)
-library(tidyr)
+margs = data.frame(oweb.p1,oweb.p1.all,
+                   oweb.p2,oweb.p2.all,
+                   oweb.p3,oweb.p3.all)
 margs.lon = gather(margs)
-library(ggplot2);library(ggthemes)
+
+margs.lon$window = NA
+margs.lon$window[grep('p1',margs.lon$key)] <- 'p1'
+margs.lon$window[grep('p2',margs.lon$key)] <- 'p2'
+margs.lon$window[grep('p3',margs.lon$key)] <- 'p3'
+margs.lon$which = 'Linear'
+margs.lon$which[grep('all',margs.lon$key)] <- 'Interaction'
+
+margs.lon$uq <- paste(margs.lon$which,margs.lon$window)
+margs.lon$uq = as.factor(margs.lon$uq)
+levels(margs.lon$uq)
+levels(margs.lon$uq) = c('Linear 1yr ','Linear 2yr ','Linear 3yr ','Interaction 1yr ','Interaction 2yr','Interaction 3yr')
+
+ggplot(subset(margs.lon))+ 
+  geom_density(aes(x=value,
+                   color=uq,linetype=uq),lwd=1)+
+  scale_linetype_manual(values=c(1,2,3,1,2,3)) +
+  scale_color_manual(values=c(rep(alt.col,3),rep('black',3))) +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: Linear only vs. Interaction') + ylab('Density') +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))+
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=20),
+        axis.text=element_text(size=18),
+        legend.title = element_blank(),
+        legend.text = element_text(size=18)) 
+
+
+
+library(ggplot2)
+
+
+
+
+
+
+
+draws = 100000
+oweb.wc.p1.all = inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC`)+
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC`) +
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD`)
+
+oweb.swcd.p1.all = inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$OWEB.proj.in.last.1yr.SWCD) + 
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD`)
+
+oweb.wc.p2.all = inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC`) +
+inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC`) +
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC`) +
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD`)
+
+oweb.swcd.p2.all = inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$OWEB.proj.in.last.2yr.SWCD) + 
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD`)
+
+oweb.wc.p3.all = inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC`)+
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC`)+
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC`) +
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD`)
+oweb.swcd.p3.all = inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$OWEB.proj.in.last.3yr.SWCD) + 
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD`)
+
+margs = data.frame(oweb.wc.p1.all,oweb.swcd.p1.all,
+                   oweb.wc.p2.all,oweb.swcd.p2.all,
+                   oweb.wc.p3.all,oweb.swcd.p3.all)
+margs.lon = gather(margs)
+
+margs.lon$window = NA
+margs.lon$window[grep('p1.all',margs.lon$key)] <- 'p1'
+margs.lon$window[grep('p2.all',margs.lon$key)] <- 'p2'
+margs.lon$window[grep('p3.all',margs.lon$key)] <- 'p3'
+margs.lon$which = NA
+margs.lon$which[grep('wc',margs.lon$key)] <- 'WC'
+margs.lon$which[grep('swcd',margs.lon$key)] <- 'SWCD'
+margs.lon$uq <- paste(margs.lon$which,margs.lon$window)
+
+bas.col = 'black'
+alt.col = '#E69F00'
+
+library(ggplot2)
+
+margs.lon$uq = as.factor(margs.lon$uq)
+
+levels(margs.lon$uq) = c("SWCD 1yr ", "SWCD 2yr " ,"SWCD 3yr ", "WC 1yr",  "WC 2yr"  , "WC 3yr"  )
+
+ggplot(subset(margs.lon))+ 
+  geom_density(aes(x=value,
+                color=uq,linetype=uq),lwd=1)+
+  scale_linetype_manual(values=c(1,2,3,1,2,3)) +
+  scale_color_manual(values=c(rep(alt.col,3),rep('black',3))) +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: Funds to WC vs. SWCD') + ylab('Density') +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))+
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=20),
+        axis.text=element_text(size=18),
+        legend.title = element_blank(),
+        legend.text = element_text(size=18)) 
+
+
+
+
+
+
++  
+  scale_size_manual(values =rep(c(1,0.7),each=4))+
+  scale_color_manual(values=c(stochdefcolor,stochoptcolor,
+                              dtrmndefcolor, dtrmnoptcolor,
+                              stochdefcolor,stochdefcolor,
+                              stochoptcolor,stochoptcolor)) 
+
+
+guide_legend
+
++
+  geom_density(aes(x=value,col=uq,linetype=uq),data = margs.lon) 
+  
+  
+  
+   +
+  scale_color_colorblind() + 
+  guides(col=guide_legend(ncol=2,nrow=3,colour=c('red','blue','red','blue','red','blue')))+
+  
+
+colour=rep(colorblind_pal()(2),each=2)
+?geom_density
+
+  
+
+
+rep(c(alt.col,bas.col),each=3)
+
+?scale_color_colorblind
+library(scales)
+show_col(colorblind_pal()(8))
+
+ 
+  scale_color_manual(labels=c('SWCD','WC','Extra'),values=c('red','green','blue'),breaks=c(1:3))
+  
+  
+  ?scale_color_manual
+  
+  
+  scale_linetype_manual(values=rep(1:3,each=2),labels=c('1yr','2yr','3yr','1yr','2yr','3yr')) +
+  guides(col=guide_legend(ncol=2),linetype=guide_legend(nrow=3,ncol=3))
+
+rep(1:3,each=2)
+
+?scale_linetype
+
+scale_color_colorblind(linetype=c(1,1,2,2,3,3))
+
+?scale_color_discrete
+
++ #,limits=c(-0.8,2.5))+
+
+
+?guides
+
+
+
+margs = data.frame(oweb.wc.p2.all,oweb.swcd.p2.all)
+margs.lon = gather(margs)
 ggplot(data=margs.lon,aes(x=value,col=key,linetype=key)) + 
   geom_density(lwd=1) + theme_bw() +theme_tufte(ticks=FALSE) +
-  xlab('Sampled Posterior Marginals: OWEB funds in past water-year ($100k)') + ylab('Density') +
+  xlab('Sampled Posterior Marginals: Past 2yrs funding to WC vs. SWCD') + ylab('Density') +
   theme(legend.position = c(.85,.5),
         axis.title=element_text(size=14),
         axis.text=element_text(size=12),
         legend.title = element_blank(),
         legend.text = element_text(size=12)) +
   scale_x_continuous(expand=c(0,0)) + #,limits=c(-0.8,2.5))+
-  scale_color_colorblind(labels=c('Linear-only','Interaction'))+
-scale_linetype(labels=c('Linear-only','Interaction'))
+  scale_color_colorblind(labels=c('WC','SWCD'))+
+  scale_linetype(labels=c('WC','SWCD'))
 
-
-margs = data.frame(oweb.p2,oweb.p2.all)
-library(tidyr)
+margs = data.frame(oweb.wc.p3.all,oweb.swcd.p3.all)
 margs.lon = gather(margs)
-library(ggplot2);library(ggthemes)
 ggplot(data=margs.lon,aes(x=value,col=key,linetype=key)) + 
   geom_density(lwd=1) + theme_bw() +theme_tufte(ticks=FALSE) +
-  xlab('Sampled Posterior Marginals: OWEB funds in past 2 water-years ($100k)') + ylab('Density') +
+  xlab('Sampled Posterior Marginals: Past 3yrs funding to WC vs. SWCD') + ylab('Density') +
   theme(legend.position = c(.85,.5),
         axis.title=element_text(size=14),
         axis.text=element_text(size=12),
         legend.title = element_blank(),
         legend.text = element_text(size=12)) +
   scale_x_continuous(expand=c(0,0)) + #,limits=c(-0.8,2.5))+
-  scale_color_colorblind(labels=c('Linear-only','Interaction'))+
-  scale_linetype(labels=c('Linear-only','Interaction'))
-
-margs = data.frame(oweb.p3,oweb.p3.all)
-library(tidyr)
-margs.lon = gather(margs)
-library(ggplot2);library(ggthemes)
-ggplot(data=margs.lon,aes(x=value,col=key,linetype=key)) + 
-  geom_density(lwd=1) + theme_bw() +theme_tufte(ticks=FALSE) +
-  xlab('Sampled Posterior Marginals: OWEB funds in past 3 water-years ($100k)') + ylab('Density') +
-  theme(legend.position = c(.85,.5),
-        axis.title=element_text(size=14),
-        axis.text=element_text(size=12),
-        legend.title = element_blank(),
-        legend.text = element_text(size=12)) +
-  scale_x_continuous(expand=c(0,0)) + #,limits=c(-0.8,2.5))+
-  scale_color_colorblind(labels=c('Linear-only','Interaction'))+
-  scale_linetype(labels=c('Linear-only','Interaction'))
-
-plot(density(oweb.p1),lty=1)
-lines(density(oweb.p1.staff),lty=2)
-lines(density(oweb.p1.budg),lty=2,col='red')
-lines(density(oweb.p1.years),lty=2,col='green')
-
-
-plot(density(educate), lty=1)
-lines(density(educate_racewhite), lty=2)
-
-
-
-
+  scale_color_colorblind(labels=c('WC','SWCD'))+
+  scale_linetype(labels=c('WC','SWCD'))
 
 
 
