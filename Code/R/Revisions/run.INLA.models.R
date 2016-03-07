@@ -1,5 +1,7 @@
 rm(list=ls())
 
+remote = FALSE
+nlog = FALSE
 run.owqi.only = TRUE
 
 require(foreign)
@@ -34,7 +36,8 @@ require(xtable)
 library(maptools)
 
 #load("/homes/tscott1/win/user/quinalt/temp_workspace_precip.RData")
-mod.data = read.csv('../../../Input/update_data.csv')
+if(remote){mod.data = read.csv('../../../Input/update_data.csv')}
+if(!remote){mod.data = read.csv('Input/update_data.csv')}
 
 for (i in 1:nrow(mod.data))
 {
@@ -107,7 +110,10 @@ mod.data = mod.data %>% mutate(which.wc = as.character(which.wc))
 mod.data$which.wc[grep('Middle Deschutes',mod.data$which.wc)] <- 'Willow Creek WC'
 
 library(mosaic)
-council.dat = fetchGoogle('https://docs.google.com/spreadsheets/d/1OXdC54OK8BwXAbIzMDudAKMvdblMhQQBJZ82_LUijFc/pub?output=csv')
+library(googlesheets)
+
+council.dat = read.csv('https://docs.google.com/spreadsheets/d/1OXdC54OK8BwXAbIzMDudAKMvdblMhQQBJZ82_LUijFc/pub?output=csv')
+#council.dat = fetchGoogle('https://docs.google.com/spreadsheets/d/1OXdC54OK8BwXAbIzMDudAKMvdblMhQQBJZ82_LUijFc/pub?output=csv')
 
 
 council.dat <- dplyr::select(council.dat,altName,OPERATING.BUDGET,TOTAL.BUDGET,YEAR.FOUNDED,COORD.TYPE,STAFF.FTE,Federal.Support,Foundation.Support,Donors.Support,Membership.Support)
@@ -120,6 +126,9 @@ council.dat$OPERATING.BUDGET = ordered(council.dat$OPERATING.BUDGET,c('$0 - $50,
 
 council.dat$TOTAL.BUDGET = ordered(council.dat$TOTAL.BUDGET,c('$0 - $100,000', '$100,001 - $250,000', '$250,001 - $500,000',
                                                               '$500,001 - $1,000,000', '$1,000,001 - $5,000,000'))
+
+
+
 
 
 mod.data = left_join(mod.data,council.dat,by=c('which.wc' = 'altName'))
@@ -213,6 +222,8 @@ mod.data$forst.huc8 = 100 * mod.data$forst.huc8
 #mod.data$Dev = 100 * mod.data$Dev
 mod.data$monthly.precip.median = mod.data$monthly.precip.median/100
 mod.data$monthly.precip.median = mod.data$monthly.precip.median  - mean(mod.data$monthly.precip.median)
+mod.data$lat = mod.data$Decimal_Lat
+mod.data$long = mod.data$Decimal_long
 mod.data$Decimal_Lat = mod.data$Decimal_Lat - mean(mod.data$Decimal_Lat)
 mod.data$Decimal_long = mod.data$Decimal_long - mean(mod.data$Decimal_long)
 mod.data$hist.avg.owqi = mod.data$hist.avg.owqi - mean(mod.data$hist.avg.owqi)
@@ -249,7 +260,6 @@ mod.data$OP.BUDGET.200k <- ifelse(mod.data$OPERATING.BUDGET %in% low.op,0,1)
 
 
 
-
 #mod.data$OWRI.proj.in.past.1yr = mod.data$OWRI.proj.in.past.1yr - mean(mod.data$OWRI.proj.in.past.1yr)
 #mod.data$OWRI.proj.in.past.2yr = mod.data$OWRI.proj.in.past.2yr - mean(mod.data$OWRI.proj.in.past.2yr)
 #mod.data$OWRI.proj.in.past.3yr = mod.data$OWRI.proj.in.past.3yr - mean(mod.data$OWRI.proj.in.past.3yr)
@@ -277,7 +287,6 @@ temp = mod.data %>% dplyr::filter(!duplicated(which.wc)) %>% dplyr::select(OP.BU
 
 #stargazer(temp,summary = FALSE)
 
-
 covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR','uq.tid',
                      'ag.huc8','dev.huc8','wet.huc8','forst.huc8','owqi',
                      'owqi','monthly.precip.median','YEARS.ACTIVE','TOTAL.BUDGET','OPERATING.BUDGET','OP.BUDGET.200k',
@@ -285,13 +294,18 @@ covars = mod.data[,c('Station','elevation','seaDist','HUC8','total.period','YEAR
                      'which.wc',
                      'Decimal_Lat',
                      'Decimal_long','elev100m','seaDist10km',
-                     'seasonal',
+                     'seasonal','water_yr',
                     # 'Ag','Dev','Wetl','Forst',
                      'Station.Repl','HUC8.Repl',grep('proj.in|grants.in',colnames(mod.data),value=T),
                      grep('OWEB',names(mod.data),value=T),
                      grep('cond_good',names(mod.data),value=T),
                      grep('hist.avg',names(mod.data),value=T),
                      grep('_si',names(mod.data),value=T))]
+
+if(nlog)
+{
+covars[,grep('OWEB',names(covars))] <- log(covars[,grep('OWEB',names(covars))] + 0.001)
+}
 
 dep.var.list = c(grep('_si',names(mod.data),value=T),'owqi')
 
@@ -305,7 +319,9 @@ library(maptools)
 library(splancs)
 library(rgdal);library(rgeos);library(ggplot2)
 #load oregon huc8 shapefile
-oregon.huc8 = readOGR(dsn="../../../SpatialData/hydrologic_units", layer="wbdhu8_a_or")
+
+if(remote) {oregon.huc8 = readOGR(dsn="../../../SpatialData/hydrologic_units", layer="wbdhu8_a_or")}
+if(!remote) {oregon.huc8 = readOGR(dsn="SpatialData/hydrologic_units", layer="wbdhu8_a_or")}
 oregon.huc8@data$id = rownames(oregon.huc8@data)
 border <- unionSpatialPolygons(oregon.huc8, rep(1,nrow(oregon.huc8)),threshold=11000)
 
@@ -333,11 +349,12 @@ length.of.season = 12
 
 form.base.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.1yr +
-  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
-  OWEB.proj.in.last.1yr.WC + 
-  OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k +  
-  OWEB.proj.in.last.1yr.WC:STAFF.FTE + 
+  #YEARS.ACTIVE + 
+  #OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.1yr.WC*YEARS.ACTIVE + 
+  #OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE + 
+  OWEB.proj.in.last.1yr.WC*OP.BUDGET.200k +  
+  OWEB.proj.in.last.1yr.WC*STAFF.FTE + 
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
  # f(total.period,model='rw2',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) +
@@ -346,35 +363,37 @@ form.base.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
 
 form.base.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.2yr +
-  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
-  OWEB.proj.in.last.2yr.WC + 
-  OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k +  
-  OWEB.proj.in.last.2yr.WC:STAFF.FTE + 
+  #YEARS.ACTIVE + 
+  #OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.2yr.WC*YEARS.ACTIVE + 
+  #OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE + 
+  OWEB.proj.in.last.2yr.WC*OP.BUDGET.200k +  
+  OWEB.proj.in.last.2yr.WC*STAFF.FTE + 
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p2)%*%A.1), e= rep(0,n.covariates.base.p2)))
 
 form.base.p3 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.3yr +
-  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
-  OWEB.proj.in.last.3yr.WC + 
-  OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k +  
-  OWEB.proj.in.last.3yr.WC:STAFF.FTE +   
+  #YEARS.ACTIVE + 
+  #OP.BUDGET.200k +  STAFF.FTE + 
+  OWEB.proj.in.last.3yr.WC*YEARS.ACTIVE + 
+  #OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE + 
+  OWEB.proj.in.last.3yr.WC*OP.BUDGET.200k +  
+  OWEB.proj.in.last.3yr.WC*STAFF.FTE +  
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p3)%*%A.1), e= rep(0,n.covariates.base.p3)))
 
 form.swcd.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.1yr +
-  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
-  OWEB.proj.in.last.1yr.WC + 
-  OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k +  
-  OWEB.proj.in.last.1yr.WC:STAFF.FTE + 
-  OWEB.proj.in.last.1yr.SWCD + 
-  OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD +
+  #YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  #OWEB.proj.in.last.1yr.WC + 
+  OWEB.proj.in.last.1yr.WC*YEARS.ACTIVE + 
+  OWEB.proj.in.last.1yr.WC*OP.BUDGET.200k +  
+  OWEB.proj.in.last.1yr.WC*STAFF.FTE + 
+ # OWEB.proj.in.last.1yr.SWCD + 
+  OWEB.proj.in.last.1yr.WC*OWEB.proj.in.last.1yr.SWCD +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
   # f(total.period,model='rw2',values=seq(min(covars$total.period),max(covars$total.period)),replicate = Station.Repl) +
@@ -383,26 +402,26 @@ form.swcd.p1 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + d
 
 form.swcd.p2 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.2yr +
-  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
-  OWEB.proj.in.last.2yr.WC + 
-  OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k +  
-  OWEB.proj.in.last.2yr.WC:STAFF.FTE + 
-  OWEB.proj.in.last.2yr.SWCD + 
-  OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD +
+  #YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  #OWEB.proj.in.last.2yr.WC + 
+  OWEB.proj.in.last.2yr.WC*YEARS.ACTIVE + 
+  OWEB.proj.in.last.2yr.WC*OP.BUDGET.200k +  
+  OWEB.proj.in.last.2yr.WC*STAFF.FTE + 
+  # OWEB.proj.in.last.2yr.SWCD + 
+  OWEB.proj.in.last.2yr.WC*OWEB.proj.in.last.2yr.SWCD +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p2)%*%A.1), e= rep(0,n.covariates.base.p2)))
 
 form.swcd.p3 <- y ~ 0 + b0 + Decimal_Lat + Decimal_long + ag.huc8+forst.huc8 + dev.huc8 + 
   elev100m +  monthly.precip.median + hist.avg.owqi + OWRI.proj.in.past.3yr +
-  YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
-  OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE + 
-  OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k +  
-  OWEB.proj.in.last.3yr.WC:STAFF.FTE + 
-  OWEB.proj.in.last.3yr.WC + 
-  OWEB.proj.in.last.3yr.SWCD + 
-  OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD + 
+  #YEARS.ACTIVE + OP.BUDGET.200k +  STAFF.FTE + 
+  #OWEB.proj.in.last.3yr.WC + 
+  OWEB.proj.in.last.3yr.WC*YEARS.ACTIVE + 
+  OWEB.proj.in.last.3yr.WC*OP.BUDGET.200k +  
+  OWEB.proj.in.last.3yr.WC*STAFF.FTE + 
+  # OWEB.proj.in.last.3yr.SWCD + 
+  OWEB.proj.in.last.3yr.WC*OWEB.proj.in.last.3yr.SWCD +
   f(HUC8,model='iid',param=c(0.001,0.001)) + 
   f(total.period,model='iid',param=c(0.001,0.001)) +
   f(s, model=spde.a, extraconstr = list(A = as.matrix(t(Q.base.p3)%*%A.1), e= rep(0,n.covariates.base.p3)))
@@ -601,14 +620,14 @@ Q.swcd.p3 = qr.Q(qr(X.swcd.p3))
 
 
 (mesh.a <- inla.mesh.2d(
-  cbind(mod.data$Decimal_long,mod.data$Decimal_Lat),
+  cbind(mod.data$long,mod.data$lat),
   max.edge=c(5, 40),cut=.25))$n
 
 spde.a <- inla.spde2.matern(mesh.a)
 
 # Model 1: constant spatial effect
 A.1 <- inla.spde.make.A(mesh.a, 
-                        loc=cbind(mod.data$Decimal_long,mod.data$Decimal_Lat))
+                        loc=cbind(mod.data$long,mod.data$lat))
 ind.1 <- inla.spde.make.index('s', mesh.a$n)
 
 empty.list = as.list(NULL)
@@ -692,6 +711,7 @@ if (run.owqi.only)
                       effects=list(ind.1, 
                                    list(data.frame(b0=1,covars[,colnames(covars)%in% dep.var.list==FALSE]))))
   
+  
   mod.base.p1 <- inla(form.base.p1, family='gaussian',
                       data=inla.stack.data(stk.1),
                       control.predictor=list(A=inla.stack.A(stk.1), 
@@ -703,8 +723,7 @@ if (run.owqi.only)
                       control.inla = list(
                         correct = TRUE,
                         correct.factor = correctionfactor))
-  
-  
+ 
   mod.base.p2 <- inla(form.base.p2, family='gaussian',
                       data=inla.stack.data(stk.1),
                       control.predictor=list(A=inla.stack.A(stk.1), 
@@ -899,6 +918,465 @@ htmlreg(l=list(tex.swcd.p1,tex.swcd.p2,tex.swcd.p3),leading.zero=TRUE,
 
 
 save.image('test.results.RData')
+
+load('Code/R/Revisions/test.results.RData')
+
+draws = 100000
+oweb.p1 = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC)
+oweb.p1.staff = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:STAFF.FTE`)
+oweb.p1.budg = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k`)
+oweb.p1.years = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE`)
+oweb.p1.all = inla.rmarginal(draws, mod.base.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:STAFF.FTE`)+
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k`)+
+  inla.rmarginal(draws, mod.base.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE`)
+
+oweb.p2 = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC)
+oweb.p2.staff = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:STAFF.FTE`)
+oweb.p2.budg = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k`)
+oweb.p2.years = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE`)
+oweb.p2.all = inla.rmarginal(draws, mod.base.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:STAFF.FTE`)+
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k`)+
+  inla.rmarginal(draws, mod.base.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE`)
+
+oweb.p3 = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC)
+oweb.p3.staff = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:STAFF.FTE`)
+oweb.p3.budg = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k`)
+oweb.p3.years = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE`)
+oweb.p3.all = inla.rmarginal(draws, mod.base.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:STAFF.FTE`)+
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k`)+
+  inla.rmarginal(draws, mod.base.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE`)
+
+library(tidyr)
+margs = data.frame(oweb.p1,oweb.p1.all,
+                   oweb.p2,oweb.p2.all,
+                   oweb.p3,oweb.p3.all)
+margs.lon = gather(margs)
+
+margs.lon$window = NA
+margs.lon$window[grep('p1',margs.lon$key)] <- 'p1'
+margs.lon$window[grep('p2',margs.lon$key)] <- 'p2'
+margs.lon$window[grep('p3',margs.lon$key)] <- 'p3'
+margs.lon$which = 'Linear'
+margs.lon$which[grep('all',margs.lon$key)] <- 'Interaction'
+
+margs.lon$uq <- paste(margs.lon$which,margs.lon$window)
+margs.lon$uq = as.factor(margs.lon$uq)
+levels(margs.lon$uq)
+levels(margs.lon$uq) = c('Linear 1yr ','Linear 2yr ','Linear 3yr ','Interaction 1yr ','Interaction 2yr','Interaction 3yr')
+library(ggthemes)
+library(ggplot2)
+bas.col = 'black'
+alt.col = '#E69F00'
+alt.col2 = "#56B4E9"
+p = ggplot(subset(margs.lon))+ 
+  geom_density(aes(x=value,
+                   color=uq,linetype=uq),lwd=1)+
+  scale_linetype_manual(values=c(1,2,3,1,2,3)) +
+  scale_color_manual(values=c(rep(alt.col,3),rep('black',3))) +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: Linear only vs. Interaction w/ council attributes') + ylab('') +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))+
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=18),
+        axis.text.x=element_text(size=16),
+        axis.text.y=element_blank(),
+        legend.title = element_blank(),
+        legend.text = element_text(size=16)) 
+
+ggsave(filename = 'Deliverables/JPART/Final/figure1.eps',p,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+
+
+
+draws = 100000
+oweb.wc.p1.all = inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC) + 
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:STAFF.FTE`)+
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OP.BUDGET.200k`)+
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:YEARS.ACTIVE`) +
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD`)
+
+oweb.swcd.p1.all = inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$OWEB.proj.in.last.1yr.SWCD) + 
+  inla.rmarginal(draws, mod.swcd.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC:OWEB.proj.in.last.1yr.SWCD`)
+
+oweb.wc.p2.all = inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC) + 
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:STAFF.FTE`)+
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OP.BUDGET.200k`)+
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:YEARS.ACTIVE`) +
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD`)
+
+oweb.swcd.p2.all = inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$OWEB.proj.in.last.2yr.SWCD) + 
+  inla.rmarginal(draws, mod.swcd.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC:OWEB.proj.in.last.2yr.SWCD`)
+
+oweb.wc.p3.all = inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC) + 
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:STAFF.FTE`)+
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OP.BUDGET.200k`)+
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:YEARS.ACTIVE`) +
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD`)
+oweb.swcd.p3.all = inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$OWEB.proj.in.last.3yr.SWCD) + 
+  inla.rmarginal(draws, mod.swcd.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC:OWEB.proj.in.last.3yr.SWCD`)
+
+margs = data.frame(oweb.wc.p1.all,oweb.swcd.p1.all,
+                   oweb.wc.p2.all,oweb.swcd.p2.all,
+                   oweb.wc.p3.all,oweb.swcd.p3.all)
+margs.lon = gather(margs)
+
+margs.lon$window = NA
+margs.lon$window[grep('p1.all',margs.lon$key)] <- 'p1'
+margs.lon$window[grep('p2.all',margs.lon$key)] <- 'p2'
+margs.lon$window[grep('p3.all',margs.lon$key)] <- 'p3'
+margs.lon$which = NA
+margs.lon$which[grep('wc',margs.lon$key)] <- 'WC'
+margs.lon$which[grep('swcd',margs.lon$key)] <- 'SWCD'
+margs.lon$uq <- paste(margs.lon$which,margs.lon$window)
+
+
+
+library(ggplot2)
+
+margs.lon$uq = as.factor(margs.lon$uq)
+
+levels(margs.lon$uq) = c("SWCD 1yr ", "SWCD 2yr " ,"SWCD 3yr ", "WC 1yr",  "WC 2yr"  , "WC 3yr"  )
+
+
+p.gone = ggplot(subset(margs.lon))+ 
+  geom_density(aes(x=value,
+                   color=uq,linetype=uq),lwd=1)+
+  scale_linetype_manual(values=c(1,2,3,1,2,3)) +
+  scale_color_manual(values=c(rep(alt.col,3),rep('black',3))) +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  xlab('Sampled Posterior Marginals: Funds to WC vs. SWCD') + ylab('') +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))+
+  theme(legend.position = c(.85,.5),
+        axis.title=element_text(size=18),
+        axis.text.x=element_text(size=16),
+        axis.text.y=element_blank(),
+        legend.title = element_blank(),
+        legend.text = element_text(size=18)) 
+
+#ggsave(filename = 'Deliverables/JPART/Final/figure2.eps',p2,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+
+
+draws = 100000
+oweb.project.p1.all.Tech = inla.rmarginal(draws,mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Tech) + 
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC.Tech`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC.Tech`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC.Tech`) +
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC.Tech:OWEB.proj.in.last.1yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Interaction)
+
+oweb.project.p1.all.Restoration = inla.rmarginal(draws,mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Restoration) + 
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC.Restoration`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC.Restoration`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC.Restoration`) +
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC.Restoration:OWEB.proj.in.last.1yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Interaction)
+
+oweb.project.p1.all.Outreach = inla.rmarginal(draws,mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Outreach) + 
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC.Outreach`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC.Outreach`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC.Outreach`) +
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC.Outreach:OWEB.proj.in.last.1yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Interaction)
+
+oweb.project.p2.all.Tech = inla.rmarginal(draws,mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Tech) + 
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC.Tech`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC.Tech`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC.Tech`) +
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC.Tech:OWEB.proj.in.last.2yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Interaction)
+
+oweb.project.p2.all.Restoration = inla.rmarginal(draws,mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Restoration) + 
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC.Restoration`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC.Restoration`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC.Restoration`) +
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC.Restoration:OWEB.proj.in.last.2yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Interaction)
+
+oweb.project.p2.all.Outreach = inla.rmarginal(draws,mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Outreach) + 
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC.Outreach`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC.Outreach`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC.Outreach`) +
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC.Outreach:OWEB.proj.in.last.2yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Interaction)
+
+oweb.project.p3.all.Tech = inla.rmarginal(draws,mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Tech) + 
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC.Tech`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC.Tech`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC.Tech`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC.Tech:OWEB.proj.in.last.3yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Interaction)
+
+oweb.project.p3.all.Restoration = inla.rmarginal(draws,mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Restoration) + 
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC.Restoration`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC.Restoration`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC.Restoration`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC.Restoration:OWEB.proj.in.last.3yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Interaction)
+
+oweb.project.p3.all.Outreach = inla.rmarginal(draws,mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Outreach) + 
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC.Outreach`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC.Outreach`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC.Outreach`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC.Outreach:OWEB.proj.in.last.3yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Interaction)
+
+oweb.project.p1.fixed.Tech = inla.rmarginal(draws,mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Tech) + 
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC.Tech`)+
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC.Tech`)+
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC.Tech`) +
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC.Tech:OWEB.proj.in.last.1yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Interaction)
+
+oweb.project.p1.fixed.Restoration = inla.rmarginal(draws,mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Restoration) + 
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC.Restoration`)+
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC.Restoration`)+
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC.Restoration`) +
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC.Restoration:OWEB.proj.in.last.1yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Interaction)
+
+oweb.project.p1.fixed.Outreach = inla.rmarginal(draws,mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Outreach) + 
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.1yr.WC.Outreach`)+
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.1yr.WC.Outreach`)+
+  #  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.1yr.WC.Outreach`) +
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$`OWEB.proj.in.last.1yr.WC.Outreach:OWEB.proj.in.last.1yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p1$marginals.fixed$OWEB.proj.in.last.1yr.WC.Interaction)
+
+oweb.project.p2.fixed.Tech = inla.rmarginal(draws,mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Tech) + 
+  #  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC.Tech`)+
+  #  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC.Tech`)+
+  #  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC.Tech`) +
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC.Tech:OWEB.proj.in.last.2yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Interaction)
+
+oweb.project.p2.fixed.Restoration = inla.rmarginal(draws,mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Restoration) + 
+  #  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC.Restoration`)+
+  # inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC.Restoration`)+
+  #  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC.Restoration`) +
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC.Restoration:OWEB.proj.in.last.2yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Interaction)
+
+oweb.project.p2.fixed.Outreach = inla.rmarginal(draws,mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Outreach) + 
+  # inla.rmarginal(draws, mod.project.p2$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.2yr.WC.Outreach`)+
+  #  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.2yr.WC.Outreach`)+
+  #inla.rmarginal(draws, mod.project.p2$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.2yr.WC.Outreach`) +
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$`OWEB.proj.in.last.2yr.WC.Outreach:OWEB.proj.in.last.2yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p2$marginals.fixed$OWEB.proj.in.last.2yr.WC.Interaction)
+
+oweb.project.p3.fixed.Tech = inla.rmarginal(draws,mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Tech) + 
+  # inla.rmarginal(draws, mod.project.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC.Tech`)+
+  #  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC.Tech`)+
+  # inla.rmarginal(draws, mod.project.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC.Tech`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC.Tech:OWEB.proj.in.last.3yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Interaction)
+
+oweb.project.p3.fixed.Restoration = inla.rmarginal(draws,mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Restoration) + 
+  #inla.rmarginal(draws, mod.project.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC.Restoration`)+
+  #inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC.Restoration`)+
+  # inla.rmarginal(draws, mod.project.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC.Restoration`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC.Restoration:OWEB.proj.in.last.3yr.WC.Capacity`)+
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Interaction)
+
+oweb.project.p3.fixed.Outreach = inla.rmarginal(draws,mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Outreach) + 
+  #inla.rmarginal(draws, mod.project.p3$marginals.fixed$`STAFF.FTE:OWEB.proj.in.last.3yr.WC.Outreach`)+
+  #inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OP.BUDGET.200k:OWEB.proj.in.last.3yr.WC.Outreach`)+
+  #inla.rmarginal(draws, mod.project.p3$marginals.fixed$`YEARS.ACTIVE:OWEB.proj.in.last.3yr.WC.Outreach`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$`OWEB.proj.in.last.3yr.WC.Outreach:OWEB.proj.in.last.3yr.WC.Capacity`) +
+  inla.rmarginal(draws, mod.project.p3$marginals.fixed$OWEB.proj.in.last.3yr.WC.Interaction)
+
+
+margs = data.frame(
+  oweb.project.p1.all.Tech,
+  oweb.project.p1.all.Restoration,
+  oweb.project.p1.all.Outreach,
+  oweb.project.p2.all.Tech,
+  oweb.project.p2.all.Restoration,
+  oweb.project.p2.all.Outreach,
+  oweb.project.p3.all.Tech,
+  oweb.project.p3.all.Restoration,
+  oweb.project.p3.all.Outreach,
+  oweb.project.p1.fixed.Tech,
+  oweb.project.p1.fixed.Restoration,
+  oweb.project.p1.fixed.Outreach,
+  oweb.project.p2.fixed.Tech,
+  oweb.project.p2.fixed.Restoration,
+  oweb.project.p2.fixed.Outreach,
+  oweb.project.p3.fixed.Tech,
+  oweb.project.p3.fixed.Restoration,
+  oweb.project.p3.fixed.Outreach)
+library(tidyr)
+margs.lon = gather(margs)
+
+margs.lon$window = NA
+margs.lon$window[grep('p1.',margs.lon$key)] <- 'p1'
+margs.lon$window[grep('p2.',margs.lon$key)] <- 'p2'
+margs.lon$window[grep('p3.',margs.lon$key)] <- 'p3'
+
+margs.lon$which = NA
+margs.lon$which[grep('Outreach',margs.lon$key)] <- 'Outreach'
+margs.lon$which[grep('Tech',margs.lon$key)] <- 'Tech'
+margs.lon$which[grep('Restoration',margs.lon$key)] <- 'Restoration'
+
+margs.lon$fix = NA
+margs.lon$fix[grep('all',margs.lon$key)] <- 'All'
+margs.lon$fix[grep('fixed',margs.lon$key)] <- 'Fixed'
+
+margs.lon$uq <- paste(margs.lon$which,margs.lon$fix,margs.lon$window)
+margs.lon$uq = as.factor(margs.lon$uq)
+
+bas.col = 'black'
+alt.col = '#E69F00'
+alt.col2 = "#56B4E9"
+library(dplyr)
+library(ggplot2)
+
+
+short.labs1 <- c('1yr w/ ','2yr w/','3yr w/',
+                 '1yr w/out','2yr w/out','3yr w/out')
+short.labs2 <- c('1yr w/ ','2yr w/','3yr w/',
+                 '1yr w/out','2yr w/out','3yr w/out')
+p2 = ggplot(filter(margs.lon,which=='Outreach'))+ 
+  geom_density(aes(x=value, color=uq,linetype=uq),lwd=1)+
+  scale_color_manual(values=rep(c('#E69F00','black'),each=3),
+                     name='Outreach Projects \n w/, w/out Capacity $', labels=short.labs1) +
+  scale_linetype_manual(values=rep(c(1:3),2),
+                        name='Outreach Projects \n w/, w/out Capacity $', labels=short.labs1)  +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3))+
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  theme(legend.position = c(.85,.6),
+        axis.title=element_text(size=18),
+        axis.text.x=element_text(size=16),
+        axis.text.y=element_blank(),
+        legend.title = element_text(size=18),
+        legend.text = element_text(size=14))  +
+  xlab('Sampled Posterior Marginals: Outreach + capacity building') + 
+  ylab('') +
+  scale_x_continuous(expand=c(0,0),limits = c(-35,60))+
+  scale_y_continuous(expand=c(0,0))
+library(scales)
+
+p3 = ggplot(filter(margs.lon,which=='Tech'))+ 
+  geom_density(aes(x=value, color=uq,linetype=uq),lwd=1)+
+  scale_color_manual(values=rep(c('#56B4E9','black'),each=3),
+                     name='Tech. Projects \n w/, w/out Capacity $', labels=short.labs1) +
+  scale_linetype_manual(values=rep(c(1:3),2),
+                        name='Tech. Projects \n w/, w/out Capacity $', labels=short.labs1)  +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3))+
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  theme(legend.position = c(.20,.6),
+        axis.title=element_text(size=18),
+        axis.text.x=element_text(size=16),
+        axis.text.y=element_blank(),
+        legend.title = element_text(size=18),
+        legend.text = element_text(size=14))  +
+  xlab('Sampled Posterior Marginals: Tech. + capacity building') + 
+  ylab('') +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))
+
+p4 = ggplot(filter(margs.lon,which=='Restoration'))+ 
+  geom_density(aes(x=value, color=uq,linetype=uq),lwd=1)+
+  scale_color_manual(values=rep(c('#009E73','black'),each=3),
+                     name='Restoration Projects \n w/, w/out Capacity $', labels=short.labs1) +
+  scale_linetype_manual(values=rep(c(1:3),2),
+                        name='Restoration Projects \n w/, w/out Capacity $', labels=short.labs1)  +
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3))+
+  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
+  theme_bw() +theme_tufte(ticks=FALSE) +
+  theme(legend.position = c(.30,.6),
+        axis.title=element_text(size=18),
+        axis.text.x=element_text(size=16),
+        axis.text.y=element_blank(),
+        legend.title = element_text(size=18),
+        legend.text = element_text(size=14))  +
+  xlab('Sampled Posterior Marginals: Rest. + capacity building') + 
+  ylab('') +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))
+
+
+ggsave(filename = 'Deliverables/JPART/Final/figure2.eps',p2,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+ggsave(filename = 'Deliverables/JPART/Final/figure3.eps',p3,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+ggsave(filename = 'Deliverables/JPART/Final/figure4.eps',p4,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+
+
+temp.or = readOGR(dsn='SpatialData/government_units','state_nrcs_a_or')
+
+par(mar=c(3, 2, 2, 1))
+plot(temp.or,ylim=c(min(mesh.a$loc[,2]),max(mesh.a$loc[,2])),col='grey80',border='grey80')
+plot(mesh.a,add=TRUE)
+points(mod.data$long[!duplicated(mod.data$Station)],
+       mod.data$lat[!duplicated(mod.data$Station)],col='blue',pch=19,cex=.5)
+
+covars$owqi2 <- covars$owqi + 4
+covars$owqi2 <- ifelse(covars$owqi2>100,100,covars$owqi2)
+
+covars$Qual = 'Excellent'
+covars$Qual[covars$owqi < 90] <- 'Good'
+covars$Qual[covars$owqi < 85] <- 'Fair'
+covars$Qual[covars$owqi < 80] <- 'Poor'
+covars$Qual[covars$owqi < 60] <- 'Very Poor'
+
+covars$Qual = ordered(as.factor(covars$Qual),levels = c("Very Poor","Poor",'Fair','Good','Excellent'))
+
+covars$Qual2 = 'Excellent'
+covars$Qual2[covars$owqi2 < 90] <- 'Good'
+covars$Qual2[covars$owqi2 < 85] <- 'Fair'
+covars$Qual2[covars$owqi2 < 80] <- 'Poor'
+covars$Qual2[covars$owqi2 < 60] <- 'Very Poor'
+covars$Qual2 = ordered(as.factor(covars$Qual2),levels = c("Very Poor","Poor",'Fair','Good','Excellent'))
+
+both.covars = c(covars$owqi,covars$owqi2)
+which.owqi = rep(c('Observed','Observed + 4'),each=length(covars$owqi))
+
+
+
+library(ggthemes)
+p5 = ggplot() +
+  geom_rect(aes(xmin=c(15,60,80,85,90),xmax=c(60,80,85,90,100),ymin=0,ymax=0.08),
+           # fill = c("#D55E00", "#E69F00","#999999", "#56B4E9", "#009E73"),
+           fill = NA,
+            alpha = 0.2)+
+  stat_density(aes(x=owqi,fill='grey'),data=covars,trim=TRUE,alpha=0.5,colour='black') +
+  stat_density(aes(x=owqi2,fill='blue'),data=covars,trim=TRUE,alpha=0.5,colour='black') +
+  geom_vline(xintercept=60,lty=2,col='grey50')+ geom_vline(xintercept=80,lty=2,col='grey50')+
+  geom_vline(xintercept=85,lty=2,col='grey50') +geom_vline(xintercept=90,lty=2,col='grey50')+
+  theme_bw() +
+  scale_x_continuous('OWQI',expand=c(0,0),breaks=c(seq(20,90,10))) +
+  scale_y_continuous(expand=c(0,0),limits=c(0,0.08)) +
+  theme_tufte(ticks=F) +
+  theme(
+    legend.position = c(0.25,.5),
+    axis.ticks=element_blank(),
+    axis.text.y=element_blank(),
+    axis.text.x=element_text(size=16),
+    axis.title.y=element_blank(),
+    axis.title.x=element_text(size=18),
+    legend.text=element_text(size=16),
+    legend.title=element_text(size=18)
+  )  +
+  scale_fill_colorblind(labels=c('Observed+4','Observed'),name='Distribution of Scores')+
+  geom_text(aes(x=c(30,70,82.5,87.5,95),label=c("Very Poor","Poor",'Fair','Good','Excellent'),
+                y=c(0.07,0.07,0.075,0.07,0.075)),size=8)+
+  guides(fill = guide_legend(override.aes = list(linetype = 0)))
+#color = guide_legend(override.aes = list(linetype = 0)))
+ggsave(filename = 'Deliverables/JPART/Final/figure5.tiff',p5,width=5,dpi = 500,fonts=c("serif", "Palatino"))
 
 library(mail)
 sendmail('tyler.andrew.scott@gmail.com','INLA model done')
