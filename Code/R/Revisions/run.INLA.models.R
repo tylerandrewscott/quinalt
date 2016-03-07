@@ -980,7 +980,7 @@ library(ggplot2)
 bas.col = 'black'
 alt.col = '#E69F00'
 alt.col2 = "#56B4E9"
-p = ggplot(subset(margs.lon))+ 
+p1 = ggplot(subset(margs.lon))+ 
   geom_density(aes(x=value,
                    color=uq,linetype=uq),lwd=1)+
   scale_linetype_manual(values=c(1,2,3,1,2,3)) +
@@ -996,8 +996,9 @@ p = ggplot(subset(margs.lon))+
         axis.text.y=element_blank(),
         legend.title = element_blank(),
         legend.text = element_text(size=16)) 
-
-ggsave(filename = 'Deliverables/JPART/Final/figure1.eps',p,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+w = 5
+he = 534/973 * w
+ggsave(filename = 'Deliverables/JPART/Final/figure1.eps',p1,width=w,height=he,units = 'in',dpi = 500,fonts=c("serif", "Palatino"))
 
 
 
@@ -1266,7 +1267,7 @@ p2 = ggplot(filter(margs.lon,which=='Outreach'))+
         legend.text = element_text(size=14))  +
   xlab('Sampled Posterior Marginals: Outreach + capacity building') + 
   ylab('') +
-  scale_x_continuous(expand=c(0,0),limits = c(-35,60))+
+  scale_x_continuous(expand=c(0,0))+
   scale_y_continuous(expand=c(0,0))
 library(scales)
 
@@ -1310,10 +1311,9 @@ p4 = ggplot(filter(margs.lon,which=='Restoration'))+
   scale_x_continuous(expand=c(0,0))+
   scale_y_continuous(expand=c(0,0))
 
-
-ggsave(filename = 'Deliverables/JPART/Final/figure2.eps',p2,width=5,dpi = 500,fonts=c("serif", "Palatino"))
-ggsave(filename = 'Deliverables/JPART/Final/figure3.eps',p3,width=5,dpi = 500,fonts=c("serif", "Palatino"))
-ggsave(filename = 'Deliverables/JPART/Final/figure4.eps',p4,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+ggsave(filename = 'Deliverables/JPART/Final/figure2.eps',p2,width=w,height=he,dpi = 500,fonts=c("serif", "Palatino"),units = 'in')
+ggsave(filename = 'Deliverables/JPART/Final/figure3.eps',p3,width=w,height=he,dpi = 500,fonts=c("serif", "Palatino"),units = 'in')
+ggsave(filename = 'Deliverables/JPART/Final/figure4.eps',p4,width=w,height=he,dpi = 500,fonts=c("serif", "Palatino"),units = 'in')
 
 
 temp.or = readOGR(dsn='SpatialData/government_units','state_nrcs_a_or')
@@ -1376,7 +1376,7 @@ p5 = ggplot() +
                 y=c(0.07,0.07,0.075,0.07,0.075)),size=8)+
   guides(fill = guide_legend(override.aes = list(linetype = 0)))
 #color = guide_legend(override.aes = list(linetype = 0)))
-ggsave(filename = 'Deliverables/JPART/Final/figure5.tiff',p5,width=5,dpi = 500,fonts=c("serif", "Palatino"))
+ggsave(filename = 'Deliverables/JPART/Final/figure5.tiff',p5,width=w,height=he,dpi = 500,fonts=c("serif", "Palatino"))
 
 library(mail)
 sendmail('tyler.andrew.scott@gmail.com','INLA model done')
