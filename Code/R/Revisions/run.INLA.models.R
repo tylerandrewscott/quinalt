@@ -3,7 +3,7 @@ rm(list=ls())
 remote = FALSE
 nlog = FALSE
 run.owqi.only = TRUE
-
+library(INLA)
 require(foreign)
 require(plyr)
 require(dplyr)
@@ -55,7 +55,7 @@ mod.data = mod.data %>% mutate(which.wc = as.character(which.wc))
 mod.data$which.wc[grep('Middle Deschutes',mod.data$which.wc)] <- 'Willow Creek WC'
 
 library(mosaic)
-library(googlesheets)
+
 
 council.dat = read.csv('https://docs.google.com/spreadsheets/d/1OXdC54OK8BwXAbIzMDudAKMvdblMhQQBJZ82_LUijFc/pub?output=csv')
 #council.dat = fetchGoogle('https://docs.google.com/spreadsheets/d/1OXdC54OK8BwXAbIzMDudAKMvdblMhQQBJZ82_LUijFc/pub?output=csv')
@@ -509,8 +509,9 @@ ind.1 <- inla.spde.make.index('s', mesh.a$n)
 
 empty.list = as.list(NULL)
 
-
 ###
+INLA:::inla.dynload.workaround() 
+r = inla(y~1,data = data.frame(y=0)) 
 
   stk.1 <- inla.stack(data=list(y=covars$owqi), A=list(A.1,1),
                       effects=list(ind.1, 
@@ -722,7 +723,7 @@ p1 = ggplot(subset(margs.lon))+
   xlab('Sampled Posterior Marginals: Linear only vs. Interaction w/ council attributes') + ylab('') +
   scale_x_continuous(expand=c(0,0))+
   scale_y_continuous(expand=c(0,0))+
-  theme(legend.position = c(.85,.5),
+  theme(legend.position = c(.75,.5),
         axis.title=element_text(size=18),
         axis.text.x=element_text(size=16),
         axis.text.y=element_blank(),
@@ -730,7 +731,7 @@ p1 = ggplot(subset(margs.lon))+
         legend.text = element_text(size=16)) 
 w = 5
 he = 534/973 * w
-#ggsave(filename = 'Deliverables/JPART/Final/figure1.eps',p1,width=w,height=he,units = 'in',dpi = 500,fonts=c("serif", "Palatino"))
+#ggsave(filename = 'Figure1.tiff',p1,width=w,height=he,units = 'in',dpi = 1200,fonts=c("serif", "Palatino"))
 
 
 draws = 100000
@@ -932,12 +933,13 @@ p2 = ggplot(filter(margs.lon,which=='Outreach'))+
   scale_y_continuous(expand=c(0,0))
 library(scales)
 
+
 p3 = ggplot(filter(margs.lon,which=='Tech'))+ 
   geom_density(aes(x=value, color=uq,linetype=uq),lwd=1)+
   scale_color_manual(values=rep(c('#56B4E9','black'),each=3),
-                     name='Tech. Projects \n w/, w/out Capacity $', labels=short.labs1) +
+                     name='Technical Projects \n w/, w/out Capacity $', labels=short.labs1) +
   scale_linetype_manual(values=rep(c(1:3),2),
-                        name='Tech. Projects \n w/, w/out Capacity $', labels=short.labs1)  +
+                        name='Technical Projects \n w/, w/out Capacity $', labels=short.labs1)  +
   guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3))+
   guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
   theme_bw() +theme_tufte(ticks=FALSE) +
@@ -947,30 +949,11 @@ p3 = ggplot(filter(margs.lon,which=='Tech'))+
         axis.text.y=element_blank(),
         legend.title = element_text(size=18),
         legend.text = element_text(size=14))  +
-  xlab('Sampled Posterior Marginals: Tech. + capacity building') + 
+  xlab('Sampled Posterior Marginals: Technical + capacity building') + 
   ylab('') +
   scale_x_continuous(expand=c(0,0))+
   scale_y_continuous(expand=c(0,0))
 
-p4 = ggplot(filter(margs.lon,which=='Restoration'))+ 
-  geom_density(aes(x=value, color=uq,linetype=uq),lwd=1)+
-  scale_color_manual(values=rep(c('#009E73','black'),each=3),
-                     name='Restoration Projects \n w/, w/out Capacity $', labels=short.labs1) +
-  scale_linetype_manual(values=rep(c(1:3),2),
-                        name='Restoration Projects \n w/, w/out Capacity $', labels=short.labs1)  +
-  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3))+
-  guides(col=guide_legend(ncol=2,nrow=3),linetype=guide_legend(ncol=2,nrow=3)) +
-  theme_bw() +theme_tufte(ticks=FALSE) +
-  theme(legend.position = c(.30,.6),
-        axis.title=element_text(size=18),
-        axis.text.x=element_text(size=16),
-        axis.text.y=element_blank(),
-        legend.title = element_text(size=18),
-        legend.text = element_text(size=14))  +
-  xlab('Sampled Posterior Marginals: Rest. + capacity building') + 
-  ylab('') +
-  scale_x_continuous(expand=c(0,0))+
-  scale_y_continuous(expand=c(0,0))
 
 # ggsave(filename = 'Deliverables/JPART/Final/figure2.eps',p2,width=w,height=he,dpi = 900,fonts=c("serif", "Palatino"),units = 'in')
 # ggsave(filename = 'Deliverables/JPART/Final/figure3.eps',p3,width=w,height=he,dpi = 900,fonts=c("serif", "Palatino"),units = 'in')
